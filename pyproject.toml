@@ -136,10 +136,7 @@ dev = [
 [tool.pytest.ini_options]
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
-filterwarnings = [
-  "error",
-  "ignore::DeprecationWarning",  # TODO: deal with these
-]
+filterwarnings = ["error"]
 
 [tool.isort]
 skip = [".pixi", ".tox", ".venv"]
