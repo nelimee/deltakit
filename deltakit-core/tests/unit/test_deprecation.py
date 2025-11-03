@@ -34,3 +34,18 @@ def test_custom_deprecated() -> None:
     )
     with pytest.warns(DeprecationWarning, match=msg):
         assert custom_deprecated_add(2.00000001, 3.0000000003, ndigits=3) == 5
+
+
+def test_direct_calling_no_argument() -> None:
+    with pytest.raises(ValueError):
+        deprecated()
+
+
+def test_direct_calling_with_none_callable() -> None:
+    with pytest.raises(ValueError):
+        deprecated(None)
+
+
+def test_direct_calling_all_kwargs_none() -> None:
+    with pytest.raises(ValueError):
+        deprecated(reason=None, removed_in_version=None)
