@@ -10,7 +10,7 @@ RetType = TypeVar("RetType")
 
 @overload
 def deprecated(f: Callable[P, RetType] | None, /) -> Callable[P, RetType]:
-    pass
+    pass  # pragma: no cover
 
 
 @overload
@@ -20,7 +20,7 @@ def deprecated(
     replaced_by: str | None,
     removed_in_version: semver.Version | None,
 ) -> Callable[[Callable[P, RetType]], Callable[P, RetType]]:
-    pass
+    pass  # pragma: no cover
 
 
 def deprecated(
