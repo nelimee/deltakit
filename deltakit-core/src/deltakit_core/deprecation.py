@@ -46,14 +46,12 @@ def deprecated(
         Depending on the provided arguments, either a wrapper around the provided ``f``
         that raises a deprecation warning or a decorator that can deprecate a function.
     """
-    if f is None and reason is None and removed_in_version is None:
+    if all(p is None for p in (f, reason, replaced_by, removed_in_version)):
         raise ValueError(
-            "Expected at least one of f, reason or version to be provided."
+            "Expected at least one of f, reason, replaced_by or removed_in_version to "
+            "be provided. All of them are None."
         )
     if f is not None:
-        if reason is not None or removed_in_version is not None:
-            raise ValueError("Cannot provide f alongside reason or version.")
-
         msg = f"{f.__name__} is deprecated and will eventually be removed."
 
         @functools.wraps(f)
