@@ -16,9 +16,9 @@ def deprecated(f: Callable[P, RetType] | None, /) -> Callable[P, RetType]:
 @overload
 def deprecated(
     *,
-    reason: str | None,
-    replaced_by: str | None,
-    removed_in_version: semver.Version | None,
+    reason: str | None = None,
+    replaced_by: str | None = None,
+    removed_in_version: semver.Version | None = None,
 ) -> Callable[[Callable[P, RetType]], Callable[P, RetType]]:
     pass  # pragma: no cover
 
