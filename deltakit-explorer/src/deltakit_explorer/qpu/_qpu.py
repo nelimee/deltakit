@@ -67,14 +67,14 @@ class QPU:
 
     def _get_circuit_schedule(self, circuit: Circuit) -> CircuitSchedule:
         if not circuit.qubits.issubset(self.qubits):
-            qubit_ids = set(q.unique_identifier for q in circuit.qubits - self.qubits)
+            qubit_ids = {q.unique_identifier for q in circuit.qubits - self.qubits}
             raise ValueError(
                 f"Qubits {qubit_ids} in the circuit are not present on the QPU."
             )
 
         nonnative_gateset = set()
         active_times_list, previous_layer_times = [], []
-        active_times = {qubit: 0.0 for qubit in self.qubits}
+        active_times = dict.fromkeys(self.qubits, 0.0)
         previous_layer_time = 0.0
 
         for layer in circuit.layers:

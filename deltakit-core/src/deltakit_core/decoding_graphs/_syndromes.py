@@ -92,7 +92,7 @@ class DetectorRecord(UserDict):
         -------
         DetectorRecord
         """
-        spatial_coord = property_dict.get("spatial_coord", tuple())
+        spatial_coord = property_dict.get("spatial_coord", ())
         # ensure a tuple
         spatial_coord = tuple(spatial_coord)
         time = property_dict.get("time", 0)

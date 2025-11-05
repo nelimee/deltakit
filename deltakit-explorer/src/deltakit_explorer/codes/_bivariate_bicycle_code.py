@@ -422,8 +422,8 @@ class BivariateBicycleCode(CSSCode):
         if validate:
             # assert properties of A and B:
             self._assert_matrix_ma_mb_properties(m_A, m_B)
-        self.m_A_submatrices = tuple((m_A1, m_A2, m_A3))
-        self.m_B_submatrices = tuple((m_B1, m_B2, m_B3))
+        self.m_A_submatrices = (m_A1, m_A2, m_A3)
+        self.m_B_submatrices = (m_B1, m_B2, m_B3)
 
         # create Hx and Hz check matrices. Note that since A and B
         # commute, these are valid check matrices

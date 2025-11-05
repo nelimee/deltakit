@@ -330,7 +330,7 @@ class TestCSSStageWithAllParameters:
                 stabilisers=example_simultaneous_stabilisers,
             )
 
-    @pytest.mark.parametrize("stabilisers", [[[]], None, [[], []]], tuple(tuple()))
+    @pytest.mark.parametrize("stabilisers", [[[]], None, [[], []]], ())
     def test_raises_error_when_stabilisers_is_empty_but_num_rounds_is_positive(
         self, stabilisers
     ):
@@ -528,7 +528,7 @@ class TestCSSStageWithAllParameters:
                     observable_definitions={0: [Qubit(0)]},
                     final_round_resets={RZ(1)},
                 ),
-                tuple(),
+                (),
             ),
             (full_stage_1_round.stage, full_stage_1_round.expected_ordered_stabilisers),
         ],

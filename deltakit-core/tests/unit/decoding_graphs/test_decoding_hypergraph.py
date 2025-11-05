@@ -115,7 +115,7 @@ class TestDecodingHyperGraph:
         ],
     )
     def test_hypergraph_has_expected_edges(self, hypergraph, expected_edges):
-        hypergraph_edges = set(edge.vertices for edge in hypergraph.edges)
+        hypergraph_edges = {edge.vertices for edge in hypergraph.edges}
         assert hypergraph_edges == expected_edges
 
     @pytest.mark.parametrize(
@@ -255,9 +255,9 @@ class TestDecodingHyperGraph:
         self, hypergraph, syndromes, expected_edges
     ):
         for syndrome, expected_edge in zip(syndromes, expected_edges, strict=True):
-            incident_edges = set(
+            incident_edges = {
                 frozenset(edge) for edge in hypergraph.incident_edges(syndrome)
-            )
+            }
             assert incident_edges == expected_edge
 
     @pytest.mark.parametrize(

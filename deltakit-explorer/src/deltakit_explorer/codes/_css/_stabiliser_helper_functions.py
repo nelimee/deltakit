@@ -101,12 +101,12 @@ def _get_data_qubits_from_stabilisers(
     """
     return tuple(
         sorted(
-            set(
+            {
                 qubit
                 for simultaneous_stabilisers in stabilisers
                 for stabiliser in simultaneous_stabilisers
                 for qubit in stabiliser.data_qubits
-            ),
+            },
             key=lambda qubit: qubit.unique_identifier,
         )
     )
@@ -144,9 +144,9 @@ def pauli_gates_to_stim_pauli_string(
         for pauli in pauli_gates
         if pauli is not None
     ):
-        missing_qubits = set(
+        missing_qubits = {
             pauli.qubit for pauli in pauli_gates if pauli is not None
-        ).difference(set(data_qubit_to_index_lookup.keys()))
+        }.difference(set(data_qubit_to_index_lookup.keys()))
         raise ValueError(
             "data_qubit_to_index_lookup does not contain entries for"
             f" {missing_qubits} in pauli_gates"

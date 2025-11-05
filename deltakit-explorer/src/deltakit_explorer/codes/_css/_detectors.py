@@ -393,19 +393,19 @@ def _get_joint_sub_super_stabilisers_ind(
     # fmt: off
     full_index_list: List[Tuple[Tuple[int, ...], Tuple[int, ...]]] = (
         [
-            (tuple((ind_prev,)), tuple((ind_curr,)))
+            ((ind_prev,), (ind_curr,))
             for ind_prev, ind_curr in sorted(
                 joint_stabilisers_ind.items(), key=lambda item: item[0]
             )
         ]
         + [
-            (tuple(indices_prev), tuple((ind_curr,)))
+            (tuple(indices_prev), (ind_curr,))
             for ind_curr, indices_prev in sorted(
                 sub_stabilisers_ind.items(), key=lambda item: item[0]
             )
         ]
         + [
-            (tuple((ind_prev,)), tuple(indices_curr,))
+            ((ind_prev,), tuple(indices_curr,))
             for ind_prev, indices_curr in sorted(
                 super_stabilisers_ind.items(), key=lambda item: item[0]
             )

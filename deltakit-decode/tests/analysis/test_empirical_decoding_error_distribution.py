@@ -59,7 +59,7 @@ class TestEmpiricalDecodingErrorDistribution:
 
         distr_dict = empirical_decoding_error_distribution.to_dict()
 
-        expected_dict = {parity: 0 for parity in product((False, True), repeat=3)}
+        expected_dict = dict.fromkeys(product((False, True), repeat=3), 0)
         expected_dict[(True, True, False)] = 5
         expected_dict[(False, True, False)] = 1
         assert distr_dict == expected_dict

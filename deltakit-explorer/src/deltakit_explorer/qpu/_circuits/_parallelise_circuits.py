@@ -133,7 +133,7 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
         if isinstance(layer, GateLayer):
             parallelised_layers.append(GateLayer())
             parallelised_layers_gate_types.append(
-                set(type(gate) for gate in layer.gates)
+                {type(gate) for gate in layer.gates}
             )
         else:
             parallelised_layers.append(layer)

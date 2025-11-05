@@ -235,9 +235,9 @@ def get_logical_operators_from_css_parity_check_matrices(
     x_logs, z_logs = code.compute_logicals()
 
     return tuple(
-        set(PauliX(column_to_qubit[i]) for i, x in enumerate(log_op) if x)
+        {PauliX(column_to_qubit[i]) for i, x in enumerate(log_op) if x}
         for log_op in x_logs
     ), tuple(
-        set(PauliZ(column_to_qubit[i]) for i, x in enumerate(log_op) if x)
+        {PauliZ(column_to_qubit[i]) for i, x in enumerate(log_op) if x}
         for log_op in z_logs
     )

@@ -65,22 +65,22 @@ class NativeGateSetAndTimes:
         measurement_gates: Optional[Dict[Type[_MeasurementGate], float]] = None,
     ):
         self.one_qubit_gates = (
-            {gate: 1.0 for gate in DEFAULT_ONE_QUBIT_GATES}
+            dict.fromkeys(DEFAULT_ONE_QUBIT_GATES, 1.0)
             if one_qubit_gates is None
             else one_qubit_gates
         )
         self.two_qubit_gates = (
-            {gate: 1.0 for gate in DEFAULT_TWO_QUBIT_GATES}
+            dict.fromkeys(DEFAULT_TWO_QUBIT_GATES, 1.0)
             if two_qubit_gates is None
             else two_qubit_gates
         )
         self.reset_gates = (
-            {gate: 1.0 for gate in DEFAULT_RESET_GATES}
+            dict.fromkeys(DEFAULT_RESET_GATES, 1.0)
             if reset_gates is None
             else reset_gates
         )
         self.measurement_gates = (
-            {gate: 1.0 for gate in DEFAULT_MEASUREMENT_GATES}
+            dict.fromkeys(DEFAULT_MEASUREMENT_GATES, 1.0)
             if measurement_gates is None
             else measurement_gates
         )
@@ -185,14 +185,10 @@ class NativeGateSetAndTimes:
             measurement_gates = MEASUREMENT_GATES
 
         native_gates_and_times = NativeGateSetAndTimes(
-            one_qubit_gates={g: time_1_qubit_gate
-                             for g in one_qubit_gates},
-            two_qubit_gates={g: time_2_qubit_gate
-                             for g in two_qubit_gates},
-            reset_gates={r: time_reset
-                         for r in reset_gates},
-            measurement_gates={m: time_measurement
-                               for m in measurement_gates},
+            one_qubit_gates=dict.fromkeys(one_qubit_gates, time_1_qubit_gate),
+            two_qubit_gates=dict.fromkeys(two_qubit_gates, time_2_qubit_gate),
+            reset_gates=dict.fromkeys(reset_gates, time_reset),
+            measurement_gates=dict.fromkeys(measurement_gates, time_measurement),
         )
         return native_gates_and_times
 
@@ -225,20 +221,20 @@ class NativeGateSet(NativeGateSetAndTimes):
         measurement_gates: Optional[Set[Type[_MeasurementGate]]] = None,
     ):
         one_qubit_gates_and_times = (
-            {gate: 1.0 for gate in one_qubit_gates}
+            dict.fromkeys(one_qubit_gates, 1.0)
             if one_qubit_gates is not None
             else None
         )
         two_qubit_gates_and_times = (
-            {gate: 1.0 for gate in two_qubit_gates}
+            dict.fromkeys(two_qubit_gates, 1.0)
             if two_qubit_gates is not None
             else None
         )
         reset_gates_and_times = (
-            {gate: 1.0 for gate in reset_gates} if reset_gates is not None else None
+            dict.fromkeys(reset_gates, 1.0) if reset_gates is not None else None
         )
         measurement_gates_and_times = (
-            {gate: 1.0 for gate in measurement_gates}
+            dict.fromkeys(measurement_gates, 1.0)
             if measurement_gates is not None
             else None
         )

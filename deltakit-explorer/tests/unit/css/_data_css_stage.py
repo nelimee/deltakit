@@ -280,8 +280,8 @@ stabiliser_meas_stage = CSSStageTestComponents(
         ]
     ),
     expected_remaining_rounds=Circuit(),
-    expected_measurements_as_stabilisers=tuple(),
-    expected_resets_as_stabilisers=tuple(),
+    expected_measurements_as_stabilisers=(),
+    expected_resets_as_stabilisers=(),
 )
 
 stabiliser_reset_stage = CSSStageTestComponents(
@@ -353,7 +353,7 @@ stabiliser_reset_stage = CSSStageTestComponents(
             }
         )
     ),
-    expected_measurements_as_stabilisers=tuple(),
+    expected_measurements_as_stabilisers=(),
 )
 
 stabiliser_reset_stage_many_rounds = CSSStageTestComponents(

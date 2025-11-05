@@ -322,41 +322,41 @@ def get_default_layout() -> go.Layout:
     """
     layout = go.Layout(
         showlegend=True,
-        scene=dict(
-            xaxis=dict(
-                backgroundcolor="rgb(242, 240, 239)",
-                gridcolor="white",
-                showbackground=True,
-                zerolinecolor="white",
-                dtick=1,
-            ),
-            yaxis=dict(
-                backgroundcolor="rgb(242, 240, 239)",
-                gridcolor="white",
-                showbackground=True,
-                zerolinecolor="white",
-                dtick=1,
-            ),
-            zaxis=dict(
-                backgroundcolor="rgb(230, 230, 230)",
-                gridcolor="white",
-                showbackground=True,
-                zerolinecolor="white",
-                dtick=1,
-            ),
-            xaxis_title="h",
-            yaxis_title="v",
-            zaxis_title="t",
+        scene={
+            "xaxis": {
+                "backgroundcolor": "rgb(242, 240, 239)",
+                "gridcolor": "white",
+                "showbackground": True,
+                "zerolinecolor": "white",
+                "dtick": 1,
+            },
+            "yaxis": {
+                "backgroundcolor": "rgb(242, 240, 239)",
+                "gridcolor": "white",
+                "showbackground": True,
+                "zerolinecolor": "white",
+                "dtick": 1,
+            },
+            "zaxis": {
+                "backgroundcolor": "rgb(230, 230, 230)",
+                "gridcolor": "white",
+                "showbackground": True,
+                "zerolinecolor": "white",
+                "dtick": 1,
+            },
+            "xaxis_title": "h",
+            "yaxis_title": "v",
+            "zaxis_title": "t",
             # fix aspect if desired
             # aspectratio=dict(x=1, y=1, z=1),
-            camera=dict(
-                eye=dict(x=0.2, y=0.9, z=0.2),
-                projection=dict(type="orthographic")
+            "camera": {
+                "eye": {"x": 0.2, "y": 0.9, "z": 0.2},
+                "projection": {"type": "orthographic"}
                 # use type="perspective" for a more immersive 3D experience
-            ),
-        ),
-        margin=dict(t=0, r=0, l=0, b=0),
-        legend=dict(x=0.9, y=0.5),
+            },
+        },
+        margin={"t": 0, "r": 0, "l": 0, "b": 0},
+        legend={"x": 0.9, "y": 0.5},
     )
     return layout
 
@@ -391,7 +391,7 @@ def get_scatter_for_node(
             customdata=list(zip(nodes, xyz)),
             hovertemplate="Detector: %{customdata[0]}<br>"
             + "Full coord: (%{customdata[1]})",
-            marker=dict(size=markersize, color=color, symbol=symbol),
+            marker={"size": markersize, "color": color, "symbol": symbol},
             mode="markers",
             name=name,
         )
@@ -434,7 +434,7 @@ def get_line_for_edge(
         x=x_edges,
         y=y_edges,
         z=z_edges,
-        line=dict(color=color, width=linewidth, dash=linestyle),
+        line={"color": color, "width": linewidth, "dash": linestyle},
         mode="lines",
         customdata=list(zip(edge_syndromes, edge_weights)),
         hovertemplate="edge: %{customdata[0]}<br>" + "weight: %{customdata[1]}",

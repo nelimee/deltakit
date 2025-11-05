@@ -431,7 +431,7 @@ class TestOrderedDecodingEdges:
     "errors, boundaries, expected_syndrome",
     [
         ([], set(), OrderedSyndrome()),
-        ([], set([1]), OrderedSyndrome()),
+        ([], {1}, OrderedSyndrome()),
         ([DecodingEdge(2, 0)], set(), OrderedSyndrome([0, 2])),
         (
             [
@@ -467,14 +467,14 @@ class TestOrderedDecodingEdges:
         ),
         (
             [DecodingEdge(9, 0), DecodingEdge(1, 3), DecodingEdge(1, 2)],
-            set([0]),
+            {0},
             OrderedSyndrome([9, 3, 2]),
         ),
         (
             OrderedDecodingEdges(
                 [DecodingEdge(1, 0), DecodingEdge(3, 9), DecodingEdge(1, 2)]
             ),
-            set([1, 9]),
+            {1, 9},
             OrderedSyndrome([0, 3, 2]),
         ),
         (
@@ -493,14 +493,14 @@ class TestOrderedDecodingEdges:
             OrderedDecodingEdges(
                 [DecodingHyperEdge([1, 0, 2]), DecodingHyperEdge([1, 2, 3])]
             ),
-            set([1]),
+            {1},
             OrderedSyndrome([0, 3]),
         ),
         (
             OrderedDecodingEdges(
                 [DecodingHyperEdge([0, 1, 2]), DecodingEdge(3, 9), DecodingEdge(1, 2)]
             ),
-            set([2, 9]),
+            {2, 9},
             OrderedSyndrome([0, 3]),
         ),
     ],

@@ -449,7 +449,7 @@ def _get_compilation_with_projectors_before_unitaries(
     # first, get the Tableau for the unitary_block
     if len(unitary_block) == 0:
         unitary_block_tableau: stim.Tableau = stim.Tableau.from_named_gate("I")
-        shortest_gates: Tuple = tuple()
+        shortest_gates: Tuple = ()
     else:
         unitary_block_tableau = _get_tableau_from_sequence_of_1q_gates(
             [gate.stim_string for gate in unitary_block]

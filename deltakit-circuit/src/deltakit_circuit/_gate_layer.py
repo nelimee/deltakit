@@ -257,7 +257,7 @@ class GateLayer(Generic[T]):
         for gate_string, targets, error_probability, tag in self._collect_gates(
             qubit_mapping
         ):
-            args = tuple() if error_probability == (0,) else error_probability
+            args = () if error_probability == (0,) else error_probability
             stim_circuit.append(
                 gate_string, targets, args, tag=tag if tag is not None else ""
             )

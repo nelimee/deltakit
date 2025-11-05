@@ -473,10 +473,10 @@ class CSSCode(StabiliserCode):
             # are not all the same
             if (
                 len(
-                    set(
+                    {
                         len(stabiliser.paulis)
                         for stabiliser in simultaneous_stabilisers
-                    )
+                    }
                 )
                 > 1
             ):

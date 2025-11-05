@@ -247,7 +247,7 @@ class StabiliserCode(ABC):
         return (
             self._x_logical_operators
             if self._x_logical_operators is not None
-            else tuple()
+            else ()
         )
 
     @x_logical_operators.setter
@@ -290,7 +290,7 @@ class StabiliserCode(ABC):
         return (
             self._z_logical_operators
             if self._z_logical_operators is not None
-            else tuple()
+            else ()
         )
 
     @z_logical_operators.setter

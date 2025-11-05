@@ -111,7 +111,7 @@ class CSSStage:
         ] = None,
         use_ancilla_qubits: Optional[bool] = None,
     ):
-        self._stabilisers = tuple(tuple()) if stabilisers is None else stabilisers
+        self._stabilisers = () if stabilisers is None else stabilisers
         self._num_rounds = num_rounds
         self._use_ancilla_qubits = use_ancilla_qubits
 
@@ -131,7 +131,7 @@ class CSSStage:
             )
 
         self._first_round_measurements = (
-            tuple()
+            ()
             if first_round_measurements is None
             else tuple(first_round_measurements)
         )

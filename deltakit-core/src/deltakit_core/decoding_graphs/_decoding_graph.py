@@ -710,7 +710,7 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
             yield (DecodingEdge(*detectors), int(edge_id))
 
     def incident_edges(self, detector: int) -> Iterator[Tuple[DecodingEdge, int]]:
-        unique_detectors = set(tuple(edge) for edge in self.graph.edges(detector))
+        unique_detectors = {tuple(edge) for edge in self.graph.edges(detector)}
         for detectors in unique_detectors:
             yield from self.get_edges(*detectors)
 

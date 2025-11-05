@@ -105,7 +105,7 @@ class Stabiliser:
         Set[PauliGate]
             Pauli operator representation.
         """
-        return set(pauli for pauli in self.paulis if pauli is not None)
+        return {pauli for pauli in self.paulis if pauli is not None}
 
     def __eq__(self, other: object) -> bool:
         """
