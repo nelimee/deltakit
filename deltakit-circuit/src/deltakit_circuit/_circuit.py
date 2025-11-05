@@ -45,7 +45,7 @@ from deltakit_circuit._qubit_identifiers import Coordinate, Qubit, T, U
 class _Comparable(Protocol):  # pylint: disable=too-few-public-methods
     """Protocol type for objects that can be compared."""
 
-    def __lt__(self, __o: object) -> bool:  # pragma: no cover
+    def __lt__(self, other: object) -> bool:  # pragma: no cover
         ...
 
 

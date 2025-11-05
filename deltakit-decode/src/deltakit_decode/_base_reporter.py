@@ -6,7 +6,7 @@ from abc import abstractmethod
 from contextlib import AbstractContextManager
 from math import sqrt
 from time import time_ns
-from typing import Any, Dict
+from typing import Any, Dict, Self
 
 from deltakit_decode.utils import make_logger
 
@@ -37,7 +37,7 @@ class BaseReporter(AbstractContextManager):
         This is given as a dictionary where the key is some string describing the data.
         """
 
-    def __iadd__(self, other: BaseReporter) -> BaseReporter:
+    def __iadd__(self, other: BaseReporter) -> Self:
         """Add outcomes from another reporter of the same kind.
         This is necessary for collecting results from multiple reporters
         when using parallel processes.
@@ -112,7 +112,7 @@ class TimingReporter(BaseReporter):
             "stderr_wall_ns": self.stderr_wall_ns
         }
 
-    def __iadd__(self, other: BaseReporter) -> TimingReporter:
+    def __iadd__(self, other: BaseReporter) -> Self:
         if isinstance(other, TimingReporter):
             # use parallel Welford's algorithm formula
             total_shots = self._shots + other._shots

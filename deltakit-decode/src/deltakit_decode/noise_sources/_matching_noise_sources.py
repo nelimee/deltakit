@@ -97,12 +97,12 @@ class NoMatchingNoise(IndependentMatchingNoise):
                                                                 OrderedDecodingEdges]:
         return NoNoiseMatchingSequence()
 
-    def __eq__(self, __o: object) -> bool:
-        if isinstance(__o, UniformMatchingNoise):
-            return __o.basic_error_prob == 0
-        if isinstance(__o, FixedWeightMatchingNoise):
-            return __o.weight == 0
-        return isinstance(__o, NoMatchingNoise)
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, UniformMatchingNoise):
+            return other.basic_error_prob == 0
+        if isinstance(other, FixedWeightMatchingNoise):
+            return other.weight == 0
+        return isinstance(other, NoMatchingNoise)
 
     def __hash__(self):
         return hash(NoMatchingNoise)
@@ -159,11 +159,11 @@ class FixedWeightMatchingNoise(IndependentMatchingNoise):
                                                                 OrderedDecodingEdges]:
         return ExhaustiveMatchingNoise(self.weight, self.edge_filter)
 
-    def __eq__(self, __o: object) -> bool:
-        if self.weight == 0 and __o == _ZERO:
+    def __eq__(self, other: object) -> bool:
+        if self.weight == 0 and other == _ZERO:
             return True
-        return (isinstance(__o, FixedWeightMatchingNoise) and
-                self.weight == __o.weight and self.edge_filter == __o.edge_filter)
+        return (isinstance(other, FixedWeightMatchingNoise) and
+                self.weight == other.weight and self.edge_filter == other.edge_filter)
 
     def __hash__(self):
         if self.weight == 0:
@@ -229,12 +229,12 @@ class UniformMatchingNoise(IndependentMatchingNoise):
         return [(FixedWeightMatchingNoise(error_weight, self.edge_filter), coefficient)
                 for error_weight, coefficient in enumerate(coefficients)]
 
-    def __eq__(self, __o: object) -> bool:
-        if self.basic_error_prob == 0 and __o == _ZERO:
+    def __eq__(self, other: object) -> bool:
+        if self.basic_error_prob == 0 and other == _ZERO:
             return True
-        return (isinstance(__o, UniformMatchingNoise) and
-                self.basic_error_prob == __o.basic_error_prob and
-                self.edge_filter == __o.edge_filter)
+        return (isinstance(other, UniformMatchingNoise) and
+                self.basic_error_prob == other.basic_error_prob and
+                self.edge_filter == other.edge_filter)
 
     def __hash__(self):
         if self.basic_error_prob == 0:
@@ -372,9 +372,9 @@ class EdgeProbabilityMatchingNoise(IndependentMatchingNoise):
         )
         raise NotImplementedError(msg)
 
-    def __eq__(self, __o: object) -> bool:
-        if isinstance(__o, self.__class__):
-            return self.edge_filter == __o.edge_filter
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, self.__class__):
+            return self.edge_filter == other.edge_filter
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -424,9 +424,9 @@ class AdditiveMatchingNoise(IndependentMatchingNoise):
     def __hash__(self) -> int:
         return hash(frozenset(self._internal_sources_multiset.items()))
 
-    def __eq__(self, __o: object) -> bool:
-        return (isinstance(__o, AdditiveMatchingNoise) and
-                self._internal_sources_multiset == __o._internal_sources_multiset)
+    def __eq__(self, other: object) -> bool:
+        return (isinstance(other, AdditiveMatchingNoise) and
+                self._internal_sources_multiset == other._internal_sources_multiset)
 
     def __add__(self, other: IndependentMatchingNoise) -> IndependentMatchingNoise:
         if other == _ZERO:
@@ -508,9 +508,9 @@ class AdditiveSequentialMatchingNoise(
         return prod(model.sequence_size(code_data)
                     for model in self.internal_sources)
 
-    def __eq__(self, __o: object) -> bool:
-        if isinstance(__o, AdditiveSequentialMatchingNoise):
-            return self.internal_sources == __o.internal_sources
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, AdditiveSequentialMatchingNoise):
+            return self.internal_sources == other.internal_sources
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -563,9 +563,9 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
         return sum(comb(len_filtered_edges, weight)
                    for weight in weights)
 
-    def __eq__(self, __o: object) -> bool:
-        return (isinstance(__o, ExhaustiveMatchingNoise) and
-                self.weight == __o.weight and self.edge_filter == __o.edge_filter)
+    def __eq__(self, other: object) -> bool:
+        return (isinstance(other, ExhaustiveMatchingNoise) and
+                self.weight == other.weight and self.edge_filter == other.edge_filter)
 
     def __hash__(self) -> int:
         msg = (
@@ -691,10 +691,10 @@ class ExhaustiveWeightedMatchingNoise(SequentialNoise[HyperMultiGraph,
     def __repr__(self) -> str:
         return f"EXHAUSTIVE_WEIGHTED_{self.exhaustion_ceiling}"
 
-    def __eq__(self, __o: object) -> bool:
-        return (isinstance(__o, ExhaustiveWeightedMatchingNoise) and
-                self.exhaustion_ceiling == __o.exhaustion_ceiling
-                and self.edge_filter == __o.edge_filter)
+    def __eq__(self, other: object) -> bool:
+        return (isinstance(other, ExhaustiveWeightedMatchingNoise) and
+                self.exhaustion_ceiling == other.exhaustion_ceiling
+                and self.edge_filter == other.edge_filter)
 
     def __hash__(self) -> int:
         msg = (
@@ -755,11 +755,11 @@ class UniformErasureNoise(MonteCarloNoise[HyperMultiGraph, Tuple[OrderedDecoding
             yield (OrderedDecodingEdges(chain(pauli_errors, erased_errors)),
                    OrderedDecodingEdges(erased_edges, mod_2_filter=False))
 
-    def __eq__(self, __o: object) -> bool:
-        return (isinstance(__o, UniformErasureNoise) and
-                self.erasure_probability == __o.erasure_probability and
-                self.edge_filter == __o.edge_filter and
-                self.pauli_noise_model == __o.pauli_noise_model)
+    def __eq__(self, other: object) -> bool:
+        return (isinstance(other, UniformErasureNoise) and
+                self.erasure_probability == other.erasure_probability and
+                self.edge_filter == other.edge_filter and
+                self.pauli_noise_model == other.pauli_noise_model)
 
     def __hash__(self):
         return hash((self.erasure_probability, self.edge_filter, self.pauli_noise_model))

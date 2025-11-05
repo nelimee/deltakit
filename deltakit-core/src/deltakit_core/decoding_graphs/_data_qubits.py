@@ -304,9 +304,12 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
     def __hash__(self) -> int:
         return hash(self._as_tuple)
 
-    def __eq__(self, __o: object) -> bool:
+    def __eq__(self, other: object) -> bool:
         # Perhaps allow other sequences to be comparable also?
-        return isinstance(__o, OrderedDecodingEdges) and self._as_tuple == __o._as_tuple
+        return (
+            isinstance(other, OrderedDecodingEdges)
+            and self._as_tuple == other._as_tuple
+        )
 
     def as_bitstring(self, edges: Sequence[EdgeT]) -> List[Bit]:
         """Convert given edges to a bitstring representation of `len(edges)` bits

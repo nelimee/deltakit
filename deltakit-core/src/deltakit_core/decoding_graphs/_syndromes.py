@@ -9,6 +9,7 @@ from itertools import chain, repeat
 from typing import (
     AbstractSet,
     Any,
+    Self,
     cast,
     Collection,
     Dict,
@@ -166,9 +167,9 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
     def __hash__(self) -> int:
         return hash(self._as_tuple)
 
-    def __eq__(self, __o: object) -> bool:
+    def __eq__(self, other: object) -> bool:
         # Could allow other sequences to be comparable?
-        return isinstance(__o, OrderedSyndrome) and self._as_tuple == __o._as_tuple
+        return isinstance(other, OrderedSyndrome) and self._as_tuple == other._as_tuple
 
     @classmethod
     def from_bitstring(cls, bitstring: Sequence[Bit]) -> OrderedSyndrome:
@@ -377,47 +378,47 @@ class Bitstring:
         """Get the number of 1s in this bitstring."""
         return self._bits.bit_count()
 
-    def __or__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            return Bitstring(self._bits | __value._bits)
+    def __or__(self, rhs: object) -> Bitstring:
+        if isinstance(rhs, Bitstring):
+            return Bitstring(self._bits | rhs._bits)
         return NotImplemented
 
-    def __ior__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            self._bits |= __value._bits
+    def __ior__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            self._bits |= rhs._bits
             return self
         return NotImplemented
 
-    def __and__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            return Bitstring(self._bits & __value._bits)
+    def __and__(self, rhs: object) -> Bitstring:
+        if isinstance(rhs, Bitstring):
+            return Bitstring(self._bits & rhs._bits)
         return NotImplemented
 
-    def __iand__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            self._bits &= __value._bits
+    def __iand__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            self._bits &= rhs._bits
             return self
         return NotImplemented
 
-    def __xor__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            return Bitstring(self._bits ^ __value._bits)
+    def __xor__(self, rhs: object) -> Bitstring:
+        if isinstance(rhs, Bitstring):
+            return Bitstring(self._bits ^ rhs._bits)
         return NotImplemented
 
-    def __ixor__(self, __value: object) -> Bitstring:
-        if isinstance(__value, Bitstring):
-            self._bits ^= __value._bits
+    def __ixor__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            self._bits ^= rhs._bits
             return self
         return NotImplemented
 
-    def __lshift__(self, __value: object) -> Bitstring:
-        if isinstance(__value, int):
-            return Bitstring(self._bits.__lshift__(__value))
+    def __lshift__(self, rhs: object) -> Bitstring:
+        if isinstance(rhs, int):
+            return Bitstring(self._bits.__lshift__(rhs))
         return NotImplemented
 
-    def __rshift__(self, __value: object) -> Bitstring:
-        if isinstance(__value, int):
-            return Bitstring(self._bits.__rshift__(__value))
+    def __rshift__(self, rhs: object) -> Bitstring:
+        if isinstance(rhs, int):
+            return Bitstring(self._bits.__rshift__(rhs))
         return NotImplemented
 
     def __iter__(self) -> Iterator[Bit]:
@@ -446,9 +447,9 @@ class Bitstring:
         msg = f"Bitstring indices must be integers or slices, not {type(index)}"
         raise TypeError(msg)
 
-    def __eq__(self, __value: object) -> bool:
-        if isinstance(__value, Bitstring):
-            return self._bits == __value._bits
+    def __eq__(self, rhs: object) -> bool:
+        if isinstance(rhs, Bitstring):
+            return self._bits == rhs._bits
         return NotImplemented
 
     def __len__(self) -> int:
@@ -504,42 +505,42 @@ class FixedWidthBitstring(Bitstring):
             self._bits &= (1 << new_width) - 1
         self._width = new_width
 
-    def __or__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            return FixedWidthBitstring(self._width, self._bits | __value._bits)
+    def __or__(self, rhs: object) -> FixedWidthBitstring:
+        if isinstance(rhs, Bitstring):
+            return FixedWidthBitstring(self._width, self._bits | rhs._bits)
         return NotImplemented
 
-    def __ior__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            # Need the mask here to remove the upper bits if __value has more
+    def __ior__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            # Need the mask here to remove the upper bits if rhs has more
             # bits than self.
-            self._bits |= __value._bits & ((1 << self._width) - 1)
+            self._bits |= rhs._bits & ((1 << self._width) - 1)
             return self
         return NotImplemented
 
-    def __xor__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            return FixedWidthBitstring(self._width, self._bits ^ __value._bits)
+    def __xor__(self, rhs: object) -> FixedWidthBitstring:
+        if isinstance(rhs, Bitstring):
+            return FixedWidthBitstring(self._width, self._bits ^ rhs._bits)
         return NotImplemented
 
-    def __ixor__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            # Need the mask here to remove the upper bits if __value has more
+    def __ixor__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            # Need the mask here to remove the upper bits if rhs has more
             # bits than self.
-            self._bits ^= __value._bits & ((1 << self._width) - 1)
+            self._bits ^= rhs._bits & ((1 << self._width) - 1)
             return self
         return NotImplemented
 
-    def __and__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            return FixedWidthBitstring(self._width, self._bits & __value._bits)
+    def __and__(self, rhs: object) -> FixedWidthBitstring:
+        if isinstance(rhs, Bitstring):
+            return FixedWidthBitstring(self._width, self._bits & rhs._bits)
         return NotImplemented
 
-    def __iand__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, Bitstring):
-            # Need the mask here to remove the upper bits if __value has more
+    def __iand__(self, rhs: object) -> Self:
+        if isinstance(rhs, Bitstring):
+            # Need the mask here to remove the upper bits if rhs has more
             # bits than self.
-            self._bits &= __value._bits & ((1 << self._width) - 1)
+            self._bits &= rhs._bits & ((1 << self._width) - 1)
             return self
         return NotImplemented
 
@@ -572,11 +573,11 @@ class FixedWidthBitstring(Bitstring):
         msg = f"Bitstring indices must be integers or slices, not {type(index)}"
         raise TypeError(msg)
 
-    def __add__(self, __value: object) -> FixedWidthBitstring:
-        if isinstance(__value, FixedWidthBitstring):
+    def __add__(self, rhs: object) -> FixedWidthBitstring:
+        if isinstance(rhs, FixedWidthBitstring):
             return FixedWidthBitstring(
-                self._width + __value._width,
-                (self._bits << __value._width) | __value._bits,
+                self._width + rhs._width,
+                (self._bits << rhs._width) | rhs._bits,
             )
         return NotImplemented
 

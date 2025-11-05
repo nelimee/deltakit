@@ -248,9 +248,9 @@ class CombinedIndependent(MonteCarloNoise[Tuple[CodeT, ...], Tuple[ErrorT, ...]]
 
         return combined_decomposition
 
-    def __eq__(self, __o: object) -> bool:
-        return (isinstance(__o, CombinedIndependent) and
-                self.internal_sources == __o.internal_sources)
+    def __eq__(self, other: object) -> bool:
+        return (isinstance(other, CombinedIndependent) and
+                self.internal_sources == other.internal_sources)
 
     def __hash__(self):
         return hash(self.internal_sources)
