@@ -1,5 +1,6 @@
 # (c) Copyright Riverlane 2020-2025.
 
+from collections.abc import Iterator
 import math
 from collections import defaultdict
 from itertools import chain, combinations, islice, product
@@ -86,7 +87,7 @@ def _generate_expectation_data_multiprocess(
 
 
 def _generate_expectation_data_singleprocess(
-    samples: Generator,
+    samples: Generator | Iterator,
     only_even: bool = False,
     only_odd: bool = False,
     max_degree: int = 2,
@@ -100,9 +101,9 @@ def _generate_expectation_data_singleprocess(
         raise NotImplementedError(msg)
 
     if only_even and not only_odd:
-        samples = islice(samples, 0, None, 2)  # type: ignore
+        samples = islice(samples, 0, None, 2)
     if only_odd and not only_even:
-        samples = islice(samples, 1, None, 2)  # type: ignore
+        samples = islice(samples, 1, None, 2)
     elif only_even and only_odd:
         warn("Both only_odd and only_even are True. Selecting whole batch.",
              stacklevel=3)

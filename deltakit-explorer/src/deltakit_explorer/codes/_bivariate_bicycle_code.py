@@ -8,7 +8,6 @@ other than those listed in the paper.
 """
 from __future__ import annotations
 
-import warnings
 from functools import reduce
 from itertools import product
 from typing import Dict, List, Tuple
@@ -21,9 +20,7 @@ from deltakit_circuit._basic_types import Coord2D
 from deltakit_explorer.codes._css._css_code import CSSCode
 from deltakit_explorer.codes._stabiliser import Stabiliser
 
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=SyntaxWarning)
-    from bposd.css import css_code  # type: ignore
+from bposd.css import css_code
 
 
 def _find_anticommuting_pairs(

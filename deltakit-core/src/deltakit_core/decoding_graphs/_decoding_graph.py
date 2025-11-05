@@ -25,6 +25,7 @@ from typing import (
     Sequence,
     Set,
     Tuple,
+    TypeGuard,
     TypeVar,
     Union,
     cast,
@@ -39,6 +40,25 @@ from deltakit_core.decoding_graphs._data_qubits import (
     EdgeRecord,
 )
 from deltakit_core.decoding_graphs._syndromes import DetectorRecord, OrderedSyndrome
+
+
+def _is_decoding_hyper_edge_and_edge_record(
+    data: DecodingHyperEdge | tuple[int, ...] | tuple[DecodingHyperEdge, EdgeRecord],
+) -> TypeGuard[tuple[DecodingHyperEdge, EdgeRecord]]:
+    return (
+        not isinstance(data, DecodingHyperEdge)
+        and isinstance(data[0], DecodingHyperEdge)
+        and isinstance(data[-1], EdgeRecord)
+    )
+
+
+def _is_tuple_of_ints(
+    data: DecodingHyperEdge | tuple[int, ...] | tuple[DecodingHyperEdge, EdgeRecord],
+) -> TypeGuard[tuple[int, ...]]:
+    return not isinstance(data, DecodingHyperEdge) and all(
+        isinstance(v, int) for v in data
+    )
+
 
 DecodingGraphT = TypeVar("DecodingGraphT")
 AnyEdgeT = TypeVar("AnyEdgeT")
@@ -167,10 +187,10 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
             if isinstance(data, DecodingHyperEdge):
                 edge = data
                 edge_record = EdgeRecord()
-            elif isinstance(data, tuple) and isinstance(data[-1], EdgeRecord):
-                edge, edge_record = data  # type: ignore
-            elif isinstance(data, tuple) and isinstance(data[-1], int):
-                edge = DecodingHyperEdge(data)  # type: ignore
+            elif _is_decoding_hyper_edge_and_edge_record(data):
+                edge, edge_record = data
+            elif _is_tuple_of_ints(data):
+                edge = DecodingHyperEdge(data)
                 edge_record = EdgeRecord()
             else:
                 msg = f"Invalid edge data {data}"
@@ -327,21 +347,19 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
         edge_records: Dict[DecodingHyperEdge, EdgeRecord] = {}
         edges: List[DecodingHyperEdge] = []
         for data in edge_data:
-            if not isinstance(data, DecodingHyperEdge) and isinstance(
-                data[-1], EdgeRecord
-            ):
+            if _is_decoding_hyper_edge_and_edge_record(data):
                 edge, edge_record = data
-                edge_records[edge] = edge_record  # type: ignore
+                edge_records[edge] = edge_record
             elif isinstance(data, DecodingHyperEdge):
                 edge = data
                 edge_records[edge] = EdgeRecord()
-            elif isinstance(data, tuple):
-                edge = DecodingHyperEdge(data)  # type: ignore
+            elif _is_tuple_of_ints(data):
+                edge = DecodingHyperEdge(data)
                 edge_records[edge] = EdgeRecord()
             else:
                 msg = f"Invalid edge data {data}"
                 raise ValueError(msg)
-            edges.append(edge)  # type: ignore
+            edges.append(edge)
 
         self._edges = edges
         if len(set(edges)) != len(edges):

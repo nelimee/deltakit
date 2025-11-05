@@ -144,11 +144,12 @@ class DecodingHyperEdge(Collection[int]):
     def __hash__(self):
         return self._hash
 
-    def __eq__(self, __o: DecodingHyperEdge) -> bool:  # type: ignore
-        try:
-            return self._hash == __o._hash and self.vertices == __o.vertices
-        except AttributeError:
-            return False
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, DecodingHyperEdge)
+            and self._hash == other._hash
+            and self.vertices == other.vertices
+        )
 
     def __iter__(self) -> Iterator[int]:
         return self.vertices.__iter__()

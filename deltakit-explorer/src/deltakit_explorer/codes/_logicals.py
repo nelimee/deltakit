@@ -6,7 +6,6 @@ with a collection of stabilisers.
 
 from __future__ import annotations
 
-import warnings
 from typing import Collection, Iterable, Optional
 
 from deltakit_circuit import PauliX, PauliY, PauliZ, Qubit
@@ -16,10 +15,7 @@ from deltakit_explorer.codes._css._stabiliser_helper_functions import \
 from deltakit_explorer.codes._stabiliser import Stabiliser
 from numpy.typing import NDArray
 from stim import PauliString, Tableau
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=SyntaxWarning)
-    from bposd.css import css_code  # type: ignore
+from bposd.css import css_code
 
 
 def paulistring_to_operator(
