@@ -75,27 +75,33 @@ _Gate = Union[_OneQubitCliffordGate, _TwoQubitGate, _ResetGate, _MeasurementGate
 
 ONE_QUBIT_GATE_MAPPING: Dict[str, Type[_OneQubitCliffordGate]] = {
     **{gate.stim_string: gate for gate in ONE_QUBIT_GATES},
-    **{"H_XZ": H, "SQRT_Z": S, "SQRT_Z_DAG": S_DAG},
+    "H_XZ": H,
+    "SQRT_Z": S,
+    "SQRT_Z_DAG": S_DAG,
 }
 
 TWO_QUBIT_GATE_MAPPING: Dict[str, Type[_TwoQubitGate]] = {
     **{gate.stim_string: gate for gate in TWO_QUBIT_GATES},
-    **{"ZCX": CX, "CNOT": CX, "ZCY": CY, "ZCZ": CZ},
+    "ZCX": CX,
+    "CNOT": CX,
+    "ZCY": CY,
+    "ZCZ": CZ,
 }
 
 ONE_QUBIT_MEASUREMENT_GATE_MAPPING = {
     **{gate.stim_string: gate for gate in MEASUREMENT_GATES - {MPP}},
-    **{"M": MZ, "MR": MRZ},
+    "M": MZ,
+    "MR": MRZ,
 }
 
 MEASUREMENT_GATE_MAPPING: Dict[str, Type[_MeasurementGate]] = {
     **ONE_QUBIT_MEASUREMENT_GATE_MAPPING,
-    **{MPP.stim_string: MPP},
+    MPP.stim_string: MPP,
 }
 
 RESET_GATE_MAPPING: Dict[str, Type[_ResetGate]] = {
     **{gate.stim_string: gate for gate in RESET_GATES},
-    **{"R": RZ},
+    "R": RZ,
 }
 
 GATE_MAPPING: Dict[str, Type[_Gate]] = {

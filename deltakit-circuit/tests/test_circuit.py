@@ -80,9 +80,9 @@ def noisy_measurement_circuit(empty_circuit: sp.Circuit) -> sp.Circuit:
             sp.NoiseLayer(sp.noise_channels.Depolarise1(sp.Qubit(1), 0.02)),
         ),
         (
-            sp.GateLayer(sp.gates.X(sp.Qubit(i)) for i in range(0, 1)),
+            sp.GateLayer(sp.gates.X(sp.Qubit(i)) for i in range(1)),
             sp.NoiseLayer(sp.noise_channels.Depolarise2(sp.Qubit(0), sp.Qubit(1), 0.2)),
-            sp.GateLayer(sp.gates.MZ(sp.Qubit(i)) for i in range(0, 1)),
+            sp.GateLayer(sp.gates.MZ(sp.Qubit(i)) for i in range(1)),
         ),
     ],
 )

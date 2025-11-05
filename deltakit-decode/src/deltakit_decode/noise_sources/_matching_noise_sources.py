@@ -545,7 +545,7 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
         filtered_edges = np.empty(len(filtered), dtype=object)
         filtered_edges[:] = filtered
         if self.weight is None:
-            weights = list(range(0, len(filtered_edges)+1))
+            weights = list(range(len(filtered_edges)+1))
         else:
             weights = [self.weight]
 
@@ -556,7 +556,7 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
     def sequence_size(self, code_data: HyperMultiGraph) -> int:
         len_filtered_edges = len(self.edge_filter(code_data))
         if self.weight is None:
-            weights = list(range(0, len_filtered_edges+1))
+            weights = list(range(len_filtered_edges+1))
         else:
             weights = [self.weight]
 

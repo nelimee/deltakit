@@ -60,7 +60,7 @@ target-version = "py310"
 [lint]
 select = [
     "A", "ARG", "B", "C4", "E", "EM", "EXE", "F", "FURB", "G", "N", "NPY", "PD", "PGH",
-    "PL", "RUF100", "W", "NPY"
+    "PIE", "PL", "RUF100", "W", "NPY"
 ]
 
 # Specific per-file ignores
