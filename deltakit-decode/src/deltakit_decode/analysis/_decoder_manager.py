@@ -301,9 +301,8 @@ class NoiseModelDecoderManager(DecoderManager,
                 stack.enter_context(reporter)
             error = self.generate_single_error()
             correction = self._decode_from_error(error)
-            is_fail = self._analyse_correction(error, correction)
+            return self._analyse_correction(error, correction)
 
-        return is_fail
 
     def _exec_shots_atomic(self,
                            error_generator: Iterable[ErrorT],

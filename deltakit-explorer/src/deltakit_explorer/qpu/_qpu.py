@@ -410,8 +410,7 @@ class QPU:
             noise_model=noise_model,
             maximise_parallelism=maximise_parallelism,
         )
-        compiled_noisy_circuit = qpu.compile_and_add_noise_to_circuit(
+        return qpu.compile_and_add_noise_to_circuit(
             circuit=circuit,
             remove_paulis=remove_paulis,
         )
-        return compiled_noisy_circuit

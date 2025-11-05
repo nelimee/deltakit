@@ -124,5 +124,4 @@ class TimingReporter(BaseReporter):
             self._sum_wall_ns += other._sum_wall_ns
             self._shots = total_shots
             return self
-        else:
-            return NotImplemented
+        return NotImplemented

@@ -324,7 +324,7 @@ class VisDecodingGraph3D:
 def get_default_layout() -> go.Layout:
     """Return Layout object for formatting the figure
     """
-    layout = go.Layout(
+    return go.Layout(
         showlegend=True,
         scene={
             "xaxis": {
@@ -362,7 +362,6 @@ def get_default_layout() -> go.Layout:
         margin={"t": 0, "r": 0, "l": 0, "b": 0},
         legend={"x": 0.9, "y": 0.5},
     )
-    return layout
 
 
 def get_scatter_for_node(
@@ -388,7 +387,7 @@ def get_scatter_for_node(
         ]
     )
     if len(xyz) > 0:
-        scatter_plot = go.Scatter3d(
+        return go.Scatter3d(
             x=xyz[:, 0],
             y=xyz[:, 1],
             z=xyz[:, 2],
@@ -399,7 +398,6 @@ def get_scatter_for_node(
             mode="markers",
             name=name,
         )
-        return scatter_plot
     return go.Scatter3d()
 
 
@@ -434,7 +432,7 @@ def get_line_for_edge(
         edge_syndromes += 3 * [str((edge.first, edge.second))]
         edge_weight = graph.edge_records[edge].weight
         edge_weights += 3 * [str((np.round(edge_weight, 4)))]
-    line_plot = go.Scatter3d(
+    return go.Scatter3d(
         x=x_edges,
         y=y_edges,
         z=z_edges,
@@ -444,4 +442,3 @@ def get_line_for_edge(
         hovertemplate="edge: %{customdata[0]}<br>" + "weight: %{customdata[1]}",
         name=name,
     )
-    return line_plot

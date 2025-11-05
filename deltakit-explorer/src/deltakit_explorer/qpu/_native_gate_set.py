@@ -192,13 +192,12 @@ class NativeGateSetAndTimes:
             reset_gates = RESET_GATES
             measurement_gates = MEASUREMENT_GATES
 
-        native_gates_and_times = NativeGateSetAndTimes(
+        return NativeGateSetAndTimes(
             one_qubit_gates=dict.fromkeys(one_qubit_gates, time_1_qubit_gate),
             two_qubit_gates=dict.fromkeys(two_qubit_gates, time_2_qubit_gate),
             reset_gates=dict.fromkeys(reset_gates, time_reset),
             measurement_gates=dict.fromkeys(measurement_gates, time_measurement),
         )
-        return native_gates_and_times
 
 
 class NativeGateSet(NativeGateSetAndTimes):

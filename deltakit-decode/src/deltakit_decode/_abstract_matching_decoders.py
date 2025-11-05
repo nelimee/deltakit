@@ -288,5 +288,4 @@ class ClusteringDecoder(MatchingDecoder):
                 odds = islice(cluster, 1, len(cluster), 2)
                 matching.extend(zip(evens, odds))
             return matching
-        else:
-            raise NotImplementedError()
+        raise NotImplementedError()

@@ -81,8 +81,7 @@ class StimDecoderManager(
     def _analyse_correction(self, error: StimOutput, correction: Tuple[bool, ...]
                             ) -> bool:
         _, target_logical_flip = error
-        is_fail = target_logical_flip != correction
-        return is_fail
+        return target_logical_flip != correction
 
     def _decode_from_error(self, error: StimOutput) -> Tuple[bool, ...]:
         syndrome, target_logical_flip = error

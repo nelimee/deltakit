@@ -108,14 +108,12 @@ def noise_model(physical_error_rate: float) -> NoiseParameters:
         return Depolarise1(qubit=qubit, probability=physical_error_rate)
 
     # Construct noise model
-    noise_model = NoiseParameters(
+    return NoiseParameters(
         gate_noise=gate_noise,
         reset_noise=reset_noise,
         idle_noise=idle_noise,
         measurement_flip=measurement_flip_noise,
     )
-
-    return noise_model
 
 
 def rotated_planar_xmem_noisy(
@@ -166,9 +164,7 @@ def rotated_planar_xmem_noisy(
     )
 
     # Create a noisy circuit by compiling the noiseless circuit in the QPU
-    noisy_circuit = qpu.compile_and_add_noise_to_circuit(noiseless_circuit)
-
-    return noisy_circuit
+    return qpu.compile_and_add_noise_to_circuit(noiseless_circuit)
 
 
 def experiment_decoder_manager(

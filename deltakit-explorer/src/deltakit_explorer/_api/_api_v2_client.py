@@ -122,9 +122,8 @@ class APIv2Client(APIClient):
         )
         if resp.ok:
             return Job(**resp.json())
-        else:
-            msg = f"[{resp.status_code}] Job not submitted: {resp.text}"
-            raise ServerException(msg)
+        msg = f"[{resp.status_code}] Job not submitted: {resp.text}"
+        raise ServerException(msg)
 
     def _get_job_status(self, request_id: str) -> Job:
         headers = self.auth_headers.copy()

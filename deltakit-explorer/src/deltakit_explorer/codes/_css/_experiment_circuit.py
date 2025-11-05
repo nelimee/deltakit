@@ -75,6 +75,4 @@ def experiment_circuit(experiment: Sequence[CSSStage]) -> Circuit:
         circuit.append_layers(stage.remaining_rounds)
 
     # Compress circuit
-    final_circuit = merge_layers(circuit, break_repeat_blocks=True)
-
-    return final_circuit
+    return merge_layers(circuit, break_repeat_blocks=True)
