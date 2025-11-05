@@ -79,7 +79,7 @@ def _find_anticommuting_pairs(
         x_ac_with_z: Dict[int, Dict] = {x: {} for x in x_logs}
         z_ac_with_x: Dict[int, Dict] = {z: {} for z in z_logs}
         for x_log, z_log in product(x_logs, z_logs):
-            if bin(x_log & z_log).count("1") % 2 == 1:
+            if (x_log & z_log).bit_count() % 2 == 1:
                 x_ac_with_z[x_log][z_log] = {}
                 z_ac_with_x[z_log][x_log] = {}
 

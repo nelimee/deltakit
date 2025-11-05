@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import sys
 from collections import Counter, UserDict, defaultdict
 from functools import cached_property
 from itertools import chain, repeat
@@ -376,9 +375,7 @@ class Bitstring:
 
     def bit_count(self) -> int:
         """Get the number of 1s in this bitstring."""
-        if sys.version_info >= (3, 10):
-            return self._bits.bit_count()
-        return bin(self._bits).count("1")
+        return self._bits.bit_count()
 
     def __or__(self, __value: object) -> Bitstring:
         if isinstance(__value, Bitstring):

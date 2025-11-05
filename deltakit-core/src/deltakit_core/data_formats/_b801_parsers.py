@@ -89,12 +89,10 @@ def syndromes_to_b8_file(
     Informed by https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md#b8
     """
     with open(syndrome_b8_out, "wb") as b8_out_handle:
-        for syndrome in syndromes:
-            b8_out_handle.write(
-                bytes(
-                    np.packbits(syndrome.as_bitstring(detector_num), bitorder="little")
-                )
-            )
+        b8_out_handle.writelines(
+            bytes(np.packbits(syndrome.as_bitstring(detector_num), bitorder="little"))
+            for syndrome in syndromes
+        )
 
 
 def logical_flips_to_b8_file(
@@ -106,8 +104,10 @@ def logical_flips_to_b8_file(
     Informed by https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md#b8
     """
     with open(logical_flips_b8_out, "wb") as data_b8:
-        for logical_flip in logical_flips:
-            data_b8.write(bytes(np.packbits(logical_flip, bitorder="little")))
+        data_b8.writelines(
+            bytes(np.packbits(logical_flip, bitorder="little"))
+            for logical_flip in logical_flips
+        )
 
 
 def parse_01_to_logical_flips(
