@@ -94,7 +94,7 @@ class RunAllAnalysisEngine:
         """
         # Experiment setup
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.log.info(f"Experiment started at {now}")
+        self.log.info("Experiment started at %(time)", extra={"time": now})
         if self.data_directory:
             self._current_experiment_file_path = self.construct_file_path()
             self.file_paths.append(self._current_experiment_file_path)
@@ -110,7 +110,7 @@ class RunAllAnalysisEngine:
             result_store = self._run_serial()
 
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.log.info(f"Experiment finished at {now}")
+        self.log.info("Experiment finished at %(time)", extra={"time": now})
 
         return pd.DataFrame(result_store)
 
@@ -165,8 +165,11 @@ class RunAllAnalysisEngine:
         statistics.
         """
         self.log.info(
-            f"Starting {decoder_manager} with metadata: {decoder_manager.metadata}"
-        )
+            "Starting %(decoder_manager) with metadata: %(metadata).",
+            extra={
+                "decoder_manager": decoder_manager,
+                "metadada": decoder_manager.metadata,
+            },        )
         if self.parallel:
             decoder_manager.configure_pool(pool, self.num_parallel_processes)
 
@@ -191,7 +194,11 @@ class RunAllAnalysisEngine:
             decoder_manager.clear_pool_manager(pool, self.num_parallel_processes)
 
         self.log.info(
-            f"Finished {decoder_manager} with metadata: {decoder_manager.metadata}"
+            "Finished %(decoder_manager) with metadata: %(metadata).",
+            extra={
+                "decoder_manager": decoder_manager,
+                "metadada": decoder_manager.metadata,
+            },
         )
         results = decoder_manager.get_reporter_results()
         if self._current_experiment_file_path is not None:
