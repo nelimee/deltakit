@@ -41,12 +41,17 @@ def _idle_noise_from_t1_t2(
         a one-qubit noise channel.
     """
     if t1 <= 0.0:
-        raise ValueError("Relaxation time `t1` must be positive.")
+        msg = "Relaxation time `t1` must be positive."
+        raise ValueError(msg)
     if t2 <= 0.0:
-        raise ValueError("Dephasing time `t2` must be positive.")
+        msg = "Dephasing time `t2` must be positive."
+        raise ValueError(msg)
     if t2 >= 2 * t1:
-        raise ValueError("Dephasing time `t2` must be less "
-                         "than twice relaxation time `t1`.")
+        msg = (
+            "Dephasing time `t2` must be less "
+                         "than twice relaxation time `t1`."
+        )
+        raise ValueError(msg)
 
     def _get_idle_noise(qubit: Qubit, t: float) -> OneQubitNoiseChannel:
         if t1 == t2:

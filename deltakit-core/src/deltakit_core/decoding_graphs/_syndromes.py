@@ -319,7 +319,8 @@ class Bitstring:
 
     def __init__(self, value: int = 0):
         if value < 0:
-            raise ValueError("Bitstring cannot be a negative value.")
+            msg = "Bitstring cannot be a negative value."
+            raise ValueError(msg)
         self._bits = value
 
     @classmethod
@@ -445,9 +446,8 @@ class Bitstring:
             start, stop, _ = index.indices(len(self))
             mask = (1 << (stop - start)) - 1
             return Bitstring((self._bits >> start) & mask)
-        raise TypeError(
-            f"Bitstring indices must be integers or slices, not {type(index)}"
-        )
+        msg = f"Bitstring indices must be integers or slices, not {type(index)}"
+        raise TypeError(msg)
 
     def __eq__(self, __value: object) -> bool:
         if isinstance(__value, Bitstring):
@@ -474,7 +474,8 @@ class FixedWidthBitstring(Bitstring):
 
     def __init__(self, width: int, value: int = 0):
         if width < 1:
-            raise ValueError("Width of bitstring must be greater than zero.")
+            msg = "Width of bitstring must be greater than zero."
+            raise ValueError(msg)
         super().__init__(value & ((1 << width) - 1))
         self._width = width
 
@@ -571,9 +572,8 @@ class FixedWidthBitstring(Bitstring):
             return FixedWidthBitstring(
                 width=stop - start, value=(self._bits >> start) & mask
             )
-        raise TypeError(
-            f"Bitstring indices must be integers or slices, not {type(index)}"
-        )
+        msg = f"Bitstring indices must be integers or slices, not {type(index)}"
+        raise TypeError(msg)
 
     def __add__(self, __value: object) -> FixedWidthBitstring:
         if isinstance(__value, FixedWidthBitstring):

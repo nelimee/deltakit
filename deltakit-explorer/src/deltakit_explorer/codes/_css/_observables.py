@@ -61,10 +61,13 @@ def _construct_observables(
                 else:
                     meas_ind += measurements.index(observable_measurement)
             except ValueError as ve:
-                raise ValueError(
+                msg = (
                     f"{observable_measurement} has not been measured and "
                     "thus its measurement result cannot be included in a "
                     "logical observable."
+                )
+                raise ValueError(
+                    msg
                 ) from ve
             measurement_records.append(MeasurementRecord(meas_ind))
 

@@ -138,8 +138,9 @@ class RunAllAnalysisEngine:
     def construct_file_path(self) -> Path:
         """Return the file path to be used for the results data."""
         if not self.data_directory:
+            msg = "Cannot construct file path as no data directory is specified."
             raise ValueError(
-                "Cannot construct file path as no data directory is specified."
+                msg
             )
         return self.data_directory / f"{self.experiment_name}.csv"
 
@@ -197,7 +198,8 @@ class RunAllAnalysisEngine:
             if file_save_lock is not None:
                 acquired = file_save_lock.acquire(timeout=2)
                 if not acquired:
-                    raise TimeoutError("Lock not acquired - can not write to the file!")
+                    msg = "Lock not acquired - can not write to the file!"
+                    raise TimeoutError(msg)
                 self._append_results_to_current_file(results)
                 file_save_lock.release()
             else:

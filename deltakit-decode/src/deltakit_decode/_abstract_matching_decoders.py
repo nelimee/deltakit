@@ -133,8 +133,11 @@ class GraphDecoder(DecoderProtocol, ABC, Generic[GraphT]):
             warnings.warn("A logical was given with no activators.", stacklevel=2)
         if not all(logical_edge in decoding_graph.edges
                    for logical_edge in chain.from_iterable(logicals)):
-            raise ValueError(f"Logicals {logicals} are not entirely within "
-                             f"{decoding_graph.edges}.")
+            msg = (
+                f"Logicals {logicals} are not entirely within "
+                             f"{decoding_graph.edges}."
+            )
+            raise ValueError(msg)
 
         self.decoding_graph = decoding_graph
         self.logicals = logicals

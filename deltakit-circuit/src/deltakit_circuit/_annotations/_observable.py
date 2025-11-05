@@ -32,7 +32,8 @@ class Observable:
         tag: str | None = None,
     ):
         if observable_index < 0:
-            raise ValueError("Observable index cannot be negative.")
+            msg = "Observable index cannot be negative."
+            raise ValueError(msg)
         self._observable_index = observable_index
         self._measurements = (
             frozenset((measurements,))

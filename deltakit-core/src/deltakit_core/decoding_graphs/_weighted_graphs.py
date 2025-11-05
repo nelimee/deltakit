@@ -38,10 +38,11 @@ def change_graph_error_probabilities(
         If the length of the new error probabilities and edges do not match.
     """
     if len(graph.edges) != len(new_p_errors):
-        raise ValueError(
+        msg = (
             "There should be an equal number of new error probabilities to edges in "
             "the graph."
         )
+        raise ValueError(msg)
     return NXDecodingGraph.from_edge_list(
         [
             (DecodingEdge(u, v), EdgeRecord(p_err=p_err))
@@ -72,9 +73,11 @@ def vector_weights(
         u, v = edge
         edge_record = graph.edge_records[edge]
         if (u_coord := graph.detector_records[u].full_coord) == (0,):
-            raise ValueError(f"{u} does not have proper coordinates.")
+            msg = f"{u} does not have proper coordinates."
+            raise ValueError(msg)
         if (v_coord := graph.detector_records[v].full_coord) == (0,):
-            raise ValueError(f"{v} does not have proper coordinates.")
+            msg = f"{v} does not have proper coordinates."
+            raise ValueError(msg)
         if u in graph.boundaries or v in graph.boundaries:
             vectors[(0.0,) * len(u_coord)].append(edge_record.weight)
         else:

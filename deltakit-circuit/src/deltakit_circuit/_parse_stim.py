@@ -93,7 +93,8 @@ def _classify_pauli_target(
         if target.is_inverted_result_target:
             return InvertiblePauliZ(qubit, invert=True)
         return PauliZ(qubit)
-    raise ValueError(f"Target: {target} is not a Pauli gate target.")
+    msg = f"Target: {target} is not a Pauli gate target."
+    raise ValueError(msg)
 
 
 def _parse_single_qubit_gate_instruction(
@@ -331,10 +332,11 @@ def parse_stim_gate_instruction(
         return _parse_mpp_instruction(
             instruction_targets, instruction_arguments, instruction_tag, qubit_mapping
         )
-    raise ValueError(
+    msg = (
         f"Given gate class: '{deltakit_circuit_gate_class}' is not a "
         "valid deltakit_circuit gate."
     )
+    raise ValueError(msg)
 
 
 def parse_stim_noise_instruction(
@@ -401,10 +403,11 @@ def parse_stim_noise_instruction(
             instruction_tag,
             qubit_mapping,
         )
-    raise ValueError(
+    msg = (
         f"Given noise class: '{deltakit_circuit_noise_class}' is not a "
         "valid deltakit_circuit noise channel."
     )
+    raise ValueError(msg)
 
 
 def parse_detector(instruction: stim.CircuitInstruction) -> Detector:

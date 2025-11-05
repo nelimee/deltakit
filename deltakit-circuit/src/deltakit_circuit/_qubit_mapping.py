@@ -38,7 +38,8 @@ def default_qubit_mapping(qubits: Iterable[Qubit[T]]) -> Dict[Qubit[T], int]:
         The mapping of qubit to integers.
     """
     if len({type(qubit.unique_identifier) for qubit in qubits}) > 1:
-        raise TypeError("All Qubit.unique_identifier fields must be of the same type")
+        msg = "All Qubit.unique_identifier fields must be of the same type"
+        raise TypeError(msg)
 
     mapping = {}
     for index, qubit in enumerate(qubits):

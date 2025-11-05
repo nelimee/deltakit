@@ -46,8 +46,9 @@ class StabiliserCode(ABC):
         self._ancilla_qubits = self._calculate_ancilla_qubits()
 
         if (x_logical_operators is None) != (z_logical_operators is None):
+            msg = "Either both or neither of the logical operators should be provided."
             raise ValueError(
-                "Either both or neither of the logical operators should be provided."
+                msg
             )
 
         self._x_logical_operators = (
@@ -121,9 +122,12 @@ class StabiliserCode(ABC):
             )
         )
         if None in ancilla_attrs:
-            raise ValueError(
+            msg = (
                 "In order to perform syndrome extraction using ancilla qubits, all "
                 "the Stabilisers must have ancilla qubits defined."
+            )
+            raise ValueError(
+                msg
             )
         return ancilla_attrs
 
@@ -388,13 +392,17 @@ class StabiliserCode(ABC):
         if len(opposite_type_logicals) > 0 and len(new_logicals) != len(
             opposite_type_logicals
         ):
-            raise ValueError(
+            msg = (
                 "There must be as many new logicals as existing logicals,"
                 f" but there are {len(new_logicals)}"
                 f" while there should be {len(opposite_type_logicals)}"
             )
+            raise ValueError(
+                msg
+            )
         if any(len(log) == 0 for log in new_logicals):
-            raise ValueError("Logicals cannot be weight 0")
+            msg = "Logicals cannot be weight 0"
+            raise ValueError(msg)
 
         # Convert stabilisers and logicals to stim.PauliString for commutation checks
         stabilisers_as_pauli_strings = [
@@ -416,8 +424,9 @@ class StabiliserCode(ABC):
                 new_log_as_pauli_string.commutes(other_new_logical)
                 for other_new_logical in new_logs_as_pauli_string[i + 1 :]
             ):
+                msg = f"New logical at index {i} anti-commutes with other new logicals"
                 raise ValueError(
-                    f"New logical at index {i} anti-commutes with other new logicals"
+                    msg
                 )
 
             # Check logical commutes with all stabilisers
@@ -425,8 +434,9 @@ class StabiliserCode(ABC):
                 new_log_as_pauli_string.commutes(stab)
                 for stab in stabilisers_as_pauli_strings
             ):
+                msg = f"New logical at index {i} anti-commutes with stabilisers"
                 raise ValueError(
-                    f"New logical at index {i} anti-commutes with stabilisers"
+                    msg
                 )
 
             # Check for anti-commutation if this isn't the first time setting logicals
@@ -437,9 +447,12 @@ class StabiliserCode(ABC):
                 # Check new logical at index i anti-commutes with opposite-type logical
                 # at index i
                 if new_log_as_pauli_string.commutes(opposite_logs_as_pauli_string[i]):
-                    raise ValueError(
+                    msg = (
                         f"New logical at index {i} must anti-commute with opposite type"
                         f" logical at index {i}"
+                    )
+                    raise ValueError(
+                        msg
                     )
 
                 # Check new logical at index i commutes with all the other opposite-type
@@ -449,7 +462,10 @@ class StabiliserCode(ABC):
                     for log in opposite_logs_as_pauli_string[:i]
                     + opposite_logs_as_pauli_string[(i + 1) :]
                 ):
-                    raise ValueError(
+                    msg = (
                         f"New logical at index {i} anti-commutes with opposite-type"
                         f" logicals other than at index {i}"
+                    )
+                    raise ValueError(
+                        msg
                     )

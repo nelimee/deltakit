@@ -42,16 +42,20 @@ def experiment_circuit(experiment: Sequence[CSSStage]) -> Circuit:
         measurements and observable additions.
     """
     if len(experiment) < 3:
-        raise ValueError("Experiment should contain at least three stages.")
+        msg = "Experiment should contain at least three stages."
+        raise ValueError(msg)
     if not experiment[0].resets_only:
         raise ValueError(
             "Experiment should start with a CSSStage which"
             + " consists only of qubit resets."
         )
     if not experiment[-1].allowable_final_stage:
-        raise ValueError(
+        msg = (
             "Experiment should end with a CSSStage with properties as described in "
             "allowable_final_stage."
+        )
+        raise ValueError(
+            msg
         )
     circuit = experiment[0].remaining_rounds
 

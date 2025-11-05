@@ -192,7 +192,8 @@ class MultiProbabilityNoiseChannel(NoiseChannel[T]):
         if not all(0 <= probability <= 1 for probability in probabilities):
             raise ProbabilityError()
         if sum(probabilities) > 1:
-            raise ValueError("The sum of probabilities cannot be greater than one.")
+            msg = "The sum of probabilities cannot be greater than one."
+            raise ValueError(msg)
         self._probabilities = probabilities
 
     @property
@@ -293,7 +294,8 @@ class TwoQubitNoiseChannel(NoiseChannel[T]):
         qubit1 = Qubit(qubit1) if not isinstance(qubit1, Qubit) else qubit1
         qubit2 = Qubit(qubit2) if not isinstance(qubit2, Qubit) else qubit2
         if qubit1 == qubit2:
-            raise ValueError("Qubits in two qubit noise channels must be different.")
+            msg = "Qubits in two qubit noise channels must be different."
+            raise ValueError(msg)
         self._qubit1, self._qubit2 = qubit1, qubit2
 
     @property
@@ -367,10 +369,11 @@ class TwoQubitNoiseChannel(NoiseChannel[T]):
             Qubit pair from neighbouring elements in the sequence.
         """
         if len(pairs) % 2 != 0:
-            raise ValueError(
+            msg = (
                 "Two qubit noise channels can only be "
                 "constructed from an even number of qubits"
             )
+            raise ValueError(msg)
         for qubit1, qubit2 in zip(pairs[::2], pairs[1::2], strict=True):
             yield cls(qubit1, qubit2, *gate_args, tag=tag, **gate_kwargs)
 

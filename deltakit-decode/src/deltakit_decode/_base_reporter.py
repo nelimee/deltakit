@@ -42,7 +42,8 @@ class BaseReporter(AbstractContextManager):
         This is necessary for collecting results from multiple reporters
         when using parallel processes.
         """
-        raise ValueError("Reporter concatenation not defined!")
+        msg = "Reporter concatenation not defined!"
+        raise ValueError(msg)
 
 
 class TimingReporter(BaseReporter):

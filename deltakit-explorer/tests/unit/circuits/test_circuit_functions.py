@@ -38,7 +38,8 @@ def single_stabiliser(circuit_spec: Tuple[PauliBasis, str]):
             ]
         )
     else:
-        raise ValueError(f"Unknown circuit spec {circuit_spec} supplied.")
+        msg = f"Unknown circuit spec {circuit_spec} supplied."
+        raise ValueError(msg)
 
     return circuit
 

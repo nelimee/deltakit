@@ -100,9 +100,12 @@ class RepetitionCode(CSSCode):
         Checks to ensure a valid stabiliser type is inputted into the code.
         """
         if stabiliser_type not in (PauliBasis.X, PauliBasis.Z):
-            raise ValueError(
+            msg = (
                 f"{stabiliser_type} is unsupported, only PauliBasis.X and "
                 "PauliBasis.Z are allowed."
+            )
+            raise ValueError(
+                msg
             )
 
     @staticmethod
@@ -112,7 +115,8 @@ class RepetitionCode(CSSCode):
         detection).
         """
         if distance < 2:
-            raise ValueError("Code distance must be at least 2.")
+            msg = "Code distance must be at least 2."
+            raise ValueError(msg)
 
     def _calculate_data_qubits(self) -> Set[Qubit]:
         """

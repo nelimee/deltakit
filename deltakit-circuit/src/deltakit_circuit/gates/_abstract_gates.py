@@ -190,7 +190,8 @@ class OneQubitMeasurementGate(OneQubitGate[T]):
     ):
         super().__init__(qubit, tag)
         if not 0 <= probability <= 1:
-            raise ValueError("Probability must be between zero and one.")
+            msg = "Probability must be between zero and one."
+            raise ValueError(msg)
         self._probability = probability
         self._is_inverted = invert
 
@@ -315,7 +316,8 @@ class TwoOperandGate(Gate, Generic[UT, VT]):
             else Qubit(operand2),
         )
         if operand1 == operand2:
-            raise ValueError("Operands for two qubit gates must be different.")
+            msg = "Operands for two qubit gates must be different."
+            raise ValueError(msg)
         self._operand1 = operand1
         self._operand2 = operand2
 
@@ -362,9 +364,10 @@ class TwoOperandGate(Gate, Generic[UT, VT]):
             Qubit pair from neighbouring elements in the sequence.
         """
         if len(pairs) % 2 != 0:
-            raise ValueError(
-                "Two qubit gates can only be constructed from an even number of qubits"
+            msg = (
+                "Two qubit gates can only be constructed from an even number of qubits."
             )
+            raise ValueError(msg)
         for control, target in zip(pairs[::2], pairs[1::2], strict=True):
             yield cls(control, target, tag=tag)
 

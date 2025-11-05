@@ -268,7 +268,8 @@ def _get_tableau_from_sequence_of_1q_gates(gates: Sequence[str]) -> stim.Tableau
             ),
         )
     except ValueError as ve:
-        raise ValueError("'gates' must be composed of only single qubit gates") from ve
+        msg = "'gates' must be composed of only single qubit gates"
+        raise ValueError(msg) from ve
 
 
 def _get_compilation_dict(
@@ -485,8 +486,9 @@ def _get_compilation_with_projectors_before_unitaries(
             del compilation_dict_with_y[tableau]
         compilation_dict = compilation_dict_with_y
     else:
+        msg = f"{projector_before_unitaries.stim_string} is not a recognised projector"
         raise NotImplementedError(
-            f"{projector_before_unitaries.stim_string} is not a recognised projector"
+            msg
         )
 
     # for the basis of the reset or measurement before a unitary block, we can just consider
@@ -501,11 +503,14 @@ def _get_compilation_with_projectors_before_unitaries(
                 shortest_gates = gates
 
     if not unitary_block_tableau_in_comp_dict:
-        raise KeyError(
+        msg = (
             "unitary_block's tableau is not in the compilation_dictionary."
             " This means the output of this function may include gates not"
             " in the native gate set. Try compiling unitary_block to the"
             " native gate set first."
+        )
+        raise KeyError(
+            msg
         )
 
     return shortest_gates
@@ -630,8 +635,9 @@ def _get_single_qubits_tableau_key_from_two_qubit_tableau(
         E.g, ("+Z", "+X") or ("Z", "X") if up_to_paulis=True.
     """
     if two_qubit_tableau.to_unitary_matrix(endian="little").shape != (4, 4):
+        msg = "The given tableau does not describe a two qubit gate"
         raise ValueError(
-            "The given tableau does not describe a two qubit gate"
+            msg
         )
     if qubit_index == 0:
         tableau_key = (
@@ -891,8 +897,9 @@ def _get_compilation_with_two_qubit_gates(
                             for gate in compilation_dict[second_qubit_tab]
                         ]
                     except KeyError as ke:
+                        msg = f"Tableau missing from compilation dictionary: {str(ke)}"
                         raise KeyError(
-                            f"Tableau missing from compilation dictionary: {str(ke)}"
+                            msg
                         ) from ke
 
                     # update pre-2q gate unitaries
@@ -981,7 +988,8 @@ def _get_relevant_dict_to_update(
         return meas_dict
     if isinstance(gate, TwoOperandGate):
         return two_q_dict
-    raise ValueError(f"Gate is not MR, M, R or 2Q: {gate}")
+    msg = f"Gate is not MR, M, R or 2Q: {gate}"
+    raise ValueError(msg)
 
 
 def _extract_structure_from_circuit(
@@ -1126,7 +1134,8 @@ def _extract_structure_from_circuit(
             for gate in layer.gates:
                 # if gate is just a unitary, add it and move on
                 if isinstance(gate, MPP):
-                    raise NotImplementedError("MPP gates not yet supported")
+                    msg = "MPP gates not yet supported"
+                    raise NotImplementedError(msg)
                 if not isinstance(
                     gate, (RX, RY, RZ, MRX, MRZ, MRY, MX, MY, MZ, TwoOperandGate)
                 ):

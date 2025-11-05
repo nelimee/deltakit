@@ -93,16 +93,20 @@ class NativeGateSetAndTimes:
         )
 
         if not set(self.one_qubit_gates) <= ONE_QUBIT_GATES:
-            raise ValueError("Element in one-qubit gate list is not a valid gate.")
+            msg = "Element in one-qubit gate list is not a valid gate."
+            raise ValueError(msg)
 
         if not set(self.two_qubit_gates) <= TWO_QUBIT_GATES:
-            raise ValueError("Element in two-qubit gate list is not a valid gate.")
+            msg = "Element in two-qubit gate list is not a valid gate."
+            raise ValueError(msg)
 
         if not set(self.reset_gates) <= RESET_GATES:
-            raise ValueError("Element in reset gate list is not a valid gate.")
+            msg = "Element in reset gate list is not a valid gate."
+            raise ValueError(msg)
 
         if not set(self.measurement_gates) <= ONE_QUBIT_MEASUREMENT_GATES.union({MPP}):
-            raise ValueError("Element in measurement gate list is not a valid gate.")
+            msg = "Element in measurement gate list is not a valid gate."
+            raise ValueError(msg)
 
         gate_time_dicts = [
             self.one_qubit_gates,
@@ -117,9 +121,12 @@ class NativeGateSetAndTimes:
     @staticmethod
     def _check_time(gate: Type[Gate], time: float) -> None:
         if time < 0.0:
-            raise ValueError(
+            msg = (
                 "A gate time must be a non-negative float but that for "
                 f"{gate.stim_string} is {time}."
+            )
+            raise ValueError(
+                msg
             )
 
     def add_gate(self, gate: Type[Gate], time: float = 1.0) -> None:
@@ -143,7 +150,8 @@ class NativeGateSetAndTimes:
         elif gate in ONE_QUBIT_MEASUREMENT_GATES.union({MPP}):
             self.measurement_gates[gate] = time
         else:
-            raise ValueError(f"Unknown gate {gate} supplied.")
+            msg = f"Unknown gate {gate} supplied."
+            raise ValueError(msg)
         self.native_gates.add(gate)
 
     @staticmethod

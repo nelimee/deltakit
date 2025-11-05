@@ -73,7 +73,8 @@ class Stabiliser:
             # For now we accept the ancilla being the data_qubit, if we have only
             # one pauli in paulis. This is useful when putting together stages into
             # an experiment.
-            raise ValueError("Ancilla qubit should be different from the data qubits.")
+            msg = "Ancilla qubit should be different from the data qubits."
+            raise ValueError(msg)
 
         self.paulis: Tuple[PauliGate | None, ...] = tuple(paulis)
 
@@ -90,9 +91,11 @@ class Stabiliser:
             If qubits is empty.
         """
         if len(set(qubits)) == 0:
-            raise ValueError("Stabiliser was initialised without Pauli terms.")
+            msg = "Stabiliser was initialised without Pauli terms."
+            raise ValueError(msg)
         if len(set(qubits)) != len(qubits):
-            raise ValueError("Data qubits given in paulis should be unique.")
+            msg = "Data qubits given in paulis should be unique."
+            raise ValueError(msg)
 
     @property
     def operator_repr(self) -> Set[PauliGate]:

@@ -118,10 +118,11 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             observables and qubits that are mentioned in the block "exist".
         """
         if number_of_iterations < 1:
-            raise ValueError(
+            msg = (
                 "Stim does not allow repeat blocks to be repeated less than "
                 f"1 time. Requested repeats was {number_of_iterations}."
             )
+            raise ValueError(msg)
         self._iterations = number_of_iterations
 
     @property
@@ -200,9 +201,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             A mapping of qubit types to other qubit types
         """
         if len(id_mapping.values()) != len(set(id_mapping.values())):
-            raise ValueError(
-                "The ID mapping is not bijective, all values must be unique."
-            )
+            msg = "The ID mapping is not bijective, all values must be unique."
+            raise ValueError(msg)
         for layer in self._layers:
             if isinstance(layer, (GateLayer, NoiseLayer, Circuit)):
                 layer.transform_qubits(id_mapping)
@@ -249,7 +249,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             layers = (layers,)
         for layer in layers:
             if not isinstance(layer, tuple(LAYERS)):
-                raise ValueError(f"Layer type is not one of {LAYERS}")
+                msg = f"Layer type is not one of {LAYERS}"
+                raise ValueError(msg)
             if isinstance(layer, Circuit) and layer.iterations == 1:
                 self._layers.extend(layer.layers)
             else:
@@ -261,10 +262,11 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
                         isinstance(qubit.unique_identifier, self.qubit_uid_type)
                         for qubit in layer.qubits
                     ):
-                        raise TypeError(
+                        msg = (
                             "All Qubit._unique_identifier fields "
                             "must be of the same type"
                         )
+                        raise TypeError(msg)
 
     def apply_gate_noise(
         self,
@@ -572,9 +574,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         """
         if isinstance(approximate_disjoint_errors, float):
             if not 0 <= approximate_disjoint_errors <= 1:
-                raise ValueError(
-                    "approximate_disjoint_errors is not a valid probability"
-                )
+                msg = "approximate_disjoint_errors is not a valid probability"
+                raise ValueError(msg)
 
         return self.as_stim_circuit().detector_error_model(
             decompose_errors=decompose_errors,
@@ -755,12 +756,13 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         )
 
     def __hash__(self) -> int:
-        raise NotImplementedError(
+        msg = (
             "Hash is expected to be implemented in constant time but there is not easy "
             "way of achieving that complexity with the current Circuit internals. If "
             "you get this error, please open an issue on "
             "https://github.com/Deltakit/deltakit/issues/new/choose."
         )
+        raise NotImplementedError(msg)
 
     def __repr__(self) -> str:
         indent = 4 * " "

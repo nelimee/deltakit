@@ -61,8 +61,9 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
     # Check for unequal numbers of iterations
     iterations = circuits[0].iterations
     if any(circuit.iterations != iterations for circuit in circuits):
+        msg = "Circuits to be parallelised must have the same number of iterations."
         raise ValueError(
-            "Circuits to be parallelised must have the same number of iterations."
+            msg
         )
 
     def _any_annotations(circuit: Circuit) -> bool:
@@ -87,7 +88,8 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
 
     # Check if any circuit contains NoiseLayers
     if any(circuit.is_noisy for circuit in circuits):
-        raise ValueError("Circuits to be parallelised may not contain NoiseLayers.")
+        msg = "Circuits to be parallelised may not contain NoiseLayers."
+        raise ValueError(msg)
 
     # Check which circuits contain annotations
     any_annotations = [_any_annotations(circuit) for circuit in circuits]
@@ -99,17 +101,22 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
             for circuit in circuits
             if circuit != circuits[annotations_circ]
         ):
-            raise ValueError(
+            msg = (
                 "If one circuit to be parallelised contains annotations, "
                 "no other circuit can contain measurements."
             )
+            raise ValueError(
+                msg
+            )
     elif sum(any_annotations) > 1:
-        raise ValueError("Only one circuit to be parallelised can contain annotations.")
+        msg = "Only one circuit to be parallelised can contain annotations."
+        raise ValueError(msg)
 
     # Check how many circuits contain a nested circuit
     if sum(_any_circuit_layers(circuit) for circuit in circuits) > 1:
+        msg = "Only one circuit to be parallelised can contain a nested Circuit."
         raise ValueError(
-            "Only one circuit to be parallelised can contain a nested Circuit."
+            msg
         )
 
     # In future, this can be simplified to the length of non-recursive gate_layers
@@ -147,8 +154,9 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
         # update qubits
         new_qubits = circuit.qubits
         if len(qubits.union(new_qubits)) != len(qubits) + len(new_qubits):
+            msg = "Circuits to be parallelised do not act on distinct qubits."
             raise ValueError(
-                "Circuits to be parallelised do not act on distinct qubits."
+                msg
             )
         qubits = qubits.union(new_qubits)
 
@@ -223,22 +231,25 @@ def parallelise_same_length_circuits(circuits: List[Circuit]) -> Circuit:
     # Check for unequal numbers of iterations
     iterations = circuits[0].iterations
     if any(circuit.iterations != iterations for circuit in circuits):
+        msg = "Circuits to be parallelised must have the same number of iterations."
         raise ValueError(
-            "Circuits to be parallelised must have the same number of iterations."
+            msg
         )
 
     if any(
         not all(isinstance(layer, GateLayer) for layer in circuit.layers)
         for circuit in circuits
     ):
+        msg = "Circuits can only be parallelised if they contain only GateLayers."
         raise ValueError(
-            "Circuits can only be parallelised if they contain only GateLayers."
+            msg
         )
 
     circuit_lengths = [len(circuit.layers) for circuit in circuits]
     num_layers = circuit_lengths[0]
     if not np.all(np.array(circuit_lengths) == num_layers):
-        raise ValueError("Circuits must all be the same length.")
+        msg = "Circuits must all be the same length."
+        raise ValueError(msg)
 
     # Begin parallelised circuit construction with first circuit
     parallelised_circuit = Circuit(

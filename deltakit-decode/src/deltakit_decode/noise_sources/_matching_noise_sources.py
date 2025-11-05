@@ -139,8 +139,11 @@ class FixedWeightMatchingNoise(IndependentMatchingNoise):
         filtered_edges = np.empty(num_edges, dtype=object)
         filtered_edges[:] = filtered
         if num_edges < self.weight:
-            raise ValueError(f"Fixed weight {self.weight} generator cannot be created "
-                             f"as after filtering there are {num_edges} edges.")
+            msg = (
+                f"Fixed weight {self.weight} generator cannot be created "
+                             f"as after filtering there are {num_edges} edges."
+            )
+            raise ValueError(msg)
         rng = self.get_rng(seed)
 
         while True:
@@ -363,8 +366,11 @@ class EdgeProbabilityMatchingNoise(IndependentMatchingNoise):
         return combined_edge_decomposition
 
     def __add__(self, other):
-        raise NotImplementedError("Cannot add edge probability noise to "
-                                  "any other noise.")
+        msg = (
+            "Cannot add edge probability noise to "
+                                  "any other noise."
+        )
+        raise NotImplementedError(msg)
 
     def __eq__(self, __o: object) -> bool:
         if isinstance(__o, self.__class__):
@@ -391,9 +397,12 @@ class AdditiveMatchingNoise(IndependentMatchingNoise):
         self.internal_sources = list(self._internal_sources_multiset.elements())
 
         if len(self.internal_sources) < 2:
-            raise ValueError(
+            msg = (
                 "Additive noise is for two or more noise sources that do not reduce "
-                "to less sources when summed.")
+                "to less sources when summed."
+            )
+            raise ValueError(
+                msg)
 
     def error_generator(
         self, code_data: HyperMultiGraph, seed: Optional[int] = None
@@ -505,9 +514,12 @@ class AdditiveSequentialMatchingNoise(
         return NotImplemented
 
     def __hash__(self) -> int:
-        raise NotImplementedError(
+        msg = (
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
+        )
+        raise NotImplementedError(
+            msg
         )
 
 class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
@@ -556,9 +568,12 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
                 self.weight == __o.weight and self.edge_filter == __o.edge_filter)
 
     def __hash__(self) -> int:
-        raise NotImplementedError(
+        msg = (
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
+        )
+        raise NotImplementedError(
+            msg
         )
 
     def __repr__(self) -> str:
@@ -573,8 +588,11 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
         seed: Optional[int] = None
     ) -> Tuple[Tuple[Iterator[OrderedDecodingEdges], int], ...]:
         if self.weight is None:
-            raise NotImplementedError("Ascending exhaustive split generator is not "
-                                      "implemented.")
+            msg = (
+                "Ascending exhaustive split generator is not "
+                                      "implemented."
+            )
+            raise NotImplementedError(msg)
         if self.weight == 0:
             return NoNoiseMatchingSequence().split_error_generator(code_data, num_splits,
                                                                    seed)
@@ -679,9 +697,12 @@ class ExhaustiveWeightedMatchingNoise(SequentialNoise[HyperMultiGraph,
                 and self.edge_filter == __o.edge_filter)
 
     def __hash__(self) -> int:
-        raise NotImplementedError(
+        msg = (
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
+        )
+        raise NotImplementedError(
+            msg
         )
 
     def field_values(self) -> Dict[str, Any]:
@@ -752,7 +773,8 @@ class UniformErasureNoise(MonteCarloNoise[HyperMultiGraph, Tuple[OrderedDecoding
         return base_dict
 
     def __add__(self, other):
-        raise NotImplementedError("Cannot add uniform erasure noise to any other noise.")
+        msg = "Cannot add uniform erasure noise to any other noise."
+        raise NotImplementedError(msg)
 
 
 def error_weight_probabilities(

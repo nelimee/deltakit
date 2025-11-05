@@ -68,8 +68,9 @@ class QPU:
     def _get_circuit_schedule(self, circuit: Circuit) -> CircuitSchedule:
         if not circuit.qubits.issubset(self.qubits):
             qubit_ids = {q.unique_identifier for q in circuit.qubits - self.qubits}
+            msg = f"Qubits {qubit_ids} in the circuit are not present on the QPU."
             raise ValueError(
-                f"Qubits {qubit_ids} in the circuit are not present on the QPU."
+                msg
             )
 
         nonnative_gateset = set()
@@ -137,9 +138,12 @@ class QPU:
         active_times_list.append(active_times.copy())
 
         if nonnative_gateset:
-            raise ValueError(
+            msg = (
                 f"Gate(s) {nonnative_gateset} present in the circuit "
                 "do not belong to the native gate set."
+            )
+            raise ValueError(
+                msg
             )
         return CircuitSchedule(active_times_list, previous_layer_times)
 
@@ -299,9 +303,12 @@ class QPU:
         mapping = {}
         for qubit in circuit.qubits:
             if qubit not in self.qubits:
-                raise ValueError(
+                msg = (
                     "A valid circuit-to-QPU qubit mapping could not be found "
                     f"because qubit {qubit} is not present in the QPU."
+                )
+                raise ValueError(
+                    msg
                 )
             mapping[qubit] = qubit
 

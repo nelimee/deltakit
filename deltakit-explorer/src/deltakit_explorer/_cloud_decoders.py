@@ -66,8 +66,9 @@ class _CloudDecoder:
             circuit = str(circuit)
         self.text_circuit = circuit
         if client is None:
+            msg = "Currently, a `client` must be provided to instantiate this class."
             raise NotImplementedError(
-                "Currently, a `client` must be provided to instantiate this class."
+                msg
             )
         self.client = client
 
@@ -80,10 +81,13 @@ class _CloudDecoder:
         num_shots = syndrome_batch.shape[0]
         detectors = types.DetectionEvents(syndrome_batch)
         if self.num_observables < 1:
-            raise ValueError(
+            msg = (
                 "Circuit must have at least one observable. "
                 "Please make sure your circuit has observables or provide "
                 f"`num_observables` when instantiating an `{self.__class__.__name__}`."
+            )
+            raise ValueError(
+                msg
             )
         observables = types.ObservableFlips(
             np.zeros((num_shots, self.num_observables), dtype=syndrome_batch.dtype)

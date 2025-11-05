@@ -173,7 +173,8 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
                 edge = DecodingHyperEdge(data)  # type: ignore
                 edge_record = EdgeRecord()
             else:
-                raise ValueError(f"Invalid edge data {data}")
+                msg = f"Invalid edge data {data}"
+                raise ValueError(msg)
             edge_id = edge_count[edge]
             edge_count[edge] += 1
             edge_records[(edge, edge_id)] = edge_record
@@ -181,7 +182,8 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
 
         self._edges = edges
         if len(set(edges)) != len(edges):
-            raise ValueError("Each edge must have a unique integer identifier")
+            msg = "Each edge must have a unique integer identifier"
+            raise ValueError(msg)
         self._detector_records = {} if detector_records is None else detector_records
         self._edge_records = edge_records
 
@@ -337,12 +339,14 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
                 edge = DecodingHyperEdge(data)  # type: ignore
                 edge_records[edge] = EdgeRecord()
             else:
-                raise ValueError(f"Invalid edge data {data}")
+                msg = f"Invalid edge data {data}"
+                raise ValueError(msg)
             edges.append(edge)  # type: ignore
 
         self._edges = edges
         if len(set(edges)) != len(edges):
-            raise ValueError("Each edge must have a unique integer identifier")
+            msg = "Each edge must have a unique integer identifier"
+            raise ValueError(msg)
         self._detector_records = {} if detector_records is None else detector_records
         self._edge_records = edge_records
         self._nodes_in_detector_records = set(self._detector_records.keys())
@@ -397,9 +401,8 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
         """
         if (edge := DecodingHyperEdge(detectors)) in self.edges:
             return edge
-        raise ValueError(
-            f"Detectors {detectors} do not belong to any edge in the graph."
-        )
+        msg = f"Detectors {detectors} do not belong to any edge in the graph."
+        raise ValueError(msg)
 
     def get_edge_record(self, *detectors: int) -> EdgeRecord:
         """Fetch the edge record for a sequence of detectors."""
@@ -488,7 +491,8 @@ class NXGraph(HyperMultiGraph[AnyEdgeT], Generic[NXGraphT, AnyEdgeT]):
         self._graph = nx.freeze(graph)
         self._boundaries = frozenset(boundaries)
         if any(boundary not in self.nodes for boundary in self.boundaries):
-            raise ValueError(f"Boundaries {boundaries} are not in nodes {self.nodes}.")
+            msg = f"Boundaries {boundaries} are not in nodes {self.nodes}."
+            raise ValueError(msg)
         max_index = max(self.nodes, default=0)
         self._boundaries_lookup = tuple(
             i in self.boundaries for i in range(max_index + 1)
@@ -677,7 +681,8 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
             elif isinstance(data, tuple) and isinstance(data[1], EdgeRecord):
                 edge, edge_record = data
             else:
-                raise TypeError(f"Unsupported data type for edge {data}")
+                msg = f"Unsupported data type for edge {data}"
+                raise TypeError(msg)
             u, v = edge
             k = nx_graph.number_of_edges(u, v)
             edge_records[(edge, k)] = edge_record
@@ -829,7 +834,8 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
                 edge, edge_record = data
                 edge_records[edge] = edge_record
             else:
-                raise TypeError(f"Unsupported data type for edge {data}")
+                msg = f"Unsupported data type for edge {data}"
+                raise TypeError(msg)
             nx_graph.add_edge(*edge, **edge_records[edge])
 
         return cls(nx_graph, boundaries)
@@ -859,9 +865,8 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
         """
         if (edge := DecodingEdge(*detectors)) in self.edge_records:
             return edge
-        raise ValueError(
-            f"Detectors {detectors} do not belong to any edge in the graph."
-        )
+        msg = f"Detectors {detectors} do not belong to any edge in the graph."
+        raise ValueError(msg)
 
     def get_edge_record(self, *detectors: int) -> EdgeRecord:
         """Given a set of detectors that define an edge in the graph,

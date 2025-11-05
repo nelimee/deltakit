@@ -47,10 +47,11 @@ def deprecated(
         that raises a deprecation warning or a decorator that can deprecate a function.
     """
     if all(p is None for p in (f, reason, replaced_by, removed_in_version)):
-        raise ValueError(
+        msg = (
             "Expected at least one of f, reason, replaced_by or removed_in_version to "
             "be provided. All of them are None."
         )
+        raise ValueError(msg)
     if f is not None:
         msg = f"{f.__name__} is deprecated and will eventually be removed."
 

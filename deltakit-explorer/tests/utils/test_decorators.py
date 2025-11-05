@@ -31,7 +31,8 @@ def test_validate_generation_warns():
 def test_validate_and_split_decoding_negative():
     @validate_and_split_decoding
     def dummy(_obj, _dets, _obs, _decoder, _circuit, _leakage=None):
-        raise Exception("fail")
+        msg = "fail"
+        raise Exception(msg)
     dets = DetectionEvents(np.ones((10, 2)), "B8", 2)
     obs = ObservableFlips(np.ones((10, 2)), "B8", 2)
     decoder = Decoder(DecoderType.MWPM)

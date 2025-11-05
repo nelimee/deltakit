@@ -70,7 +70,8 @@ def simulate_with_stim(
     if client is not None:
         circuit = str(stim_circuit.as_stim_circuit()) if not isinstance(stim_circuit, str) else stim_circuit
         if result_file is not None:
-            raise NotImplementedError("Use of `client` is currently incompatible with `result_file`.")
+            msg = "Use of `client` is currently incompatible with `result_file`."
+            raise NotImplementedError(msg)
         measurements, leakage_flags = client.simulate_stim_circuit(circuit, shots=shots)
         return measurements, leakage_flags
 

@@ -54,9 +54,8 @@ class EdgeRecord(UserDict):
         if self.p_err == 1:
             return -math.inf
         if not 0 < self.p_err < 1:
-            raise ValueError(
-                f"Edge weight undefined for error probability {self.p_err}"
-            )
+            msg = f"Edge weight undefined for error probability {self.p_err}"
+            raise ValueError(msg)
         return math.log((1 - self.p_err) / self.p_err)
 
     @property
@@ -133,13 +132,11 @@ class DecodingHyperEdge(Collection[int]):
             return DecodingEdge(*self.vertices)
         if degree == 1:
             if boundary is None:
-                raise ValueError(
-                    f"Boundary vertex is required for edge: {self} of degree one."
-                )
+                msg = f"Boundary vertex is required for edge: {self} of degree one."
+                raise ValueError(msg)
             return DecodingEdge(next(iter(self.vertices)), boundary)
-        raise ValueError(
-            f"Cannot cast edge: {self} of degree {degree} to decoding edge."
-        )
+        msg = f"Cannot cast edge: {self} of degree {degree} to decoding edge."
+        raise ValueError(msg)
 
     def __repr__(self) -> str:
         return str(tuple(self.vertices))
@@ -177,10 +174,11 @@ class DecodingEdge(DecodingHyperEdge):
 
     def __init__(self, first_detector: int, second_detector: int):
         if first_detector == second_detector:
-            raise ValueError(
+            msg = (
                 f"Invalid DecodingEdge between detectors {first_detector} "
                 f"and {second_detector}."
             )
+            raise ValueError(msg)
         super().__init__((first_detector, second_detector))
 
     @property

@@ -365,9 +365,8 @@ def dem_to_decoding_graph_and_logicals(
                 )
                 continue
             if degree > degree_target:
-                raise ValueError(
-                    f"Edge of degree {degree} cannot be converted to decoding edge."
-                )
+                msg = f"Edge of degree {degree} cannot be converted to decoding edge."
+                raise ValueError(msg)
 
             u, v = (next(iter(vertices)), boundary) if degree == 1 else tuple(vertices)
             old_edge_data = (

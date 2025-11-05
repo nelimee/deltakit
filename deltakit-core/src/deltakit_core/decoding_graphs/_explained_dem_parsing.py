@@ -35,10 +35,11 @@ def depolarising_as_independent(probability: float, num_qubits: int) -> float:
     pauli_combinations = 4**num_qubits
     mixing_probability = (pauli_combinations - 1) / pauli_combinations
     if probability > mixing_probability:
-        raise ValueError(
+        msg = (
             "Depolarising probability cannot be above the mixing "
             f"probability which is {mixing_probability}"
         )
+        raise ValueError(msg)
     p_with_i = probability / mixing_probability
     exponent = 1 / 2 ** (2 * num_qubits - 1)
     return float((1 - (1 - p_with_i) ** exponent) / 2)
@@ -70,7 +71,8 @@ def noise_probability(noise_channel: stim.CircuitTargetsInsideInstruction) -> fl
         return depolarising_as_independent(noise_channel.args[0], 2)
     if noise_channel.gate in ("X_ERROR", "Y_ERROR", "Z_ERROR"):
         return float(noise_channel.args[0])
-    raise TypeError(f"Unsupported gate type: {noise_channel.gate}")
+    msg = f"Unsupported gate type: {noise_channel.gate}"
+    raise TypeError(msg)
 
 
 def parse_explained_dem(
@@ -105,7 +107,8 @@ def parse_explained_dem(
         for dem_term in error.dem_error_terms:
             target = dem_term.dem_target
             if target.is_separator():
-                raise TypeError("Target separators should not be in the explained DEM.")
+                msg = "Target separators should not be in the explained DEM."
+                raise TypeError(msg)
             if target.is_relative_detector_id():
                 edge_vertices.add(target.val)
                 *spatial_coords, time = dem_term.coords

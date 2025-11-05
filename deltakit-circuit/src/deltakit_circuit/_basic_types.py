@@ -50,7 +50,8 @@ class Coord2DDelta(NamedTuple):
         """
         if isinstance(other, Coord2DDelta):
             return self.x * other.x + self.y * other.y
-        raise TypeError(f"Dot product is not implemented for {type(other)}")
+        msg = f"Dot product is not implemented for {type(other)}"
+        raise TypeError(msg)
 
 
 class Coord2D(Coordinate):

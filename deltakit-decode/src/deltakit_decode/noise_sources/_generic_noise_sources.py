@@ -59,7 +59,8 @@ class _NoiseModel(ABC, Generic[CodeT, ErrorT]):
         """Given some representation of a code, return `num_splits` number of generators
         of errors for that code and the respective sizes for those generators.
         """
-        raise NotImplementedError(f"Noise model {self} is currently not splittable.")
+        msg = f"Noise model {self} is currently not splittable."
+        raise NotImplementedError(msg)
 
     @abstractmethod
     def error_generator(
@@ -92,7 +93,8 @@ class _NoiseModel(ABC, Generic[CodeT, ErrorT]):
         """Given some representation of a code, return `num_splits` number of batch
         generators of errors for that code and the respective sizes for those generators.
         """
-        raise NotImplementedError(f"Noise model {self} is currently not splittable.")
+        msg = f"Noise model {self} is currently not splittable."
+        raise NotImplementedError(msg)
 
     def field_values(self) -> Dict[str, Any]:
         """Return the values of data that characterises this noise model.
@@ -155,7 +157,8 @@ class MonteCarloNoise(_NoiseModel[CodeT, ErrorT]):
             List of component noise sources, with normalised weightings.
         """
 
-        raise NotImplementedError(f"Noise model {self} is currently not decomposable.")
+        msg = f"Noise model {self} is currently not decomposable."
+        raise NotImplementedError(msg)
 
     def as_exhaustive_sequential_model(self) -> SequentialNoise[CodeT, ErrorT]:
         """Return the equivalent exhaustive model for this noise model. The exhaustive
@@ -167,7 +170,8 @@ class MonteCarloNoise(_NoiseModel[CodeT, ErrorT]):
         SequentialNoise[CodeT, ErrorT]
             Corresponding sequential exhaustive version of this noise model.
         """
-        raise NotImplementedError(f"Noise model {self} currently has no exhaustion.")
+        msg = f"Noise model {self} currently has no exhaustion."
+        raise NotImplementedError(msg)
 
     def split_error_generator(
         self,

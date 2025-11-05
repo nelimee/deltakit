@@ -70,8 +70,9 @@ def _find_anticommuting_pairs(
     chosen_z_logs: List[int] = []
     while len(chosen_x_logs) < k:
         if len(x_logs) == 0 or len(z_logs) == 0:
+            msg = f"Unable to construct {k} logical operators, could only find {len(chosen_x_logs)}"
             raise ValueError(
-                f"Unable to construct {k} logical operators, could only find {len(chosen_x_logs)}"
+                msg
             )
         # get which x anti-commutes with which z and vice-versa
         # use dictionaries for constant-time lookup
@@ -154,19 +155,24 @@ class Monomial:
             self.l = l
             self.m = m
         else:
-            raise ValueError("l and m must be >= 0")
+            msg = "l and m must be >= 0"
+            raise ValueError(msg)
         self.x_pow = x_pow % l
         self.y_pow = y_pow % m
 
     def __mul__(self, other: object) -> Monomial:
         if not isinstance(other, Monomial):
+            msg = f"Can only multiply Monomials by other Monomials, not {type(other)}"
             raise NotImplementedError(
-                f"Can only multiply Monomials by other Monomials, not {type(other)}"
+                msg
             )
         if self.l != other.l or self.m != other.m:
-            raise ValueError(
+            msg = (
                 "Cannot multiply monomials of differing max degree."
                 f" lhs: l={self.l}, m={self.m} | rhs: l={other.l}, m={other.m}"
+            )
+            raise ValueError(
+                msg
             )
         return Monomial(
             (other.x_pow + self.x_pow) % self.l,
@@ -483,25 +489,34 @@ class BivariateBicycleCode(CSSCode):
             Powers for the individual B_i matrices to be raised to.
         """
         if ell < 1:
-            raise ValueError("param_l should be greater than or equal to 1.")
+            msg = "param_l should be greater than or equal to 1."
+            raise ValueError(msg)
         if m < 1:
-            raise ValueError("param_m should be greater than or equal to 1.")
+            msg = "param_m should be greater than or equal to 1."
+            raise ValueError(msg)
         if len(m_A_powers) != 3:
-            raise ValueError("m_A_powers should contain 3 integers.")
+            msg = "m_A_powers should contain 3 integers."
+            raise ValueError(msg)
         if len(m_B_powers) != 3:
-            raise ValueError("m_B_powers should contain 3 integers.")
+            msg = "m_B_powers should contain 3 integers."
+            raise ValueError(msg)
         if [n == 0 for n in m_A_powers + m_B_powers].count(True) > 1:
-            raise ValueError("Should only be at most one power of 0 in A and B powers")
+            msg = "Should only be at most one power of 0 in A and B powers"
+            raise ValueError(msg)
         for n in [m_A_powers[0], *m_B_powers[1:]]:
             if not 0 <= n < ell:
-                raise ValueError("Powers of x must be in between 0 and l-1 inclusive")
+                msg = "Powers of x must be in between 0 and l-1 inclusive"
+                raise ValueError(msg)
             if (m_B_powers[1] - m_B_powers[2]) % ell == 0:
-                raise ValueError("Powers of x in the same polynomial must be distinct")
+                msg = "Powers of x in the same polynomial must be distinct"
+                raise ValueError(msg)
         for n in [m_B_powers[0], *m_A_powers[1:]]:
             if not 0 <= n < m:
-                raise ValueError("Powers of y must be in between 0 and m-1 inclusive")
+                msg = "Powers of y must be in between 0 and m-1 inclusive"
+                raise ValueError(msg)
             if (m_A_powers[1] - m_A_powers[2]) % m == 0:
-                raise ValueError("Powers of y in the same polynomial must be distinct")
+                msg = "Powers of y in the same polynomial must be distinct"
+                raise ValueError(msg)
 
     @staticmethod
     def _assert_x_y_properties(
@@ -509,43 +524,51 @@ class BivariateBicycleCode(CSSCode):
     ):
         # (1) xy = yx
         if not np.allclose(m_x @ m_y, m_y @ m_x):
-            raise ValueError("y*x should equal x*y")
+            msg = "y*x should equal x*y"
+            raise ValueError(msg)
 
         # (2) x^l = y^m = I_lm
         if not np.allclose(
             np.linalg.matrix_power(m_x, param_l),
             np.identity(param_l * param_m, dtype=np.int_),
         ):
-            raise ValueError("x^l should equal the identity matrix of shape (l*m, l*m)")
+            msg = "x^l should equal the identity matrix of shape (l*m, l*m)"
+            raise ValueError(msg)
         if not np.allclose(
             np.linalg.matrix_power(m_y, param_m),
             np.identity(param_l * param_m, dtype=np.int_),
         ):
-            raise ValueError("y^m should equal the identity matrix of shape (l*m, l*m)")
+            msg = "y^m should equal the identity matrix of shape (l*m, l*m)"
+            raise ValueError(msg)
 
     @staticmethod
     def _assert_matrix_ma_mb_properties(m_A: npt.NDArray, m_B: npt.NDArray):
         # (1) exactly 3 non-zero entries in any row or column
         if not (np.count_nonzero(m_A, axis=0) == 3).all():
+            msg = "Matrix A should have exactly 3 non-zero entries in each column"
             raise ValueError(
-                "Matrix A should have exactly 3 non-zero entries in each column"
+                msg
             )
         if not (np.count_nonzero(m_A, axis=1) == 3).all():
+            msg = "Matrix A should have exactly 3 non-zero entries in each row"
             raise ValueError(
-                "Matrix A should have exactly 3 non-zero entries in each row"
+                msg
             )
         if not (np.count_nonzero(m_B, axis=0) == 3).all():
+            msg = "Matrix B should have exactly 3 non-zero entries in each column"
             raise ValueError(
-                "Matrix B should have exactly 3 non-zero entries in each column"
+                msg
             )
         if not (np.count_nonzero(m_B, axis=1) == 3).all():
+            msg = "Matrix B should have exactly 3 non-zero entries in each row"
             raise ValueError(
-                "Matrix B should have exactly 3 non-zero entries in each row"
+                msg
             )
 
         # (2) AB = BA
         if not np.allclose(m_A @ m_B, m_B @ m_A):
-            raise ValueError("A*B should equal B*A")
+            msg = "A*B should equal B*A"
+            raise ValueError(msg)
 
     def _get_qubit_coords(
         self,
@@ -649,9 +672,12 @@ class BivariateBicycleCode(CSSCode):
                     break
             current_iter_index += 1
         else:
-            raise ValueError(
+            msg = (
                 "Max iteration limit exceeded for coord placement; consider"
                 " changing code parameters"
+            )
+            raise ValueError(
+                msg
             )
 
         return dl_lookup, dr_lookup, x_lookup, z_lookup

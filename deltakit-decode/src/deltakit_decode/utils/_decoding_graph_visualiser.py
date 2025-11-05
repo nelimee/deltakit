@@ -76,7 +76,8 @@ class VisDecodingGraph3D:
             elif edge.is_hooklike(self.decoding_graph.detector_records):
                 hook_edges.add(edge)
             else:
-                raise ValueError(f"Unknown edge type: {edge}")
+                msg = f"Unknown edge type: {edge}"
+                raise ValueError(msg)
         return (boundary_edges, spacelike_edges, timelike_edges, hook_edges)
 
     def get_plot_3d_traces(
@@ -226,9 +227,12 @@ class VisDecodingGraph3D:
         """Given a lit up syndrome, add its nodes to traces"""
         traces = []
         if any(s not in self.decoding_graph.nodes for s in syndrome):
-            raise ValueError(
+            msg = (
                 f"SyndromeBits must belong to DecodingGraph. \
                             Invalid syndrome: {syndrome}"
+            )
+            raise ValueError(
+                msg
             )
         if len(syndrome) != 0:
             scatter = get_scatter_for_node(

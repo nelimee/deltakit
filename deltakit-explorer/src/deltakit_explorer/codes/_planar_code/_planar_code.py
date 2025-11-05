@@ -83,7 +83,8 @@ class PlanarCode(CSSCode, ABC):
         self._shift = shift
         self.linear_tr = np.array([[1, 0], [0, 1]])
         if np.linalg.det(self.linear_tr) == 0.0:
-            raise ValueError("Determinant of linear transformation matrix cannot be 0")
+            msg = "Determinant of linear transformation matrix cannot be 0"
+            raise ValueError(msg)
 
         self._dimensions_at_least_2(width, height)
 
@@ -145,7 +146,8 @@ class PlanarCode(CSSCode, ABC):
             Raises an error if either width or height is smaller than 2.
         """
         if width < 2 or height < 2:
-            raise ValueError("Width and height need to be greater than or equal to 2.")
+            msg = "Width and height need to be greater than or equal to 2."
+            raise ValueError(msg)
 
     @abstractmethod
     def _calculate_untransformed_logical_operators(
@@ -309,7 +311,8 @@ class PlanarCode(CSSCode, ABC):
         elif self.schedule_type == ScheduleType.X_ONLY:
             stabilisers.append(self._sort_stabilisers(x_stabilisers))
         else:
-            raise ValueError(f"Unknown schedule type {self.schedule_type} encountered.")
+            msg = f"Unknown schedule type {self.schedule_type} encountered."
+            raise ValueError(msg)
 
         return tuple(stabilisers)
 
@@ -619,8 +622,9 @@ class PlanarCode(CSSCode, ABC):
             if type(self).__name__ != "UnrotatedToricCode":
                 for pauli in new_logical:
                     if pauli.qubit not in self.data_qubits:
+                        msg = f"Pauli operator on qubit {pauli.qubit} is not contained in the patch data qubits after shifting by {tuple(delta)}"
                         raise ValueError(
-                            f"Pauli operator on qubit {pauli.qubit} is not contained in the patch data qubits after shifting by {tuple(delta)}"
+                            msg
                         )
             else:
                 warnings.warn(

@@ -93,8 +93,11 @@ def _generate_expectation_data_singleprocess(
     num_processes: int = 1,
 ):
     if num_processes != 1:
-        raise NotImplementedError("Generators may only be passed in single-threaded"
-                                  " mode. Please set num_processes=1")
+        msg = (
+            "Generators may only be passed in single-threaded"
+                                  " mode. Please set num_processes=1"
+        )
+        raise NotImplementedError(msg)
 
     if only_even and not only_odd:
         samples = islice(samples, 0, None, 2)  # type: ignore
@@ -178,8 +181,11 @@ def generate_expectation_data(
                                                        only_odd,
                                                        max_degree,
                                                        num_processes)
-    raise NotImplementedError(f"Unrecognised argument type: {type(samples)},"
-                              " argument must be a Generator or Collection.")
+    msg = (
+        f"Unrecognised argument type: {type(samples)},"
+                              " argument must be a Generator or Collection."
+    )
+    raise NotImplementedError(msg)
 
 
 def _calculate_g_value(p: float, q: float) -> float:
@@ -381,7 +387,8 @@ def create_correlation_matrix(
     # throw an error, since we can only plot NxN matrices
     if not all((len(x) == len(next(iter(major_minor_mapping.values())))
                 for x in major_minor_mapping.values())):
-        raise ValueError("Inconsistent qubit time mapping")
+        msg = "Inconsistent qubit time mapping"
+        raise ValueError(msg)
 
     # helper function for converting coordinates into their Pij value
     # as per the Pij matrix

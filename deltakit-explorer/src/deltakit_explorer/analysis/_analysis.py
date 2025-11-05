@@ -232,10 +232,13 @@ def compute_logical_error_per_round(
     non_unique_entries_mask = unique_counts.counts > 1
     if np.any(non_unique_entries_mask):
         non_unique_values = unique_counts.values[non_unique_entries_mask].tolist()
-        raise RuntimeError(
+        msg = (
             "Multiple entries were provided for the following number of rounds: "
             f"{non_unique_values}. This is not supported. Please make sure you only "
             "provide one entry per number of rounds."
+        )
+        raise RuntimeError(
+            msg
         )
 
     # Check that we do not have any num_rounds <= 0 entry.
@@ -255,19 +258,25 @@ def compute_logical_error_per_round(
         num_shots = num_shots[1:]
 
     if np.any(num_failed_shots == 0):
-        raise RuntimeError(
+        msg = (
             "Got an experiment without any errors. You should increase the number of "
             "shots to have at least one error, else the problem is ill-formed."
+        )
+        raise RuntimeError(
+            msg
         )
 
     logical_error_probabilities = num_failed_shots / num_shots
     fidelities = 1 - 2 * logical_error_probabilities
 
     if np.any(fidelities <= 0):
-        raise RuntimeError(
+        msg = (
             "Got estimations of logical error probability above 0.5. That is not "
             "supported by this function. Please reduce your number of rounds. "
             f"Estimated logical error probabilities: {logical_error_probabilities}."
+        )
+        raise RuntimeError(
+            msg
         )
     # Check if the heuristic guideline on the number of rounds is verified.
     max_logical_error_probability = np.max(logical_error_probabilities)

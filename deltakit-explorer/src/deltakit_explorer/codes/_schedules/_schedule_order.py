@@ -74,7 +74,8 @@ def get_x_and_z_schedules(
     elif schedule_order == ScheduleOrder.DOUBLY_REFLECTED:
         dict_to_use = schedule_class.doubly_reflected_N_Z_dict
     else:
-        raise ValueError(f"Did not recognise ScheduleOrder {schedule_order}")
+        msg = f"Did not recognise ScheduleOrder {schedule_order}"
+        raise ValueError(msg)
 
     if x_type_has_N_shape:
         return dict_to_use["N"], dict_to_use["Z"]

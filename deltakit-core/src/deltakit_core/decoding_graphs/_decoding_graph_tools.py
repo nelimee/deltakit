@@ -157,7 +157,8 @@ def graph_to_json(
         JSON formatted string representing the essential graph and logical info
     """
     if len(decoding_graph.boundaries) > 1:
-        raise ValueError("JSON graph representation supports maximum one boundary")
+        msg = "JSON graph representation supports maximum one boundary"
+        raise ValueError(msg)
 
     if isinstance(decoding_graph, (DecodingHyperMultiGraph, NXDecodingMultiGraph)):
         edges = [(sorted(edge), edge_id) for edge, edge_id in decoding_graph.edges]
@@ -281,10 +282,11 @@ def inverse_logical_at_boundary(
         edge for edge in all_edges_to_boundaries if edge not in logical
     }
     if len(inverse_logical_edges | logical) != len(all_edges_to_boundaries):
-        raise ValueError(
+        msg = (
             "The logical given was not entirely along the boundary, "
             "so the inverse logical is undefined."
         )
+        raise ValueError(msg)
     return inverse_logical_edges
 
 

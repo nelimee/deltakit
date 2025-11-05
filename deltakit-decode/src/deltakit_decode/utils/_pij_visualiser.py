@@ -32,8 +32,9 @@ def plot_correlation_matrix(
     try:
         import seaborn as sns  # noqa: PLC0415
     except ImportError as ie:
+        msg = "Seaborn is not installed - please install Visualisation extras"
         raise ImportError(
-            "Seaborn is not installed - please install Visualisation extras") from ie
+            msg) from ie
 
     # create a list of indices of the minor ticks for which to label with
     # the qubit labels such that the labels are in the middle of the major

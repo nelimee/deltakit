@@ -116,18 +116,21 @@ class CSSStage:
         self._use_ancilla_qubits = use_ancilla_qubits
 
         if self._num_rounds < 0:
-            raise ValueError("Number of rounds must be non-negative.")
+            msg = "Number of rounds must be non-negative."
+            raise ValueError(msg)
         if self._num_rounds > 0 and all(
             len(stabiliser_set) == 0 for stabiliser_set in self._stabilisers
         ):
+            msg = "Non-zero number of rounds requires non-zero number of stabilisers."
             raise ValueError(
-                "Non-zero number of rounds requires non-zero number of stabilisers."
+                msg
             )
         if self._num_rounds == 0 and any(
             len(stabiliser_set) > 0 for stabiliser_set in self._stabilisers
         ):
+            msg = "Non-zero number of stabilisers requires non-zero number of rounds."
             raise ValueError(
-                "Non-zero number of stabilisers requires non-zero number of rounds."
+                msg
             )
 
         self._first_round_measurements = (
@@ -181,7 +184,8 @@ class CSSStage:
             itertools.chain.from_iterable(gate.qubits for gate in first_round_gates)
         )
         if len(gate_qubits) > len(set(gate_qubits)):
-            raise ValueError("Qubits in first_round_gates have to be unique.")
+            msg = "Qubits in first_round_gates have to be unique."
+            raise ValueError(msg)
         return gate_qubits
 
     @staticmethod
@@ -209,14 +213,18 @@ class CSSStage:
         reset_qubits = {gate.qubit for gate in resets}
 
         if not stabiliser_qubits.isdisjoint(measurement_qubits):
-            raise ValueError(
+            msg = (
                 "Initial measurement qubits and qubits in stabilisers "
                 "should be disjoint."
             )
+            raise ValueError(
+                msg
+            )
 
         if not stabiliser_qubits.isdisjoint(reset_qubits):
+            msg = "Final reset qubits and qubits in stabilisers should be disjoint."
             raise ValueError(
-                "Final reset qubits and qubits in stabilisers should be disjoint."
+                msg
             )
 
     @staticmethod
@@ -236,25 +244,34 @@ class CSSStage:
             return
         # Check 1)
         if len(measurements) != 0:
-            raise ValueError(
+            msg = (
                 "If first_round_gates is non-empty, then first_round_measurements has "
                 "to be empty."
+            )
+            raise ValueError(
+                msg
             )
         # Check 2).
         if all(
             len(simultaneous_stabilisers) == 0
             for simultaneous_stabilisers in stabilisers
         ):
-            raise ValueError(
+            msg = (
                 "The stabilisers parameter is empty, which is not allowed when "
                 "first_round_gates is not empty."
+            )
+            raise ValueError(
+                msg
             )
         # Check 3).
         for gate in gates:
             if len(set(gate.qubits).intersection(first_round_data_qubits)) == 0:
-                raise ValueError(
+                msg = (
                     f"The gate {gate} from first_round_gates is not supported on any "
                     "data qubits, which is not allowed."
+                )
+                raise ValueError(
+                    msg
                 )
 
     @staticmethod
@@ -310,8 +327,9 @@ class CSSStage:
             return True
         if not any(ancillas_defined):
             return False
+        msg = "Either all stabilisers or no stabilisers should have an ancilla defined."
         raise ValueError(
-            "Either all stabilisers or no stabilisers should have an ancilla defined."
+            msg
         )
 
     def _construct_mpp_syndrome_extraction_layers(self) -> List[GateLayer]:

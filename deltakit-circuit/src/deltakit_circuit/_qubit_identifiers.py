@@ -55,7 +55,8 @@ class Qubit(Generic[T]):
 
     def __init__(self, unique_identifier: T, stim_identifier: int | None = None):
         if isinstance(unique_identifier, abc.Generator):
-            raise TypeError("Generators are not supported as qubit identifiers.")
+            msg = "Generators are not supported as qubit identifiers."
+            raise TypeError(msg)
         self._unique_identifier = unique_identifier
 
         self._stim_identifier: int | None
@@ -91,7 +92,8 @@ class Qubit(Generic[T]):
             stacklevel=2,
         )
         if len(ids) % 2 != 0:
-            raise ValueError("Pairs cannot be constructed from an odd number of IDs.")
+            msg = "Pairs cannot be constructed from an odd number of IDs."
+            raise ValueError(msg)
         for qubit1, qubit2 in zip(ids[::2], ids[1::2], strict=True):
             yield (cls(qubit1), cls(qubit2))
 
@@ -106,7 +108,8 @@ class Qubit(Generic[T]):
         of a stim circuit.
         """
         if self._stim_identifier is None:
-            raise ValueError(f"{self} has no stim identifier.")
+            msg = f"{self} has no stim identifier."
+            raise ValueError(msg)
         return self._stim_identifier
 
     def stim_targets(
@@ -151,7 +154,8 @@ class SweepBit:
 
     def __init__(self, bit_index: int):
         if bit_index < 0:
-            raise ValueError("Sweep bit index cannot be a negative number.")
+            msg = "Sweep bit index cannot be a negative number."
+            raise ValueError(msg)
         self._bit_index = bit_index
 
     @property
@@ -208,7 +212,8 @@ class MeasurementRecord:
 
     def __init__(self, lookback_index: int):
         if lookback_index >= 0:
-            raise ValueError("Lookback index should be negative.")
+            msg = "Lookback index should be negative."
+            raise ValueError(msg)
         self._lookback_index = lookback_index
 
     @property
@@ -491,12 +496,12 @@ class MeasurementPauliProduct(Generic[T]):
             else tuple(pauli_gates)
         )
         if len(pauli_gates) == 0:
-            raise ValueError(
-                "There must be at least one Pauli gate in a Pauli product."
-            )
+            msg = "There must be at least one Pauli gate in a Pauli product."
+            raise ValueError(msg)
         qubits = [pauli_gate.qubit for pauli_gate in pauli_gates]
         if len(qubits) != len(set(qubits)):
-            raise ValueError("Pauli product cannot contain duplicate qubits.")
+            msg = "Pauli product cannot contain duplicate qubits."
+            raise ValueError(msg)
         self._pauli_gates = pauli_gates
 
     @property

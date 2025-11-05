@@ -42,7 +42,8 @@ class EmpiricalDecodingErrorDistribution:
             Frequency of the event, by default 1.
         """
         if frequency < 0:
-            raise ValueError(f"Event frequency = {frequency} must be non-negative.")
+            msg = f"Event frequency = {frequency} must be non-negative."
+            raise ValueError(msg)
         event_index = sum((1 << i) * parity
                           for i, parity in enumerate(event))
         self._error_distribution[event_index] += frequency
@@ -151,14 +152,20 @@ class EmpiricalDecodingErrorDistribution:
 
         if isinstance(index, tuple) and all(isinstance(item, bool) for item in index):
             if len(index) != self.number_of_logicals:
-                raise TypeError(f"EmpiricalDecodingErrorDistribution index tuples "
+                msg = (
+                    f"EmpiricalDecodingErrorDistribution index tuples "
                                 f"must be of length {self.number_of_logicals}, "
-                                f"not {len(index)}")
+                                f"not {len(index)}"
+                )
+                raise TypeError(msg)
             event = sum((1 << i) * parity
                         for i, parity in enumerate(index))
             return self[event]
-        raise TypeError("EmpiricalDecodingErrorDistribution indices "
-                        f"must be integers or Tuple[bool], not {type(index)}")
+        msg = (
+            "EmpiricalDecodingErrorDistribution indices "
+                        f"must be integers or Tuple[bool], not {type(index)}"
+        )
+        raise TypeError(msg)
 
     def __len__(self):
         return self._distribution_size
