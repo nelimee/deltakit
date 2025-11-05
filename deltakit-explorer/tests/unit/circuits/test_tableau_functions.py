@@ -4526,7 +4526,7 @@ class TestCompilationData:
     )
     class TestNestedCircuits:
         def test_extract_structure_from_circuit_gives_correct_output_for_nested_Circuits(
-            self, circuit, non_gatelayer_layers, reset_dict, unitary_blocks
+            self, circuit, non_gatelayer_layers
         ):
             results = _extract_structure_from_circuit(circuit)
             assert results.non_gatelayer_layers == non_gatelayer_layers
@@ -5196,7 +5196,7 @@ class TestCompileCircuitWithTableau:
             assert compiled_circ == expected_circ
 
         def test_no_non_native_gates_left_after_compilation(
-            self, circ, native_gate_set, expected_circ
+            self, circ, native_gate_set
         ):
             compiled_circ = compile_circuit_to_native_gates(circ, native_gate_set)
             for gate_layer in compiled_circ.gate_layers():
@@ -5285,7 +5285,7 @@ class TestCompileCircuitWithTableau:
             assert compiled_circ == expected_circ
 
         def test_no_non_native_gates_left_after_compilation(
-            self, circ, native_gate_set, expected_circ
+            self, circ, native_gate_set
         ):
             compiled_circ = compile_circuit_to_native_gates(circ, native_gate_set)
             for gate_layer in compiled_circ.gate_layers():

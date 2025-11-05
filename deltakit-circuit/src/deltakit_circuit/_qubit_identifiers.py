@@ -159,8 +159,7 @@ class SweepBit:
         """Get the bit index for this sweep bit."""
         return self._bit_index
 
-    def stim_targets(self, *args) -> Tuple[stim.GateTarget]:
-        # pylint: disable = unused-argument
+    def stim_targets(self, *_) -> Tuple[stim.GateTarget]:
         """Get this sweep bit as a stim gate target."""
         return (stim.GateTarget(stim.target_sweep_bit(self._bit_index)),)
 
@@ -217,8 +216,7 @@ class MeasurementRecord:
         """Get the lookback index"""
         return self._lookback_index
 
-    def stim_targets(self, *args) -> Tuple[stim.GateTarget]:
-        # pylint: disable = unused-argument
+    def stim_targets(self, *_) -> Tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (stim.GateTarget(stim.target_rec(self.lookback_index)),)
 

@@ -43,7 +43,7 @@ class NoiseChannel(ABC, Generic[T]):
 
     stim_string: ClassVar[str]
 
-    def __init__(self, *args, tag: str | None = None, **kwargs) -> None:
+    def __init__(self, *_args, tag: str | None = None, **_kwargs) -> None:
         super().__init__()
         self._tag = tag
 

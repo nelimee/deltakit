@@ -68,7 +68,7 @@ class ToyNoise(NoiseParameters):
             )
         )
 
-        self.idle_noise = lambda qubit, t=0.0: Depolarise1(
+        self.idle_noise = lambda qubit, _t=0.0: Depolarise1(
             qubit=qubit, probability=self.p / 10
         )
 

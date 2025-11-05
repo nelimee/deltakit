@@ -23,7 +23,7 @@ class TestGraphDecoderManager:
         return decoder
 
     @pytest.fixture()
-    def mock_noise_model(self, mocker, logicals) -> Mock:
+    def mock_noise_model(self, mocker) -> Mock:
         noise_model: Mock = mocker.Mock()
         return noise_model
 

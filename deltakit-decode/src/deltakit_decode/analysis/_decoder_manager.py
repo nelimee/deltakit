@@ -124,9 +124,9 @@ class DecoderManager(ABC):
 
     def run_batch_shots_parallel(self,
                                  batch_limit: Optional[int],
-                                 processes: int,
-                                 pool,
-                                 min_tasks_per_process: int = 50
+                                 processes: int,  # noqa: ARG002
+                                 pool,  # noqa: ARG002
+                                 min_tasks_per_process: int = 50  # noqa: ARG002
                                  ) -> Tuple[int, int]:
         """Run batch of shots in parallel using `processes` number of runners from
         `pool`. Cap the number of processes created such that a minimum of

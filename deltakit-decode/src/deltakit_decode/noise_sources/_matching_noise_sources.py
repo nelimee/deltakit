@@ -31,7 +31,7 @@ class NoNoiseMatchingSequence(SequentialNoise[HyperMultiGraph,
     """
 
     def error_generator(
-        self, code_data: HyperMultiGraph, seed: Optional[int] = None
+        self, code_data: HyperMultiGraph, seed: Optional[int] = None  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         yield OrderedDecodingEdges()
 
@@ -44,7 +44,7 @@ class NoNoiseMatchingSequence(SequentialNoise[HyperMultiGraph,
         return ((self.error_generator(code_data, seed), 1),) + \
             tuple((_empty_generator(), 0) for _ in range(num_splits-1))
 
-    def sequence_size(self, code_data: HyperMultiGraph) -> int:
+    def sequence_size(self, code_data: HyperMultiGraph) -> int:  # noqa: ARG002
         return 1
 
     def __repr__(self) -> str:
@@ -88,7 +88,7 @@ class NoMatchingNoise(IndependentMatchingNoise):
     """
 
     def error_generator(
-        self, code_data: HyperMultiGraph, seed: Optional[int] = None
+        self, code_data: HyperMultiGraph, seed: Optional[int] = None  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         while True:
             yield OrderedDecodingEdges()
@@ -526,7 +526,7 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
         self.edge_filter = edge_filter or IndependentMatchingNoise.empty_filter
 
     def error_generator(
-        self, code_data: HyperMultiGraph, seed: Optional[int] = None
+        self, code_data: HyperMultiGraph, seed: Optional[int] = None  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         filtered = list(self.edge_filter(code_data))
         # Need to copy into 1D array to avoid inner object conversion to array
@@ -648,7 +648,7 @@ class ExhaustiveWeightedMatchingNoise(SequentialNoise[HyperMultiGraph,
         return pruned_edges, max_edges_within_ceiling
 
     def error_generator(
-        self, code_data: HyperMultiGraph, seed: Optional[int] = None
+        self, code_data: HyperMultiGraph, seed: Optional[int] = None  # noqa: ARG002
     ) -> Iterator[OrderedDecodingEdges]:
         pruned_edges, max_edges_within_ceiling = self.prune_edges(code_data)
 

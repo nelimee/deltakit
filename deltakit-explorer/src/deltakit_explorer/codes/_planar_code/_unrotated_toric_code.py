@@ -161,7 +161,7 @@ class UnrotatedToricCode(PlanarCode):
 
         return (x_logicals, z_logicals)
 
-    def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = False) -> None:
+    def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = False) -> None:  # noqa: ARG002
         fig, ax = plt.subplots(nrows=1, ncols=1)
         all_qubit_x_coords = [qubit.unique_identifier.x for qubit in self.qubits]
         all_qubit_y_coords = [qubit.unique_identifier.y for qubit in self.qubits]

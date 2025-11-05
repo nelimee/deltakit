@@ -37,9 +37,7 @@ def qubit_mapping() -> dict[int, Qubit]:
         ["", "sjkdhf", "λ", "leaky<0>"],
     ),
 )
-def test_parse_tagged_instruction(
-    instr_template: str, tag: str, qubit_mapping: dict[int, Qubit]
-) -> None:
+def test_parse_tagged_instruction(instr_template: str, tag: str) -> None:
     instr_str = instr_template.format(tag=tag)
     stim_circuit = stim.Circuit(instr_str)
     circuit = Circuit.from_stim_circuit(stim_circuit)

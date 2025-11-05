@@ -245,7 +245,7 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
         }
         yield from neighbour_nodes
 
-    def detector_is_boundary(self, detector: int) -> bool:
+    def detector_is_boundary(self, detector: int) -> bool:  # noqa: ARG002
         return False
 
     def to_parity_check_matrix(self) -> npt.NDArray[np.uint8]:
@@ -445,7 +445,7 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
             check_matrix[tuple(edge), (edge_index,)] = True
         return check_matrix
 
-    def detector_is_boundary(self, detector: int) -> bool:
+    def detector_is_boundary(self, detector: int) -> bool:  # noqa: ARG002
         return False
 
     def error_to_syndrome(self, edges: Iterable[DecodingHyperEdge]) -> OrderedSyndrome:

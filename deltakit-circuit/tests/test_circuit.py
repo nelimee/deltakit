@@ -42,7 +42,7 @@ def noisy_circuit(empty_circuit: sp.Circuit) -> sp.Circuit:
 
 
 @pytest.fixture
-def nested_circuit_with_noise(empty_circuit: sp.Circuit) -> sp.Circuit:
+def nested_circuit_with_noise() -> sp.Circuit:
     return sp.Circuit(
         sp.Circuit(
             [
@@ -658,7 +658,7 @@ class TestApplyingGateNoise:
     ):
         empty_circuit.append_layers(sp.GateLayer(sp.gates.X(0)))
         empty_circuit.apply_gate_noise(
-            lambda noise_context: sp.noise_channels.PauliZError(0, 0.01), adjacency
+            lambda _: sp.noise_channels.PauliZError(0, 0.01), adjacency
         )
         assert empty_circuit.is_noisy
 
