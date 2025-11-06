@@ -18,4 +18,4 @@ if files:
     # check=False: we only need vale to print feedback to console; not raise an error
     subprocess.run(["vale", *files], check=False)
 else:
-    print("No files to lint.")
+    print("No files to lint.")  # noqa: T201

@@ -212,7 +212,6 @@ class TestEmpiricalDecodingErrorDistribution:
         distr = EmpiricalDecodingErrorDistribution(3)
 
         distr.batch_record_errors(corrections, target)
-        print(distr.to_dict())
 
         assert distr[4] == 1
         assert distr[(True, True, False)] == 2

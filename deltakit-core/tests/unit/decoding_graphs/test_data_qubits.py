@@ -177,9 +177,7 @@ class TestEdgeRecord:
             ValueError,
             match=rf"Edge weight undefined for error probability {invalid_perr}",
         ):
-            print(
-                f"invalid per {invalid_perr}, weight {EdgeRecord(p_err=invalid_perr).weight}"
-            )
+            EdgeRecord(p_err=invalid_perr).weight  # noqa: B018
 
     @pytest.mark.parametrize(
         "perr, expected_weight",
@@ -411,7 +409,7 @@ class TestOrderedDecodingEdges:
     def test_add_ordered_decoding_edges_does_not_mutate_operands(self):
         left_ode = OrderedDecodingEdges([DecodingEdge(0, 1)])
         right_ode = OrderedDecodingEdges([DecodingEdge(1, 2)])
-        left_ode + right_ode
+        left_ode + right_ode  # pyright: ignore[reportUnusedExpression]
 
         assert left_ode == OrderedDecodingEdges([DecodingEdge(0, 1)])
         assert right_ode == OrderedDecodingEdges([DecodingEdge(1, 2)])
