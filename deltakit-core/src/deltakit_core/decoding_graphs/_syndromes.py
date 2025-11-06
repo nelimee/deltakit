@@ -73,7 +73,7 @@ class DetectorRecord(UserDict):
         """Return the full coordinate for this detector, which is given in the form
         spatial coordinates then time coordinate.
         """
-        return self.spatial_coord + (self.time,)
+        return (*self.spatial_coord, self.time)
 
     @classmethod
     def from_dict(

@@ -185,7 +185,7 @@ class DecodingEdge(DecodingHyperEdge):
     @property
     def first(self) -> int:
         """Return the first vertex in this edge, order is arbitrary."""
-        return tuple(self._vertices)[0]
+        return next(iter(self._vertices))
 
     @property
     def second(self) -> int:

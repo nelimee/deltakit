@@ -130,10 +130,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         """Whether this circuit contains any noise layers or measurement
         gates that are marked as noisy."""
         for layer in self._layers:
-            if (
-                isinstance(layer, NoiseLayer)
-                or isinstance(layer, Circuit)
-                and layer.is_noisy
+            if isinstance(layer, NoiseLayer) or (
+                isinstance(layer, Circuit) and layer.is_noisy
             ):
                 return True
         return any(gate.probability > 0 for gate in self.measurement_gates)

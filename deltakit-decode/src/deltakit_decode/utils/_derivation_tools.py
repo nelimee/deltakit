@@ -216,7 +216,7 @@ def _calculate_p_i_sigma(nodes: List[float]) -> List[float]:
         return nodes
     if len(nodes) == 2:
         return [_calculate_g_value(nodes[0], nodes[1])]
-    return _calculate_p_i_sigma([nodes[0]] + _calculate_p_i_sigma(nodes[1:]))
+    return _calculate_p_i_sigma([nodes[0], *_calculate_p_i_sigma(nodes[1:])])
 
 
 def _calculate_edge_prob_with_higher_degrees(

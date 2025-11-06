@@ -175,7 +175,7 @@ class TestDetectorTrimming:
         )
         nested_detector_indices = list(range(4, 13, 4)) + list(range(5, 14, 4))
         stim_circuit = sp.trim_detectors(
-            stim_circuit, dem_detectors_to_eliminate=[0, 18] + nested_detector_indices
+            stim_circuit, dem_detectors_to_eliminate=[0, 18, *nested_detector_indices]
         )
         assert sp.Circuit.from_stim_circuit(
             stim_circuit

@@ -796,7 +796,7 @@ class TestGetCompilationDict:
         )
         # change format, add identity
         equiv_dict = {
-            k: [tuple([g.stim_string for g in equiv]) for equiv in v][0]
+            k: next(tuple([g.stim_string for g in equiv]) for equiv in v)
             for k, v in equiv_dict.items()
         }
         equiv_dict[("+X", "+Z")] = ()

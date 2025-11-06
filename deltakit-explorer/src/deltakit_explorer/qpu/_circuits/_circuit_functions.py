@@ -8,6 +8,7 @@ from typing import List, Tuple, Union
 from deltakit_circuit import (Circuit, Detector, GateLayer, MeasurementRecord,
                               NoiseLayer, Observable, ShiftCoordinates)
 from deltakit_circuit.gates import I
+import itertools
 
 # According to the purpose and business logic, content of this file
 # may violate pylint rules on cyclomatic complexity. Still, code
@@ -144,7 +145,7 @@ def merge_layers(circuit: Circuit, break_repeat_blocks: bool = False) -> Circuit
     # now remove one repeat from the repeat block if it is beneficial to do so
     new_merged_layers = []
     skip_layer = False
-    for layer, next_layer in zip(merged_layers[:-1], merged_layers[1:]):
+    for layer, next_layer in itertools.pairwise(merged_layers):
         if skip_layer:
             skip_layer = False
             continue
@@ -154,7 +155,7 @@ def merge_layers(circuit: Circuit, break_repeat_blocks: bool = False) -> Circuit
             gate_layer = GateLayer(next_layer.gates)
             # try to merge nested circuit and following gate layer
             merged_nested_circuit_and_layer = merge_layers(
-                Circuit(nested_circuit_layers + [gate_layer]), break_repeat_blocks
+                Circuit([*nested_circuit_layers, gate_layer]), break_repeat_blocks
             )
             if len(merged_nested_circuit_and_layer.layers) <= len(
                 nested_circuit_layers

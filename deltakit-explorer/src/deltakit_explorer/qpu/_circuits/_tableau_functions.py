@@ -897,7 +897,7 @@ def _get_compilation_with_two_qubit_gates(
                             for gate in compilation_dict[second_qubit_tab]
                         ]
                     except KeyError as ke:
-                        msg = f"Tableau missing from compilation dictionary: {str(ke)}"
+                        msg = f"Tableau missing from compilation dictionary: {ke!s}"
                         raise KeyError(
                             msg
                         ) from ke

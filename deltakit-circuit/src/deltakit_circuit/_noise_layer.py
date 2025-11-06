@@ -286,7 +286,7 @@ class NoiseLayer(Generic[T]):
         indent = 4 * " "
         noise_layer_lines = ["NoiseLayer(["]
         noise_layer_lines.extend(
-            f"{indent}{repr(noise_channel)}" for noise_channel in self.noise_channels
+            f"{indent}{noise_channel!r}" for noise_channel in self.noise_channels
         )
         noise_layer_lines.append("])")
         return "\n".join(noise_layer_lines)

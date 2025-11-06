@@ -51,7 +51,7 @@ def _get_coordinate_from_ancilla_qubit(
             isinstance(coord, (float, int, np.floating, np.integer))
             for coord in qubit_coord
         ):
-            full_coord = qubit_coord + (0,)
+            full_coord = (*qubit_coord, 0)
             return Coordinate(*full_coord)
 
     return None
@@ -106,10 +106,7 @@ def _get_coordinate_from_data_qubits(
         return None
     qubit_coord_len = len(qubit_coords[0])
 
-    full_coord = tuple(
-        float(np.mean([qubit_coord[i] for qubit_coord in qubit_coords]))
-        for i in range(qubit_coord_len)
-    ) + (0,)
+    full_coord = (*tuple(float(np.mean([qubit_coord[i] for qubit_coord in qubit_coords])) for i in range(qubit_coord_len)), 0)
     return Coordinate(*full_coord)
 
 
@@ -182,9 +179,7 @@ def _calculate_detector_coordinates(
                     first_coord = (
                         detector_coord[0] - 0.3 + 0.6 * i_index / (detector_count - 1)
                     )
-                    full_coord = (first_coord,) + tuple(
-                        coord for coord in detector_coord[1:]
-                    )
+                    full_coord = (first_coord, *tuple(coord for coord in detector_coord[1:]))
                     detector_coords[index] = Coordinate(*full_coord)
 
         # check again for repeats as some shifted coordinates with different original

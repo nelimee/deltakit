@@ -4,9 +4,9 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from decimal import Decimal
 from functools import partial
-from itertools import chain, combinations, product, repeat, starmap
+from itertools import chain, combinations, product, repeat
 from math import comb, floor, prod
-from typing import (Any, Callable, Dict, FrozenSet, Iterable, Iterator, List,
+from typing import (Any, Callable, ClassVar, Dict, FrozenSet, Iterable, Iterator, List,
                     Optional, Sequence, Tuple)
 
 import numpy as np
@@ -41,8 +41,7 @@ class NoNoiseMatchingSequence(SequentialNoise[HyperMultiGraph,
         num_splits: int,
         seed: Optional[int] = None
     ) -> Tuple[Tuple[Iterator[OrderedDecodingEdges], int], ...]:
-        return ((self.error_generator(code_data, seed), 1),) + \
-            tuple((_empty_generator(), 0) for _ in range(num_splits-1))
+        return ((self.error_generator(code_data, seed), 1), *tuple((_empty_generator(), 0) for _ in range(num_splits - 1)))
 
     def sequence_size(self, code_data: HyperMultiGraph) -> int:  # noqa: ARG002
         return 1
@@ -390,7 +389,7 @@ class AdditiveMatchingNoise(IndependentMatchingNoise):
 
     Use add operator to add noise sources, not the constructor for this class.
     """
-    _filter_cache: Dict[FrozenSet[Callable], Callable] = {}
+    _filter_cache: ClassVar[Dict[FrozenSet[Callable], Callable]] = {}
 
     def __init__(self, internal_sources: Iterable[IndependentMatchingNoise]):
         self._internal_sources_multiset = Counter(internal_sources)
@@ -442,7 +441,7 @@ class AdditiveMatchingNoise(IndependentMatchingNoise):
                 inner_counter.subtract([model])
                 inner_counter.update([model_sum])
                 return AdditiveMatchingNoise(inner_counter.elements())
-        return AdditiveMatchingNoise(self.internal_sources + [other])
+        return AdditiveMatchingNoise([*self.internal_sources, other])
 
     @classmethod
     def _get_combined_filter(cls, filter_list):
@@ -603,10 +602,10 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
             [_empty_generator() for _ in range(num_splits)]
         # split based on first element, bin greedily
         for edge_i in range(num_edges-self.weight+1):
-            iterator: Iterable[OrderedDecodingEdges] = starmap(
-                lambda x, y: OrderedDecodingEdges(x+y), zip(repeat(
+            iterator: Iterable[OrderedDecodingEdges] = map(
+                lambda x, y: OrderedDecodingEdges(x+y), repeat(
                     (edges[edge_i], )),
-                    combinations(edges[edge_i+1:], self.weight-1)))
+                    combinations(edges[edge_i+1:], self.weight-1))
             size = comb(num_edges - edge_i - 1, self.weight - 1)
             min_bucket_i = sizes.index(min(sizes))
             sizes[min_bucket_i] += size

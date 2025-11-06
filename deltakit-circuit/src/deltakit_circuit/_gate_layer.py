@@ -326,6 +326,6 @@ class GateLayer(Generic[T]):
     def __repr__(self) -> str:
         indent = 4 * " "
         gate_layer_lines = ["GateLayer(["]
-        gate_layer_lines.extend(f"{indent}{repr(gate)}" for gate in self.gates)
+        gate_layer_lines.extend(f"{indent}{gate!r}" for gate in self.gates)
         gate_layer_lines.append("])")
         return "\n".join(gate_layer_lines)

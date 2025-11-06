@@ -611,8 +611,7 @@ class TestTransversalHStage:
             final_round_resets=stage._final_round_resets,
         )
         assert stage.first_round == Circuit(
-            [GateLayer(stage._first_round_gates)]
-            + stage_without_trv_h.first_round.layers
+            [GateLayer(stage._first_round_gates), *stage_without_trv_h.first_round.layers]
         )
 
 
@@ -680,8 +679,7 @@ class TestTransversalSWAPStage:
             final_round_resets=stage._final_round_resets,
         )
         assert stage.first_round == Circuit(
-            [GateLayer(stage._first_round_gates)]
-            + stage_without_trv_h.first_round.layers
+            [GateLayer(stage._first_round_gates), *stage_without_trv_h.first_round.layers]
         )
 
 

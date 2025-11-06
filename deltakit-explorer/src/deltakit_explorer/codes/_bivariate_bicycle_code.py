@@ -84,7 +84,7 @@ def _find_anticommuting_pairs(
         # anti-commutes with that x
         chosen_x = x_logs[0]
         try:
-            chosen_z = list(x_ac_with_z[chosen_x].keys())[0]
+            chosen_z = next(iter(x_ac_with_z[chosen_x].keys()))
         except IndexError:
             # this logical X doesnt have any anticommuting Zs, so
             # try a different X

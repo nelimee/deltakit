@@ -313,7 +313,7 @@ def compute_logical_error_per_round(
         )
         num_rounds = np.hstack([[0], num_rounds])
         logfidelity = np.hstack([[0], logfidelity])
-        # We cannot set the stddev to 0 here because curve_fit will divide by that
+        # We cannot set the stddev to 0 here because curve_fit will divide by that
         # quantity, so make it very small.
         logfidelities_stddev = np.hstack([[1e-12], logfidelities_stddev])
 
@@ -325,7 +325,7 @@ def compute_logical_error_per_round(
         logfidelity,
         sigma=logfidelities_stddev,
         absolute_sigma=True,
-        # If the error probabilities are exactly 0, the solution should be (0, 0).
+        # If the error probabilities are exactly 0, the solution should be (0, 0).
         # Because we expect the error probabilities to be close to 0, start from (0, 0)
         # as a first estimate.
         p0=(0, 0),
@@ -481,9 +481,9 @@ def simulate_different_round_numbers_for_lep_per_round_estimation(
     # ``heuristic_logical_error_lower_bound`` but under
     # ``heuristic_logical_error_upper_bound``.
     maximum_number_of_backward_steps: int = 5
-    backward_arithmetic_factor: int = int(floor(
+    backward_arithmetic_factor: int = floor(
         (nrounds[-1] - nrounds[-2]) / (maximum_number_of_backward_steps + 1)
-    ))
+    )
     while (nfails[-1] / nshots[-1]) > heuristic_logical_error_upper_bound:
         out_of_bound_round_value = nrounds[-1]
         nrounds, nfails, nshots = nrounds[:-1], nfails[:-1], nshots[:-1]

@@ -302,7 +302,7 @@ def create_dem_from_pij(
         output.append(out_str + "\n")
 
     # add detector coords to end
-    detector_coords = {k: list(v["spatial_coord"]) + [v["time"]]
+    detector_coords = {k: [*list(v["spatial_coord"]), v["time"]]
                        for k, v in graph.detector_records.items()}
     for b in graph.boundaries:
         detector_coords.pop(b, None)

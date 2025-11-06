@@ -1012,7 +1012,7 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-2), sp.Coordinate(0, 1)),
             sp.Detector(sp.MeasurementRecord(-3), sp.Coordinate(1, 1)),
         ]
-        layers = [sp.GateLayer(sp.gates.MZ(i) for i in range(3))] + detectors
+        layers = [sp.GateLayer(sp.gates.MZ(i) for i in range(3)), *detectors]
         deltakit_circuit_circuit = sp.Circuit(layers)
         deltakit_circuit_circuit.reorder_detectors()
         assert deltakit_circuit_circuit.layers == layers
@@ -1020,8 +1020,9 @@ class TestReorderingDetectors:
     def test_other_layers_between_blocks_are_not_modified_when_reordering_detectors(
         self,
     ):
-        layers = [sp.GateLayer(sp.gates.MZ(i) for i in range(2))] + [
-            sp.GateLayer(sp.gates.I(i) for i in range(2))
+        layers = [
+            sp.GateLayer(sp.gates.MZ(i) for i in range(2)),
+            sp.GateLayer(sp.gates.I(i) for i in range(2)),
         ]
         deltakit_circuit_circuit = sp.Circuit(layers)
         deltakit_circuit_circuit.reorder_detectors()
@@ -1035,7 +1036,7 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-2)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            [sp.GateLayer(sp.gates.MZ(i) for i in range(2))] + detectors
+            [sp.GateLayer(sp.gates.MZ(i) for i in range(2)), *detectors]
         )
         deltakit_circuit_circuit.reorder_detectors()
         assert deltakit_circuit_circuit.detectors() == detectors
@@ -1049,7 +1050,7 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-3), sp.Coordinate(0, 0, 0)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            [sp.GateLayer(sp.gates.MZ(i) for i in range(3))] + detectors
+            [sp.GateLayer(sp.gates.MZ(i) for i in range(3)), *detectors]
         )
         deltakit_circuit_circuit.reorder_detectors()
         assert deltakit_circuit_circuit.detectors() == [
@@ -1068,10 +1069,12 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-2), coordinate=sp.Coordinate(0, 0)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            [sp.GateLayer(sp.gates.MZ(i) for i in range(2))]
-            + detectors[0:2]
-            + [sp.GateLayer(sp.gates.MZ(i) for i in range(2))]
-            + detectors[2:4]
+            [
+                sp.GateLayer(sp.gates.MZ(i) for i in range(2)),
+                *detectors[0:2],
+                sp.GateLayer(sp.gates.MZ(i) for i in range(2)),
+                *detectors[2:4],
+            ]
         )
         deltakit_circuit_circuit.reorder_detectors()
         assert deltakit_circuit_circuit.detectors() == [
@@ -1090,7 +1093,7 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-1), coordinate=sp.Coordinate(1, 0)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            [sp.GateLayer(sp.gates.MZ(i) for i in range(3))] + detectors
+            [sp.GateLayer(sp.gates.MZ(i) for i in range(3)), *detectors]
         )
         deltakit_circuit_circuit.reorder_detectors(reverse=True)
         assert deltakit_circuit_circuit.detectors() == [
@@ -1107,7 +1110,7 @@ class TestReorderingDetectors:
         ]
         deltakit_circuit_circuit = sp.Circuit(
             sp.Circuit(
-                [sp.GateLayer(sp.gates.MZ(i) for i in range(3))] + detectors,
+                [sp.GateLayer(sp.gates.MZ(i) for i in range(3)), *detectors],
                 iterations=5,
             )
         )
@@ -1128,13 +1131,13 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-1), sp.Coordinate(0, 2)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            [sp.GateLayer(sp.gates.MZ(i) for i in range(2))]
-            + detectors[0:2]
-            + [
+            [
+                sp.GateLayer(sp.gates.MZ(i) for i in range(2)),
+                *detectors[0:2],
                 sp.Circuit(
-                    [sp.GateLayer(sp.gates.MX(i) for i in range(2))] + detectors[2:],
+                    [sp.GateLayer(sp.gates.MX(i) for i in range(2)), *detectors[2:]],
                     iterations=5,
-                )
+                ),
             ]
         )
         deltakit_circuit_circuit.reorder_detectors()
@@ -1155,7 +1158,7 @@ class TestReorderingDetectors:
             sp.Detector(sp.MeasurementRecord(-1), sp.Coordinate(0, 1)),
         ]
         deltakit_circuit_circuit = sp.Circuit(
-            detectors[0:2] + [sp.ShiftCoordinates((0, 1))] + detectors[2:4]
+            [*detectors[0:2], sp.ShiftCoordinates((0, 1)), *detectors[2:4]]
         )
         deltakit_circuit_circuit.reorder_detectors()
         assert deltakit_circuit_circuit.detectors() == [
