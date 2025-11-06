@@ -4,6 +4,7 @@ from itertools import combinations
 import deltakit_circuit as sp
 import pytest
 import stim
+import contextlib
 
 
 @pytest.fixture
@@ -1481,10 +1482,8 @@ class TestStimCircuit:
             for index, stim_id in reversed(list(enumerate(stim_identifiers)))
             if stim_id in sp.gates.GATE_MAPPING
         )
-        try:
+        with contextlib.suppress(IndexError):
             assert stim_lines[last_gate_line_index + 1] != "TICK"
-        except IndexError:
-            pass
 
     def test_stim_circuit_preserves_ordering_of_measurement_gates(
         self, empty_circuit: sp.Circuit

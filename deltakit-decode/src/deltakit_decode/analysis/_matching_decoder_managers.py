@@ -241,9 +241,7 @@ class GraphDecoderManager(NoiseModelDecoderManager[
                             ) -> bool:
         target_logical_flip = tuple(len(error & logical) % 2 == 1
                                 for logical in self._logicals)
-        if target_logical_flip != correction:
-            return True
-        return False
+        return target_logical_flip != correction
 
     @property
     def error_distribution_over_logicals(self) -> Dict[Tuple[bool, ...], int]:

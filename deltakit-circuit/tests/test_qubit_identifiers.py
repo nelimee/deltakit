@@ -88,11 +88,13 @@ def test_error_is_raised_if_calling_pairs_from_consecutive_with_odd_sequence():
         "This method should not be used. Instead please use the `from_consecutive` "
         "method on the two qubit gate class"
     )
-    with pytest.warns(DeprecationWarning, match=msg):
-        with pytest.raises(
+    with (
+        pytest.warns(DeprecationWarning, match=msg),
+        pytest.raises(
             ValueError, match="Pairs cannot be constructed from an odd number of IDs."
-        ):
-            list(Qubit.pairs_from_consecutive([0, 1, 2]))
+        ),
+    ):
+        list(Qubit.pairs_from_consecutive([0, 1, 2]))
 
 
 def test_pairs_from_consecutive_returns_correct_qubit_pairs():

@@ -79,7 +79,7 @@ class RunAllAnalysisEngine:
         reported_fields = {
             field_name: None
             for decoder_manager in self.decoder_managers
-            for field_name in decoder_manager.get_reporter_results().keys()
+            for field_name in decoder_manager.get_reporter_results()
         }
         return list(reported_fields.keys())
 
@@ -104,10 +104,7 @@ class RunAllAnalysisEngine:
         else:
             self._current_experiment_file_path = None
 
-        if self.parallel:
-            result_store = self._run_parallel()
-        else:
-            result_store = self._run_serial()
+        result_store = self._run_parallel() if self.parallel else self._run_serial()
 
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.log.info("Experiment finished at %(time)", extra={"time": now})

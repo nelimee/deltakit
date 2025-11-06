@@ -493,13 +493,7 @@ class CSSStage:
         bool
             True if resets only.
         """
-        if (
-            len(self.ordered_stabilisers) > 0
-            or len(self._first_round_measurements) > 0
-            or len(self._observable_definitions) > 0
-        ):
-            return False
-        return True
+        return not (len(self.ordered_stabilisers) > 0 or len(self._first_round_measurements) > 0 or len(self._observable_definitions) > 0)
 
     @cached_property
     def allowable_final_stage(self) -> bool:
@@ -516,11 +510,7 @@ class CSSStage:
         """
         if len(self._final_round_resets) > 0:
             return False
-        if len(self.ordered_stabilisers) > 0 and (
-            self._num_rounds > 1 or self._use_ancilla_qubits
-        ):
-            return False
-        return True
+        return not (len(self.ordered_stabilisers) > 0 and (self._num_rounds > 1 or self._use_ancilla_qubits))
 
     @property
     def first_round(self) -> Circuit:

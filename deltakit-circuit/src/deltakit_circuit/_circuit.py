@@ -254,17 +254,16 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             else:
                 self._layers.append(layer)
 
-            if hasattr(layer, "qubits"):
-                if self.qubit_uid_type is not None:
-                    if not all(
-                        isinstance(qubit.unique_identifier, self.qubit_uid_type)
-                        for qubit in layer.qubits
-                    ):
-                        msg = (
-                            "All Qubit._unique_identifier fields "
-                            "must be of the same type"
-                        )
-                        raise TypeError(msg)
+            if (
+                hasattr(layer, "qubits")
+                and self.qubit_uid_type is not None
+                and not all(
+                    isinstance(qubit.unique_identifier, self.qubit_uid_type)
+                    for qubit in layer.qubits
+                )
+            ):
+                msg = "All Qubit._unique_identifier fields must be of the same type"
+                raise TypeError(msg)
 
     def apply_gate_noise(
         self,
@@ -570,10 +569,12 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         https://github.com/quantumlib/Stim/blob/main/doc/
         python_api_reference_vDev.md#stim.Circuit.detector_error_model
         """
-        if isinstance(approximate_disjoint_errors, float):
-            if not 0 <= approximate_disjoint_errors <= 1:
-                msg = "approximate_disjoint_errors is not a valid probability"
-                raise ValueError(msg)
+        if (
+            isinstance(approximate_disjoint_errors, float)
+            and not 0 <= approximate_disjoint_errors <= 1
+        ):
+            msg = "approximate_disjoint_errors is not a valid probability"
+            raise ValueError(msg)
 
         return self.as_stim_circuit().detector_error_model(
             decompose_errors=decompose_errors,
@@ -719,7 +720,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
 
         for self_layer, other_layer in zip(self.layers, other.layers, strict=True):
             if isinstance(self_layer, (Detector, Observable, ShiftCoordinates)):
-                if not self_layer == other_layer:
+                if self_layer != other_layer:
                     return False
             elif not self_layer.approx_equals(
                 other_layer, rel_tol=rel_tol, abs_tol=abs_tol
@@ -816,17 +817,16 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
                     detectors_gates.extend(layer.detectors_gates(measurements))
                 elif isinstance(layer, GateLayer):
                     measurements.extend(layer.measurement_gates)
-                elif isinstance(layer, Detector):
-                    if iteration == self.iterations:
-                        detectors_gates.append(
-                            (
-                                layer,
-                                [
-                                    measurements[measurement.lookback_index]
-                                    for measurement in layer.measurements
-                                ],
-                            )
+                elif isinstance(layer, Detector) and iteration == self.iterations:
+                    detectors_gates.append(
+                        (
+                            layer,
+                            [
+                                measurements[measurement.lookback_index]
+                                for measurement in layer.measurements
+                            ],
                         )
+                    )
 
         return detectors_gates
 

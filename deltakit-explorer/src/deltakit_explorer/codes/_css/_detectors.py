@@ -144,9 +144,9 @@ def _calculate_detector_coordinates(
     for stabiliser in stabilisers:
         # attempt to get a coordinate from the ancilla qubit
         detector_coord = _get_coordinate_from_ancilla_qubit(stabiliser.ancilla_qubit)
-        if detector_coord is not None:
+        if (detector_coord is not None
             # check if detector coordinate length is consistent with previous lengths
-            if len(detector_coords) == 0 or coord_len == len(detector_coord):
+            and (len(detector_coords) == 0 or coord_len == len(detector_coord))):
                 detector_coords.append(detector_coord)
                 coord_len = len(detector_coord)
                 continue
@@ -368,8 +368,7 @@ def _get_joint_sub_super_stabilisers_ind(
             [previous_stabilisers[ind_prev] for ind_prev in indices_prev],
         )
         if (
-            not current_stabilisers[ind_curr].operator_repr
-            == previous_stabiliser_product.operator_repr
+            current_stabilisers[ind_curr].operator_repr != previous_stabiliser_product.operator_repr
         ):
             del sub_stabilisers_ind[ind_curr]
 
@@ -380,8 +379,7 @@ def _get_joint_sub_super_stabilisers_ind(
             [current_stabilisers[ind_curr] for ind_curr in indices_curr],
         )
         if (
-            not previous_stabilisers[ind_prev].operator_repr
-            == current_stabiliser_product.operator_repr
+            previous_stabilisers[ind_prev].operator_repr != current_stabiliser_product.operator_repr
         ):
             del super_stabilisers_ind[ind_prev]
     # Convert these dictionaries into the list format

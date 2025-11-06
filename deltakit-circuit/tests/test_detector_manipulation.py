@@ -64,12 +64,12 @@ class TestDetectorTrimming:
     def test_detectors_are_specified_for_removal_if_all_of_a_detectors_dem_ids_are_specified_for_removal(
         self,
     ):
-        assert [0] == _get_detectors_to_remove([2, 3], [[2, 3], [4, 5]])
+        assert _get_detectors_to_remove([2, 3], [[2, 3], [4, 5]]) == [0]
 
     def test_no_detectors_are_specified_for_removal_if_a_detectors_dem_ids_are_not_all_specified_for_removal(
         self,
     ):
-        assert [] == _get_detectors_to_remove([], [[2, 3], [4, 5]])
+        assert _get_detectors_to_remove([], [[2, 3], [4, 5]]) == []
 
     def test_warning_is_raised_if_a_subset_of_a_detectors_dem_ids_are_specified_for_removal(
         self,

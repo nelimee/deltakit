@@ -253,7 +253,7 @@ def _calculate_edge_prob_with_higher_degrees(
     # collect all edges our current edge is a subset of -
     # thereby all edges that can turn on our edge
     connected_edges = [pij_data[k]
-                       for k in pij_data.keys() if edge < k]
+                       for k in pij_data if edge < k]
     if len(connected_edges) == 0:
         return pij_data.get(edge, 0.0)
     pi_sigma = _calculate_p_i_sigma(connected_edges)[0]
@@ -394,10 +394,7 @@ def create_correlation_matrix(
     # helper function for converting coordinates into their Pij value
     # as per the Pij matrix
     def coord_to_pij(x):
-        if x[0] == x[1]:
-            xf = frozenset((x[0],))
-        else:
-            xf = frozenset(x)
+        xf = frozenset((x[0],)) if x[0] == x[1] else frozenset(x)
         if xf in pij_data:
             return pij_data[xf]
         return 0.0
