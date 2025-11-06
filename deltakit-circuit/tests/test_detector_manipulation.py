@@ -1,5 +1,4 @@
 # (c) Copyright Riverlane 2020-2025.
-from typing import Tuple
 
 import pytest
 import stim
@@ -84,7 +83,7 @@ class TestDetectorTrimming:
     @pytest.fixture
     def stim_circuit_with_and_without_detectors_0_4_5_10(
         self,
-    ) -> Tuple[stim.Circuit, stim.Circuit]:
+    ) -> tuple[stim.Circuit, stim.Circuit]:
         return (
             stim.Circuit.generated(
                 "repetition_code:memory",

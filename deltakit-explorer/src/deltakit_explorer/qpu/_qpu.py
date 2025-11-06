@@ -6,7 +6,8 @@ execution time computation features. This is a fully-functional class.
 """
 # pylint: disable=too-many-branches
 from copy import deepcopy
-from typing import Dict, Iterable, NamedTuple
+from typing import NamedTuple
+from collections.abc import Iterable
 
 from deltakit_circuit import Circuit, GateLayer, NoiseLayer, Qubit
 from deltakit_circuit.gates import I
@@ -163,7 +164,7 @@ class QPU:
         """
 
         def _get_idle_noise_channels(
-            previous_layer_time: float, active_times: Dict[Qubit, float]
+            previous_layer_time: float, active_times: dict[Qubit, float]
         ):
             if (
                 previous_layer_time > 0.0
@@ -282,7 +283,7 @@ class QPU:
 
         return noisy_circuit
 
-    def _get_valid_qubit_mapping(self, circuit: Circuit) -> Dict[Qubit, Qubit]:
+    def _get_valid_qubit_mapping(self, circuit: Circuit) -> dict[Qubit, Qubit]:
         """
         Get a mapping from qubits in the supplied circuit to qubits in the QPU.
         Currently, this can return only the trivial mapping and thus will raise

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from itertools import chain
-from typing import FrozenSet, Iterable, Mapping
+from collections.abc import Iterable, Mapping
 
 import stim
 from deltakit_circuit._qubit_identifiers import Coordinate, MeasurementRecord
@@ -50,7 +50,7 @@ class Detector:
         return self._coordinate
 
     @property
-    def measurements(self) -> FrozenSet[MeasurementRecord]:
+    def measurements(self) -> frozenset[MeasurementRecord]:
         return self._measurements
 
     def transform_coordinates(

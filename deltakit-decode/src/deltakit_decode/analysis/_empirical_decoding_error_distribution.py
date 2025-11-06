@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from itertools import product
-from typing import Dict, Tuple, overload
+from typing import overload
 
 import numpy as np
 import numpy.typing as npt
@@ -30,7 +30,7 @@ class EmpiricalDecodingErrorDistribution:
         self._fails_per_logical = np.zeros(number_of_logicals, dtype=np.int32)
         self._error_distribution = np.zeros(self._distribution_size, dtype=np.uint32)
 
-    def add_event(self, event: Tuple[bool, ...], frequency: int = 1):
+    def add_event(self, event: tuple[bool, ...], frequency: int = 1):
         """Adds given tuple to error disitrubtion.
 
         Parameters
@@ -62,7 +62,7 @@ class EmpiricalDecodingErrorDistribution:
         """
         return self._number_of_logicals
 
-    def record_error(self, correction: Tuple[bool, ...], target: Tuple[bool, ...]):
+    def record_error(self, correction: tuple[bool, ...], target: tuple[bool, ...]):
         """Computes and adds error event based on predicted and target value of
         the logicals.
 
@@ -143,7 +143,7 @@ class EmpiricalDecodingErrorDistribution:
         ...
 
     @overload
-    def __getitem__(self, index: Tuple[bool, ...]) -> int:
+    def __getitem__(self, index: tuple[bool, ...]) -> int:
         ...
 
     def __getitem__(self, index) -> int:
@@ -187,7 +187,7 @@ class EmpiricalDecodingErrorDistribution:
         """
         return self._fails_per_logical[logical]
 
-    def to_dict(self) -> Dict[Tuple[bool, ...], int]:
+    def to_dict(self) -> dict[tuple[bool, ...], int]:
         """Returns the error distribution in dictionary representation of
         boolean keys.
 
@@ -210,7 +210,7 @@ class EmpiricalDecodingErrorDistribution:
                 product((False, True), repeat=self._number_of_logicals)}
 
     @classmethod
-    def from_dict(cls, distribution_dict: Dict[Tuple[bool, ...], int],
+    def from_dict(cls, distribution_dict: dict[tuple[bool, ...], int],
                   ) -> EmpiricalDecodingErrorDistribution:
         """Create a EmpiricalDecodingErrorDistribution from a given distribution
         dict of boolean tuples.

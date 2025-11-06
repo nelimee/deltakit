@@ -2,7 +2,7 @@
 """Module for functions for weighted decoding graphs."""
 
 from collections import defaultdict
-from typing import DefaultDict, List, Sequence, Tuple
+from collections.abc import Sequence
 
 import numpy as np
 from deltakit_core.decoding_graphs._decoding_graph import (
@@ -55,7 +55,7 @@ def change_graph_error_probabilities(
 
 def vector_weights(
     graph: NXDecodingGraph,
-) -> DefaultDict[Tuple[float, ...], List[float]]:
+) -> defaultdict[tuple[float, ...], list[float]]:
     """Treat the edges of a graph as vectors and return a mapping of
     normalised vectors to a list of weights on those vectors.
 

@@ -3,7 +3,7 @@
 This module contains standalone functions related to observables used to generate
 stabiliser code circuits.
 """
-from typing import Iterable, List, Mapping, Sequence, Union
+from collections.abc import Iterable, Mapping, Sequence
 
 from deltakit_circuit import MeasurementRecord, Observable, Qubit
 from deltakit_circuit.gates import (ONE_QUBIT_MEASUREMENT_GATES,
@@ -11,9 +11,9 @@ from deltakit_circuit.gates import (ONE_QUBIT_MEASUREMENT_GATES,
 
 
 def _construct_observables(
-    observable_definitions: Mapping[int, Iterable[Union[_MeasurementGate, Qubit]]],
+    observable_definitions: Mapping[int, Iterable[_MeasurementGate | Qubit]],
     measurements: Sequence[_MeasurementGate],
-) -> List[Observable]:
+) -> list[Observable]:
     """
     Constructs Observable objects from a set of observable definitions and
     a list of lookback measurements. For each observable definition,
@@ -40,7 +40,7 @@ def _construct_observables(
     List[Observable]
         Constructed list of observables.
     """
-    observables: List[Observable] = []
+    observables: list[Observable] = []
     num_measurements = len(measurements)
     measurement_qubits = [
         measurement.qubit

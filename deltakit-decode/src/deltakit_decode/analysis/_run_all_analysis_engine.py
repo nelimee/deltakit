@@ -3,7 +3,8 @@ import datetime
 import logging
 from multiprocessing.synchronize import Lock as LockBase
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional
+from typing import Any
+from collections.abc import Callable, Iterable
 
 import numpy as np
 import pandas as pd
@@ -47,9 +48,8 @@ class RunAllAnalysisEngine:
         self,
         experiment_name: str,
         decoder_managers: Iterable[DecoderManager],
-        loop_condition: Optional[
-            Callable[[EmpiricalDecodingErrorDistribution], bool]] = None,
-        data_directory: Optional[Path] = None,
+        loop_condition: Callable[[EmpiricalDecodingErrorDistribution], bool] | None = None,
+        data_directory: Path | None = None,
         num_parallel_processes: int = 16,
         lvl: int = logging.NOTSET,
         batch_size: int = 10000000,
@@ -67,12 +67,12 @@ class RunAllAnalysisEngine:
         self.data_directory = data_directory
         self.decoder_managers = decoder_managers
         self.log = make_logger(lvl, experiment_name)
-        self.file_paths: List[Path] = []
-        self._current_experiment_file_path: Optional[Path] = None
+        self.file_paths: list[Path] = []
+        self._current_experiment_file_path: Path | None = None
         self._running_data = pd.DataFrame()
 
     @property
-    def all_reported_fields(self) -> List[str]:
+    def all_reported_fields(self) -> list[str]:
         """Returns the list of all fields reported by the decoder_managers. These are
         going to be headers of the exported CSV."""
         # using dict instead of set to keep ordering consistent
@@ -111,7 +111,7 @@ class RunAllAnalysisEngine:
 
         return pd.DataFrame(result_store)
 
-    def _run_parallel(self) -> List[Dict[str, Any]]:
+    def _run_parallel(self) -> list[dict[str, Any]]:
         """Helper function to run the decoder managers in parallel using a
         pathos process pool. Returns the list of shot loop results.
         """
@@ -123,7 +123,7 @@ class RunAllAnalysisEngine:
         return [self._shot_loop(decoder_manager, pool=pool)
                 for decoder_manager in tqdm_iter]
 
-    def _run_serial(self) -> List[Dict[str, Any]]:
+    def _run_serial(self) -> list[dict[str, Any]]:
         """Helper function to run the decoder managers in serial.
         Returns the list of shot loop results.
         """
@@ -141,12 +141,12 @@ class RunAllAnalysisEngine:
             )
         return self.data_directory / f"{self.experiment_name}.csv"
 
-    def save_results(self, results: List[Dict], file_path: Path):
+    def save_results(self, results: list[dict], file_path: Path):
         """Save the results to file and log that the file path was used."""
         pd.DataFrame(results).to_csv(file_path, index=False)
         self.file_paths.append(file_path)
 
-    def _append_results_to_current_file(self, results: Dict[str, Any]):
+    def _append_results_to_current_file(self, results: dict[str, Any]):
         """Appends the row of results to the current file"""
         pd.DataFrame([results]).to_csv(
             self._current_experiment_file_path, mode="a", index=False, header=False
@@ -154,9 +154,9 @@ class RunAllAnalysisEngine:
 
     def _shot_loop(
         self, decoder_manager: DecoderManager,
-        file_save_lock: Optional[LockBase] = None,
+        file_save_lock: LockBase | None = None,
         pool: ProcessPool = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Private helper function for performing a single loop for a given
         noise model, decoder and code. Returns an aggregation of accuracy
         statistics.

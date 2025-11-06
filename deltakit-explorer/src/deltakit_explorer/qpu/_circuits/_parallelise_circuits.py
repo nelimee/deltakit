@@ -4,7 +4,6 @@ This module includes functions merging multiple circuits into a
 single circuit to be executed on a single QPU in parallel.
 """
 
-from typing import List, Set
 
 import numpy as np
 from deltakit_circuit import (Circuit, Detector, GateLayer, Observable, Qubit,
@@ -17,7 +16,7 @@ from deltakit_circuit import (Circuit, Detector, GateLayer, Observable, Qubit,
 # pylint: disable=too-many-return-statements,too-many-boolean-expressions
 
 
-def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
+def parallelise_disjoint_circuits(circuits: list[Circuit]) -> Circuit:
     """
     Parallelise a list of circuits, each of which must act on distinct qubits.
     We assume it is preferable to perform gates of the same type in the same
@@ -147,7 +146,7 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
             parallelised_layers_gate_types.append(set())
 
     # Initialise set to record qubits
-    qubits: Set[Qubit] = set()
+    qubits: set[Qubit] = set()
 
     # Loop over circuits
     for icirc, (circuit, new_length) in enumerate(zip(circuits, circuit_lengths)):
@@ -209,7 +208,7 @@ def parallelise_disjoint_circuits(circuits: List[Circuit]) -> Circuit:
     return Circuit(parallelised_layers)
 
 
-def parallelise_same_length_circuits(circuits: List[Circuit]) -> Circuit:
+def parallelise_same_length_circuits(circuits: list[Circuit]) -> Circuit:
     """
     Parallelise a list of circuits, each of which must be the same length and
     act on distinct qubits in a particular layer. The circuits must also consist

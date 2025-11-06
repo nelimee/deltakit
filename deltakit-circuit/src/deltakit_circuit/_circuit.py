@@ -7,22 +7,8 @@ import collections.abc as cabc
 from copy import deepcopy
 from enum import IntEnum, auto
 from itertools import chain
-from typing import (
-    Callable,
-    FrozenSet,
-    Generic,
-    Iterable,
-    List,
-    Literal,
-    Mapping,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Union,
-    get_args,
-    no_type_check,
-)
+from typing import Generic, Literal, Protocol, get_args, no_type_check
+from collections.abc import Callable, Iterable, Mapping
 
 import stim
 from deltakit_circuit._parse_stim import parse_circuit_instruction
@@ -75,14 +61,14 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
     def __init__(
         self, layers: Layer | Iterable[Layer] | None = None, iterations: int = 1
     ):
-        self._layers: List[Layer] = []
+        self._layers: list[Layer] = []
         self.iterations = iterations
-        self._qubit_uid_type: Optional[type] = None
+        self._qubit_uid_type: type | None = None
         if layers is not None:
             self.append_layers(layers)
 
     @property
-    def qubit_uid_type(self) -> Optional[type]:
+    def qubit_uid_type(self) -> type | None:
         """Get the type of the qubit unique identifiers used in this circuit.
         If the circuit has not been parsed yet this will be None.
         """
@@ -93,7 +79,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         return self._qubit_uid_type
 
     @property
-    def layers(self) -> List[Layer]:
+    def layers(self) -> list[Layer]:
         """Get all the layers in this circuit. This property should not be
         modified directly and instead layers should be added using the
         append_layers method.
@@ -136,7 +122,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
                 return True
         return any(gate.probability > 0 for gate in self.measurement_gates)
 
-    def noise_layers(self, include_nested: bool = True) -> List[NoiseLayer[T]]:
+    def noise_layers(self, include_nested: bool = True) -> list[NoiseLayer[T]]:
         """All the noise layers in this circuit."""
         noise_layers = []
         for layer in self._layers:
@@ -146,7 +132,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
                 noise_layers.extend(layer.noise_layers(include_nested))
         return noise_layers
 
-    def gate_layers(self, include_nested: bool = True) -> List[GateLayer[T]]:
+    def gate_layers(self, include_nested: bool = True) -> list[GateLayer[T]]:
         """All the gate layers in this circuit."""
         gate_layers = []
         for layer in self._layers:
@@ -156,7 +142,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
                 gate_layers.extend(layer.gate_layers(include_nested))
         return gate_layers
 
-    def detectors(self, include_nested: bool = True) -> List[Detector]:
+    def detectors(self, include_nested: bool = True) -> list[Detector]:
         """All of the detectors in this circuit."""
         detectors = []
         for layer in self._layers:
@@ -167,7 +153,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         return detectors
 
     @property
-    def measurement_gates(self) -> Tuple[_MeasurementGate, ...]:
+    def measurement_gates(self) -> tuple[_MeasurementGate, ...]:
         """Get the ordered measurement gates in this circuit."""
         return tuple(
             chain.from_iterable(
@@ -178,10 +164,10 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         )
 
     @property
-    def qubits(self) -> FrozenSet[Qubit[T]]:
+    def qubits(self) -> frozenset[Qubit[T]]:
         """Get all the qubits that are used in this circuit and all nested
         circuits."""
-        qubits: Set[Qubit[T]] = set()
+        qubits: set[Qubit[T]] = set()
         for layer in self._layers:
             if not isinstance(layer, (Detector, Observable, ShiftCoordinates)):
                 qubits.update(layer.qubits)
@@ -325,7 +311,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             if not isinstance(noise_profile, Iterable)
             else noise_profile
         )
-        new_layers: List[Layer] = []
+        new_layers: list[Layer] = []
         for layer in self._layers:
             if isinstance(layer, GateLayer):
                 noise_layer: NoiseLayer = NoiseLayer()
@@ -460,8 +446,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
 
         sort_key = lexical_order if key is None else key
 
-        sorted_layers: List[Layer] = []
-        unsorted_detectors: List[Detector] = []
+        sorted_layers: list[Layer] = []
+        unsorted_detectors: list[Detector] = []
         for layer in self._layers:
             if isinstance(layer, Detector):
                 unsorted_detectors.append(layer)
@@ -647,7 +633,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             else qubit_mapping
         )
 
-        layers: List[Layer] = []
+        layers: list[Layer] = []
         for instruction in stim_circuit:
             if isinstance(instruction, stim.CircuitRepeatBlock):
                 repeated_circuit = cls.from_stim_circuit(
@@ -785,8 +771,8 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         return Circuit(deepcopy(self.layers), self.iterations)
 
     def detectors_gates(
-        self, measurement_gate_stack: List[_MeasurementGate] | None = None
-    ) -> List[Tuple[Detector, List[_MeasurementGate]]]:
+        self, measurement_gate_stack: list[_MeasurementGate] | None = None
+    ) -> list[tuple[Detector, list[_MeasurementGate]]]:
         """Return the gates associated with each detector in this circuit,
         including nested circuits. This is returned by resolving the lookback
         indices in the full context of the circuit.
@@ -809,7 +795,7 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         measurements = (
             measurement_gate_stack if measurement_gate_stack is not None else []
         )
-        detectors_gates: List[Tuple[Detector, List[_MeasurementGate]]] = []
+        detectors_gates: list[tuple[Detector, list[_MeasurementGate]]] = []
 
         for iteration in range(1, self.iterations + 1):
             for layer in self.layers:
@@ -831,5 +817,5 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
         return detectors_gates
 
 
-Layer = Union[GateLayer, NoiseLayer, Circuit, Detector, Observable, ShiftCoordinates]
+Layer = GateLayer | NoiseLayer | Circuit | Detector | Observable | ShiftCoordinates
 LAYERS = get_args(Layer)

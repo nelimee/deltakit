@@ -6,8 +6,7 @@ CSSCode class derives from StabiliserCode.
 
 import itertools
 from abc import ABC, abstractmethod
-from typing import (Collection, FrozenSet, Iterable, Optional, Sequence, Set,
-                    Tuple)
+from collections.abc import Collection, Iterable, Sequence
 
 from deltakit_circuit import Qubit
 from deltakit_circuit._basic_types import PauliBasis
@@ -29,8 +28,8 @@ class StabiliserCode(ABC):
     def __init__(
         self,
         stabilisers: Sequence[Iterable[Stabiliser]],
-        x_logical_operators: Optional[Sequence[Collection[PauliGate]]] = None,
-        z_logical_operators: Optional[Sequence[Collection[PauliGate]]] = None,
+        x_logical_operators: Sequence[Collection[PauliGate]] | None = None,
+        z_logical_operators: Sequence[Collection[PauliGate]] | None = None,
         use_ancilla_qubits: bool = True,
         check_logical_operators_are_independent: bool = False,
     ):
@@ -88,7 +87,7 @@ class StabiliserCode(ABC):
             :math:`\ket{+}\dots\ket{+}`.
         """
 
-    def _calculate_data_qubits(self) -> Set[Qubit]:
+    def _calculate_data_qubits(self) -> set[Qubit]:
         """
         Calculate all data qubits and return a set of them.
 
@@ -103,7 +102,7 @@ class StabiliserCode(ABC):
                 data_qubits.update(stab.data_qubits)
         return data_qubits
 
-    def _calculate_ancilla_qubits(self) -> Set[Qubit]:
+    def _calculate_ancilla_qubits(self) -> set[Qubit]:
         """
         Calculate ancilla qubits.
 
@@ -178,7 +177,7 @@ class StabiliserCode(ABC):
         """
 
     @property
-    def stabilisers(self) -> Tuple[Tuple[Stabiliser, ...], ...]:
+    def stabilisers(self) -> tuple[tuple[Stabiliser, ...], ...]:
         """
         Code stabilisers.
 
@@ -190,7 +189,7 @@ class StabiliserCode(ABC):
         return self._stabilisers
 
     @property
-    def qubits(self) -> Set[Qubit]:
+    def qubits(self) -> set[Qubit]:
         """
         All code qubits, both ancilla and data.
 
@@ -202,7 +201,7 @@ class StabiliserCode(ABC):
         return self._ancilla_qubits.union(self._data_qubits)
 
     @property
-    def data_qubits(self) -> Set[Qubit]:
+    def data_qubits(self) -> set[Qubit]:
         """
         All code data qubits.
 
@@ -214,7 +213,7 @@ class StabiliserCode(ABC):
         return self._data_qubits
 
     @property
-    def ancilla_qubits(self) -> Set[Qubit]:
+    def ancilla_qubits(self) -> set[Qubit]:
         """
         All code ancilla qubits.
 
@@ -238,7 +237,7 @@ class StabiliserCode(ABC):
         return self._use_ancilla_qubits
 
     @property
-    def x_logical_operators(self) -> Tuple[FrozenSet[PauliGate], ...]:
+    def x_logical_operators(self) -> tuple[frozenset[PauliGate], ...]:
         """
         All X logical operators for the code.
 
@@ -281,7 +280,7 @@ class StabiliserCode(ABC):
         self._x_logical_operators = tuple(frozenset(log) for log in new_x_logicals)
 
     @property
-    def z_logical_operators(self) -> Tuple[FrozenSet[PauliGate], ...]:
+    def z_logical_operators(self) -> tuple[frozenset[PauliGate], ...]:
         """
         All Z logical operators for the code.
 

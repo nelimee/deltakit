@@ -1,6 +1,5 @@
 # (c) Copyright Riverlane 2020-2025.
 from collections import defaultdict
-from typing import List, Set
 
 import stim
 from deltakit_core.decoding_graphs import (
@@ -76,7 +75,7 @@ def noise_probability(noise_channel: stim.CircuitTargetsInsideInstruction) -> fl
 
 
 def parse_explained_dem(
-    explained_dem: List[stim.ExplainedError],
+    explained_dem: list[stim.ExplainedError],
 ) -> DecodingHyperMultiGraph:
     """Parse an explained DEM into a hyper-multi-graph. Information about
     which logicals an edge affects is stored in the edge record of that edge
@@ -128,7 +127,7 @@ def parse_explained_dem(
     return DecodingHyperMultiGraph(edges, detector_records=detector_records)
 
 
-def extract_logicals(graph: HyperMultiGraph[AnyEdgeT]) -> List[Set[AnyEdgeT]]:
+def extract_logicals(graph: HyperMultiGraph[AnyEdgeT]) -> list[set[AnyEdgeT]]:
     """Extract which edges affect which logical observables from a graph by
     looking through the edge records.
 
@@ -152,7 +151,7 @@ def extract_logicals(graph: HyperMultiGraph[AnyEdgeT]) -> List[Set[AnyEdgeT]]:
             logicals_dict[logical].add(edge)
 
     # Logicals are zero indexed so we must plus one
-    logicals: List[Set[AnyEdgeT]] = [set() for _ in range(max_logical + 1)]
+    logicals: list[set[AnyEdgeT]] = [set() for _ in range(max_logical + 1)]
     for logical, edges in logicals_dict.items():
         logicals[logical] = edges
 

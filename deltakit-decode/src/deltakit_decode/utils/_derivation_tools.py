@@ -4,8 +4,8 @@ from collections.abc import Iterator
 import math
 from collections import defaultdict
 from itertools import chain, combinations, islice, product
-from typing import (Collection, Counter, DefaultDict, Dict, FrozenSet,
-                    Generator, Iterable, List, Sequence, Tuple)
+from collections import Counter
+from collections.abc import Collection, Generator, Iterable, Sequence
 from warnings import warn
 
 import numpy as np
@@ -13,7 +13,7 @@ import numpy.typing as npt
 import pathos
 from deltakit_core.decoding_graphs import NXDecodingGraph
 
-PijData = Dict[FrozenSet[int], float]
+PijData = dict[frozenset[int], float]
 
 
 def _compute_combinations_of_detectors(
@@ -195,7 +195,7 @@ def _calculate_g_value(p: float, q: float) -> float:
     return p + q - (2 * p * q)
 
 
-def _calculate_p_i_sigma(nodes: List[float]) -> List[float]:
+def _calculate_p_i_sigma(nodes: list[float]) -> list[float]:
     """Recursively collapse list of Pij values into PiSigma value,
     equation (S14) in https://arxiv.org/pdf/2102.06132.pdf
 
@@ -220,7 +220,7 @@ def _calculate_p_i_sigma(nodes: List[float]) -> List[float]:
 
 
 def _calculate_edge_prob_with_higher_degrees(
-    edge: FrozenSet[int],
+    edge: frozenset[int],
     pij_data: PijData,
     min_prob: float,
 ) -> float:
@@ -266,7 +266,7 @@ def _calculate_edge_prob_with_higher_degrees(
 
 def _n1_formula(
     exp_values: PijData,
-    keys: Sequence[FrozenSet[int]]
+    keys: Sequence[frozenset[int]]
 ) -> float:
     """Formula for parameter n1 in hyperedge calculations.
 
@@ -283,12 +283,12 @@ def _n1_formula(
     float
         The value of the calculation.
     """
-    return math.prod(((1 - (2 * exp_values.get(n, 0.0))) for n in keys))
+    return math.prod((1 - (2 * exp_values.get(n, 0.0))) for n in keys)
 
 
 def _d1_formula(
     exp_values: PijData,
-    keys: Sequence[FrozenSet[int]]
+    keys: Sequence[frozenset[int]]
 ) -> float:
     """Formula for parameter d1 in hyperedge calculations.
 
@@ -313,8 +313,8 @@ def _d1_formula(
 
 
 def _n2_formula(exp_values: PijData,
-                key: FrozenSet[int],
-                keys: Sequence[FrozenSet[int]]
+                key: frozenset[int],
+                keys: Sequence[frozenset[int]]
                 ) -> float:
     """Formula for parameter n2 in hyperedge calculations.
 
@@ -335,8 +335,8 @@ def _n2_formula(exp_values: PijData,
     float
         The value of the calculation.
     """
-    return 1 - (2 * math.fsum((exp_values.get(frozenset((n,)), 0.0) for n in key))) \
-        + (4 * math.fsum((exp_values.get(x, 0.0) for x in keys))) \
+    return 1 - (2 * math.fsum(exp_values.get(frozenset((n,)), 0.0) for n in key)) \
+        + (4 * math.fsum(exp_values.get(x, 0.0) for x in keys)) \
         - (8 * exp_values.get(key, 0.0))
 
 
@@ -344,7 +344,7 @@ def create_correlation_matrix(
     pij_data: PijData,
     graph: NXDecodingGraph,
     plot_boundary_edges: bool = False,
-) -> Tuple[npt.NDArray[np.float64], Dict[Tuple[float, ...], List[int]]]:
+) -> tuple[npt.NDArray[np.float64], dict[tuple[float, ...], list[int]]]:
     """Generate a correlation matrix for a given Pij matrix.
     Will plot qubit labels as major ticks, minor ticks
     within the major ticks are rounds (time). Matrix will be
@@ -374,8 +374,8 @@ def create_correlation_matrix(
 
     # create a mapping - each major tick is an ancilla qubit,
     # and each minor tick inside a major corresponds to a round
-    major_minor_mapping: DefaultDict[Tuple[float, ...],
-                                     List[int]] = defaultdict(list)
+    major_minor_mapping: defaultdict[tuple[float, ...],
+                                     list[int]] = defaultdict(list)
     for k, v in graph.detector_records.items():
         if k not in graph.boundaries:
             major_minor_mapping[v.spatial_coord].append(k)
@@ -386,8 +386,8 @@ def create_correlation_matrix(
 
     # if there are not a consistent number of rounds for each qubit,
     # throw an error, since we can only plot NxN matrices
-    if not all((len(x) == len(next(iter(major_minor_mapping.values())))
-                for x in major_minor_mapping.values())):
+    if not all(len(x) == len(next(iter(major_minor_mapping.values())))
+                for x in major_minor_mapping.values()):
         msg = "Inconsistent qubit time mapping"
         raise ValueError(msg)
 

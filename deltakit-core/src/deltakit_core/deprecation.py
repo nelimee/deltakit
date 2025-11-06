@@ -1,6 +1,7 @@
 import functools
 import warnings
-from typing import Callable, ParamSpec, TypeVar, overload
+from typing import ParamSpec, TypeVar, overload
+from collections.abc import Callable
 
 import semver
 

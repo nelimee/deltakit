@@ -5,8 +5,9 @@ from abc import ABC, abstractmethod
 from contextlib import ExitStack
 from functools import cached_property, partial
 from itertools import islice
-from typing import (TYPE_CHECKING, Any, Dict, Generic, Iterable, Iterator,
-                    List, Optional, Tuple, TypeVar)
+from typing import (TYPE_CHECKING, Any, Generic,
+                    TypeVar)
+from collections.abc import Iterable, Iterator
 from uuid import UUID, uuid4
 from warnings import warn
 
@@ -25,7 +26,7 @@ CorrectionT = TypeVar('CorrectionT')
 BatchErrorT = TypeVar('BatchErrorT')
 BatchCorrectionT = TypeVar('BatchCorrectionT')
 
-mp_dm: Optional[DecoderManager] = None  # pylint: disable=global-statement
+mp_dm: DecoderManager | None = None  # pylint: disable=global-statement
 
 
 class DecoderManager(ABC):
@@ -56,8 +57,8 @@ class DecoderManager(ABC):
 
     def __init__(self,
                  number_of_observables: int,
-                 reporters: Optional[List[BaseReporter]] = None,
-                 metadata: Optional[Dict[str, Any]] = None,
+                 reporters: list[BaseReporter] | None = None,
+                 metadata: dict[str, Any] | None = None,
                  batch_size: int = 10000):
         self.reporters = reporters if reporters is not None else []
         self.metadata = metadata if metadata is not None else {}
@@ -74,7 +75,7 @@ class DecoderManager(ABC):
         """
 
     @abstractmethod
-    def run_batch_shots(self, batch_limit: Optional[int]) -> Tuple[int, int]:
+    def run_batch_shots(self, batch_limit: int | None) -> tuple[int, int]:
         """Run multiple shots of decoding. Return the number of shots ran and the number
         of those that were deemed failures.
         """
@@ -123,11 +124,11 @@ class DecoderManager(ABC):
         pool.map(lambda _: _clear_process_global_memory(), range(total_processes))
 
     def run_batch_shots_parallel(self,
-                                 batch_limit: Optional[int],
+                                 batch_limit: int | None,
                                  processes: int,  # noqa: ARG002
                                  pool,  # noqa: ARG002
                                  min_tasks_per_process: int = 50  # noqa: ARG002
-                                 ) -> Tuple[int, int]:
+                                 ) -> tuple[int, int]:
         """Run batch of shots in parallel using `processes` number of runners from
         `pool`. Cap the number of processes created such that a minimum of
         `min_tasks_per_process` should be running per process. By default the ABC
@@ -172,7 +173,7 @@ class DecoderManager(ABC):
         # pylint: disable=unused-argument
         return self.run_batch_shots(batch_limit=batch_limit)
 
-    def get_reporter_results(self) -> Dict[str, Any]:
+    def get_reporter_results(self) -> dict[str, Any]:
         """Get aggregated data from the manager's internal state and all available
         reporters as a dict from string of data identifier to data.
 
@@ -181,7 +182,7 @@ class DecoderManager(ABC):
         Dict[str, Any]
             Dictionary of current reporting results.
         """
-        analysis_results: Dict[str, Any] = {"shots": self.shots, "fails": self.fails}
+        analysis_results: dict[str, Any] = {"shots": self.shots, "fails": self.fails}
         analysis_results.update(self.metadata)
 
         for reporter in self.reporters:
@@ -238,9 +239,9 @@ def _clear_process_global_memory():
     mp_dm = None
 
 
-def _run_process(state_token: UUID, batch_limit: Optional[int], jobs: int, job_no: int
-                 ) -> Tuple[EmpiricalDecodingErrorDistribution,
-                            List[BaseReporter]]:
+def _run_process(state_token: UUID, batch_limit: int | None, jobs: int, job_no: int
+                 ) -> tuple[EmpiricalDecodingErrorDistribution,
+                            list[BaseReporter]]:
     """Run process with persistent decoder manager object stored in process
     globals memory.
     """
@@ -282,16 +283,16 @@ class NoiseModelDecoderManager(DecoderManager,
     def __init__(self,
                  noise_model: NoiseModel[CodeDataT, ErrorT],
                  number_of_observables: int,
-                 reporters: Optional[List[BaseReporter]] = None,
-                 metadata: Optional[Dict[str, Any]] = None,
-                 seed: Optional[int] = None,
+                 reporters: list[BaseReporter] | None = None,
+                 metadata: dict[str, Any] | None = None,
+                 seed: int | None = None,
                  batch_size: int = int(1e4)):
         super().__init__(number_of_observables,
                          reporters,
                          metadata,
                          batch_size=batch_size)
         self._noise_model = noise_model
-        self._shared_generator: Optional[Iterator[ErrorT]] = None
+        self._shared_generator: Iterator[ErrorT] | None = None
         self._seed = seed
         self._start_seed = seed
 
@@ -306,7 +307,7 @@ class NoiseModelDecoderManager(DecoderManager,
 
     def _exec_shots_atomic(self,
                            error_generator: Iterable[ErrorT],
-                           batch_limit: Optional[int]):
+                           batch_limit: int | None):
         """Executes shot one by one."""
         if batch_limit is not None:
             error_generator = islice(error_generator, int(batch_limit))
@@ -361,7 +362,7 @@ class NoiseModelDecoderManager(DecoderManager,
         return self._noise_model.error_generator(
             self._get_code_data(), seed=self._seed)
 
-    def run_batch_shots(self, batch_limit: Optional[int]) -> Tuple[int, int]:
+    def run_batch_shots(self, batch_limit: int | None) -> tuple[int, int]:
         if batch_limit is not None and batch_limit > 1 and not self.reporters:
             self._exec_shots_batch(self.batch_error_generator, batch_limit)
         else:
@@ -369,11 +370,11 @@ class NoiseModelDecoderManager(DecoderManager,
         return self.shots, self.fails
 
     def run_batch_shots_parallel(self,
-                                 batch_limit: Optional[int],
+                                 batch_limit: int | None,
                                  processes: int,
                                  pool,
                                  min_tasks_per_process: int = 50
-                                 ) -> Tuple[int, int]:
+                                 ) -> tuple[int, int]:
         if batch_limit is None:
             if isinstance(self._noise_model, MonteCarloNoise):
                 msg = (
@@ -420,9 +421,9 @@ class NoiseModelDecoderManager(DecoderManager,
                 self._get_code_data(), seed=self._seed)
         return next(self._shared_generator)
 
-    def _setup_and_run_process(self, batch_limit: Optional[int], jobs: int, job_no: int
-                               ) -> Tuple[EmpiricalDecodingErrorDistribution,
-                                          List[BaseReporter]]:
+    def _setup_and_run_process(self, batch_limit: int | None, jobs: int, job_no: int
+                               ) -> tuple[EmpiricalDecodingErrorDistribution,
+                                          list[BaseReporter]]:
         """Setup process globals memory with manager and run thread worker.
         """
         global mp_dm  # pylint: disable=global-statement
@@ -440,10 +441,10 @@ class NoiseModelDecoderManager(DecoderManager,
 
     def _thread_worker(self,
                        state_token,
-                       batch_limit: Optional[int],
+                       batch_limit: int | None,
                        jobs: int, job_no: int
-                       ) -> Tuple[EmpiricalDecodingErrorDistribution,
-                                  List[BaseReporter]]:
+                       ) -> tuple[EmpiricalDecodingErrorDistribution,
+                                  list[BaseReporter]]:
         if state_token != self._mp_token:
             msg = "Worker decoder manager global has invalid token."
             raise InvalidGlobalManagerStateError(

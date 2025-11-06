@@ -7,7 +7,6 @@ circuit for a quantum memory experiment with a Calderbank-Shor-Steane
 
 from __future__ import annotations
 
-from typing import Optional
 
 import deltakit_explorer
 import stim
@@ -31,7 +30,7 @@ def css_code_memory_circuit(
     css_code: StabiliserCode,
     num_rounds: int,
     logical_basis: PauliBasis,
-    client: Optional[deltakit_explorer.Client] = None,
+    client: deltakit_explorer.Client | None = None,
     use_iswap_gates: bool = False,
 ) -> Circuit:
     """
@@ -102,7 +101,7 @@ def _cloud_css_code_experiment_circuit(
     css_code: StabiliserCode,
     num_rounds: int,
     logical_basis: PauliBasis,
-    client: Optional[deltakit_explorer.Client] = None,
+    client: deltakit_explorer.Client | None = None,
     use_iswap_gates: bool = False,
 ) -> Circuit:
     """
@@ -175,7 +174,7 @@ def _cloud_css_code_experiment_circuit(
     else:
         msg = "Unrecognised `css_code` type."
         raise ValueError(msg)
-    basis_gates: Optional[list[str]] = None
+    basis_gates: list[str] | None = None
     if use_iswap_gates:
         basis_gates = [
             "ISWAP",
@@ -202,7 +201,7 @@ def css_code_stability_circuit(
     css_code: StabiliserCode,
     num_rounds: int,
     logical_basis: PauliBasis,
-    client: Optional[deltakit_explorer.Client] = None,
+    client: deltakit_explorer.Client | None = None,
     use_iswap_gates: bool = False,
 ) -> Circuit:
     """

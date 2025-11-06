@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional, cast, TYPE_CHECKING
+from typing import Any, cast, TYPE_CHECKING
 from typing_extensions import override
 from urllib.parse import urljoin
 
@@ -45,7 +45,7 @@ class Job:
     status: str
     request_id: str
     type: APIEndpoints
-    error: Optional[str] = None
+    error: str | None = None
     workload: dict = field(default_factory=dict)
     result: dict = field(default_factory=dict)
 

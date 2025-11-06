@@ -8,7 +8,8 @@ import warnings
 from collections import defaultdict
 from collections.abc import Iterable as IterableC
 from functools import reduce
-from typing import TYPE_CHECKING, Dict, List, Optional, Sequence, Tuple, Union
+from typing import TYPE_CHECKING
+from collections.abc import Sequence
 
 import numpy as np
 from deltakit_circuit import (Circuit, Coordinate, Detector, MeasurementRecord,
@@ -20,8 +21,8 @@ if TYPE_CHECKING:
 
 
 def _get_coordinate_from_ancilla_qubit(
-    ancilla_qubit: Optional[Qubit],
-) -> Optional[Coordinate]:
+    ancilla_qubit: Qubit | None,
+) -> Coordinate | None:
     """
     Extracts and returns the coordinate of the qubit provided. If these coordinates
     are not available (i.e. if the qubit provided is None or if the qubit's unique
@@ -58,8 +59,8 @@ def _get_coordinate_from_ancilla_qubit(
 
 
 def _get_coordinate_from_data_qubits(
-    data_qubits: List[Qubit],
-) -> Optional[Coordinate]:
+    data_qubits: list[Qubit],
+) -> Coordinate | None:
     """
     Computes and returns a coordinate which is the average in each coordinate
     dimension of qubits' coordinates provided. If any of these qubits' coordinate is
@@ -112,7 +113,7 @@ def _get_coordinate_from_data_qubits(
 
 def _calculate_detector_coordinates(
     stabilisers: Sequence[Stabiliser],
-) -> Tuple[Coordinate, ...]:
+) -> tuple[Coordinate, ...]:
     """
     Calculate detector coordinates based on the stabilisers used in the stage.
 
@@ -139,7 +140,7 @@ def _calculate_detector_coordinates(
         as in the input.
     """
 
-    detector_coords: List[Coordinate] = []
+    detector_coords: list[Coordinate] = []
     coord_len: int = -1
     for stabiliser in stabilisers:
         # attempt to get a coordinate from the ancilla qubit
@@ -193,7 +194,7 @@ def _calculate_detector_coordinates(
     return tuple(Coordinate(i, 0) for i in range(len(stabilisers)))
 
 
-def _get_coordinate_shifts(detectors: List[Detector]) -> List[ShiftCoordinates]:
+def _get_coordinate_shifts(detectors: list[Detector]) -> list[ShiftCoordinates]:
     """
     Given a list of detectors, computes coordinate shifts which increase the last
     coordinate dimension by 1. If the detectors provided have coordinates of
@@ -235,7 +236,7 @@ def _get_coordinate_shifts(detectors: List[Detector]) -> List[ShiftCoordinates]:
 def _get_between_round_detectors(
     detector_coordinates: Sequence[Coordinate],
     num_additional_measurements: int = 0,
-) -> List[Detector]:
+) -> list[Detector]:
     """
     For a scenario where multiple rounds of syndrome extraction of a same group of
     stabilisers are performed, compute and return the detectors which compare
@@ -264,7 +265,7 @@ def _get_between_round_detectors(
 
     num_measurements = len(detector_coordinates) + num_additional_measurements
 
-    detectors: List[Union[Detector, ShiftCoordinates]] = []
+    detectors: list[Detector | ShiftCoordinates] = []
 
     for i, detector_coord in enumerate(detector_coordinates):
         lookback_index = i - num_measurements
@@ -280,7 +281,7 @@ def _get_between_round_detectors(
 def get_between_round_detectors_and_coordinate_shifts(
     detector_coordinates: Sequence[Coordinate],
     num_additional_measurements: int = 0,
-) -> List[Union[Detector, ShiftCoordinates]]:
+) -> list[Detector | ShiftCoordinates]:
     """
     For a scenario where multiple rounds of syndrome extraction of a same group of
     stabilisers are performed, compute and return the detectors which compare
@@ -320,7 +321,7 @@ def get_between_round_detectors_and_coordinate_shifts(
 def _get_joint_sub_super_stabilisers_ind(
     previous_stabilisers: Sequence[Stabiliser],
     current_stabilisers: Sequence[Stabiliser],
-) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
+) -> list[tuple[tuple[int, ...], tuple[int, ...]]]:
     """
     Exhaustively search for one element in previous_stabilisers/current_stabilisers and
     one or more elements from current_stabilisers/previous_stabilisers such that the
@@ -346,9 +347,9 @@ def _get_joint_sub_super_stabilisers_ind(
         The list collecting the stabiliser outcome comparisons.
     """
     # First build dictionaries of the comparisons
-    joint_stabilisers_ind: Dict[int, int] = {}
-    sub_stabilisers_ind: Dict[int, List[int]] = defaultdict(list)
-    super_stabilisers_ind: Dict[int, List[int]] = defaultdict(list)
+    joint_stabilisers_ind: dict[int, int] = {}
+    sub_stabilisers_ind: dict[int, list[int]] = defaultdict(list)
+    super_stabilisers_ind: dict[int, list[int]] = defaultdict(list)
 
     for (ind_prev, stab_prev), (ind_curr, stab_curr) in itertools.product(
         enumerate(previous_stabilisers), enumerate(current_stabilisers)
@@ -384,7 +385,7 @@ def _get_joint_sub_super_stabilisers_ind(
             del super_stabilisers_ind[ind_prev]
     # Convert these dictionaries into the list format
     # fmt: off
-    full_index_list: List[Tuple[Tuple[int, ...], Tuple[int, ...]]] = (
+    full_index_list: list[tuple[tuple[int, ...], tuple[int, ...]]] = (
         [
             ((ind_prev,), (ind_curr,))
             for ind_prev, ind_curr in sorted(
@@ -410,7 +411,7 @@ def _get_joint_sub_super_stabilisers_ind(
 
 def _get_stage_transition_detectors(
     previous_stage: "CSSStage", current_stage: "CSSStage"
-) -> List[Detector]:
+) -> list[Detector]:
     """
     Return a list containing all detectors for transitioning between the
     stages previous_stage and current_stage.

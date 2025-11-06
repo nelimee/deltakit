@@ -1,7 +1,6 @@
 # (c) Copyright Riverlane 2020-2025.
 import random
 from itertools import product
-from typing import Dict, Tuple
 
 import numpy as np
 import pytest
@@ -108,7 +107,7 @@ class TestEmpiricalDecodingErrorDistribution:
             {(False,): 0})
     ])
     def test_from_dict_gives_expected_frequency_from_bool_tuple(self,
-                                                                error_distribution_dict: Dict[Tuple[bool, ...], int]):
+                                                                error_distribution_dict: dict[tuple[bool, ...], int]):
         distr = EmpiricalDecodingErrorDistribution.from_dict(error_distribution_dict)
         for key, val in error_distribution_dict.items():
             assert distr[key] == val

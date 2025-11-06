@@ -2,7 +2,7 @@
 """Tests for data qubits datastrucutres."""
 
 import math
-from typing import AbstractSet, Iterable, List, Tuple
+from collections.abc import Iterable, Set as AbstractSet
 
 import pytest
 from deltakit_core.decoding_graphs import (
@@ -344,8 +344,8 @@ class TestOrderedDecodingEdges:
     def test_as_bitstring(
         self,
         ordered_decoding_edges: OrderedDecodingEdges,
-        edges: List[DecodingEdge],
-        expected_bitstring: List[Bit],
+        edges: list[DecodingEdge],
+        expected_bitstring: list[Bit],
     ):
         assert ordered_decoding_edges.as_bitstring(edges) == expected_bitstring
 
@@ -366,7 +366,7 @@ class TestOrderedDecodingEdges:
     )
     def test_construct_decoding_edges_from_syndrome_indices(
         self,
-        indices: Iterable[Tuple[int, int]],
+        indices: Iterable[tuple[int, int]],
         expected_decoding_edges: OrderedDecodingEdges,
     ):
         assert (

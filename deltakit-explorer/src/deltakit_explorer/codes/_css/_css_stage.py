@@ -6,8 +6,7 @@ of stage generation for quantum memory experiment using CSS codes.
 
 import itertools
 from functools import cached_property
-from typing import (FrozenSet, Iterable, List, Mapping, Optional, Sequence,
-                    Tuple, Union)
+from collections.abc import Iterable, Mapping, Sequence
 
 import stim
 from deltakit_circuit import Circuit, Coordinate, GateLayer, Qubit
@@ -97,19 +96,13 @@ class CSSStage:
 
     def __init__(
         self,
-        stabilisers: Optional[Sequence[Sequence[Stabiliser]]] = None,
+        stabilisers: Sequence[Sequence[Stabiliser]] | None = None,
         num_rounds: int = 0,
-        first_round_measurements: Optional[
-            Sequence[Union[MPP, OneQubitMeasurementGate]]
-        ] = None,
-        first_round_gates: Optional[
-            Iterable[Union[OneQubitCliffordGate, TwoOperandGate]]
-        ] = None,
-        final_round_resets: Optional[Iterable[OneQubitResetGate]] = None,
-        observable_definitions: Optional[
-            Mapping[int, Iterable[Union[Qubit, MPP, OneQubitMeasurementGate]]]
-        ] = None,
-        use_ancilla_qubits: Optional[bool] = None,
+        first_round_measurements: Sequence[MPP | OneQubitMeasurementGate] | None = None,
+        first_round_gates: Iterable[OneQubitCliffordGate | TwoOperandGate] | None = None,
+        final_round_resets: Iterable[OneQubitResetGate] | None = None,
+        observable_definitions: Mapping[int, Iterable[Qubit | MPP | OneQubitMeasurementGate]] | None = None,
+        use_ancilla_qubits: bool | None = None,
     ):
         self._stabilisers = () if stabilisers is None else stabilisers
         self._num_rounds = num_rounds
@@ -175,8 +168,8 @@ class CSSStage:
 
     @staticmethod
     def _calculate_gate_qubits(
-        first_round_gates: FrozenSet[Union[OneQubitCliffordGate, TwoOperandGate]],
-    ) -> Tuple[Qubit]:
+        first_round_gates: frozenset[OneQubitCliffordGate | TwoOperandGate],
+    ) -> tuple[Qubit]:
         """
         Calculate the qubits on which the gates act.
         """
@@ -231,7 +224,7 @@ class CSSStage:
     def _check_first_round_gates(
         stabilisers: Sequence[Sequence[Stabiliser]],
         measurements: Sequence[OneQubitMeasurementGate],
-        gates: FrozenSet[Union[OneQubitCliffordGate, TwoOperandGate]],
+        gates: frozenset[OneQubitCliffordGate | TwoOperandGate],
         first_round_data_qubits: Sequence[Qubit],
     ) -> None:
         """
@@ -296,7 +289,7 @@ class CSSStage:
 
     @staticmethod
     def _determine_circuit_construction_method(
-        stabilisers: Tuple[Stabiliser, ...],
+        stabilisers: tuple[Stabiliser, ...],
     ) -> bool:
         """
         Check whether the stabilisers have ancilla qubits defined and thus determine
@@ -332,7 +325,7 @@ class CSSStage:
             msg
         )
 
-    def _construct_mpp_syndrome_extraction_layers(self) -> List[GateLayer]:
+    def _construct_mpp_syndrome_extraction_layers(self) -> list[GateLayer]:
         """Construct the syndrome extraction circuit for the stabilisers using MPPs."""
         layers = []
         for stabilisers_set in self._stabilisers:
@@ -354,11 +347,11 @@ class CSSStage:
 
         return layers
 
-    def _construct_full_syndrome_extraction_layers(self) -> List[GateLayer]:
+    def _construct_full_syndrome_extraction_layers(self) -> list[GateLayer]:
         """
         Construct the syndrome extraction circuit for the stabilisers using gates.
         """
-        layers: List[GateLayer] = []
+        layers: list[GateLayer] = []
         for timestep, timestep_stabs in enumerate(self._stabilisers):
             ancilla_qubits = tuple(stab.ancilla_qubit for stab in timestep_stabs)
             layers.append(GateLayer(RX(q) for q in ancilla_qubits))
@@ -375,7 +368,7 @@ class CSSStage:
 
         return layers
 
-    def _construct_syndrome_extraction_layers(self) -> List[GateLayer]:
+    def _construct_syndrome_extraction_layers(self) -> list[GateLayer]:
         """
         Construct the layers for the syndrome extraction circuit.
         """
@@ -384,7 +377,7 @@ class CSSStage:
         return self._construct_mpp_syndrome_extraction_layers()
 
     @property
-    def detector_coordinates(self) -> Tuple[Coordinate, ...]:
+    def detector_coordinates(self) -> tuple[Coordinate, ...]:
         """
         Tuple of coordinates of detectors, computed with respect
         to stabilisers.
@@ -397,7 +390,7 @@ class CSSStage:
         return self._detector_coordinates
 
     @cached_property
-    def measurements_as_stabilisers(self) -> Tuple[Stabiliser, ...]:
+    def measurements_as_stabilisers(self) -> tuple[Stabiliser, ...]:
         """
         Tuple of stabiliser objects representing measurements.
 
@@ -420,7 +413,7 @@ class CSSStage:
         return tuple(stabs)
 
     @cached_property
-    def resets_as_stabilisers(self) -> Tuple[Stabiliser, ...]:
+    def resets_as_stabilisers(self) -> tuple[Stabiliser, ...]:
         """
         Tuple of stabiliser objects representing final round resets.
 
@@ -438,7 +431,7 @@ class CSSStage:
         )
 
     @cached_property
-    def ordered_stabilisers(self) -> Tuple[Stabiliser, ...]:
+    def ordered_stabilisers(self) -> tuple[Stabiliser, ...]:
         """
         Flattened version of the stabilisers we measure in the last round of the stage,
         in order of measurement. This is constructed straight from self._stabilisers.
@@ -452,7 +445,7 @@ class CSSStage:
     @cached_property
     def stabilisers_before(
         self,
-    ) -> Tuple[Stabiliser, ...]:
+    ) -> tuple[Stabiliser, ...]:
         """
         A transformed version of ordered_stabilisers with removed ancilla_qubits that
         correspond to the stabilisers before first_round_gates. As ancillas are changed
@@ -464,7 +457,7 @@ class CSSStage:
             The stabilisers before applying the gates in self.first_round_gates.
         """
         data_qubits = tuple(self._first_round_data_qubits)
-        tableau_qubits: Tuple[Qubit] = data_qubits + self._gate_qubits
+        tableau_qubits: tuple[Qubit] = data_qubits + self._gate_qubits
 
         # Create tableau that implements _first_round_gates
         tableau = stim.Tableau(len(tableau_qubits))
@@ -522,7 +515,7 @@ class CSSStage:
         Circuit
             A circuit with the first stage round.
         """
-        layers: List[GateLayer] = []
+        layers: list[GateLayer] = []
         current_layer = GateLayer()
         for gate in list(self._first_round_measurements) + list(
             self._first_round_gates

@@ -3,7 +3,6 @@
 This module consists of individual circuit optimisation functions.
 """
 
-from typing import List, Tuple, Union
 
 from deltakit_circuit import (Circuit, Detector, GateLayer, MeasurementRecord,
                               NoiseLayer, Observable, ShiftCoordinates)
@@ -43,10 +42,10 @@ def merge_layers(circuit: Circuit, break_repeat_blocks: bool = False) -> Circuit
     """
 
     def _calculate_offset_annotation_layers(
-        annotation_layers_with_offsets: List[
-            Tuple[Union[Detector, Observable, ShiftCoordinates], int]
+        annotation_layers_with_offsets: list[
+            tuple[Detector | Observable | ShiftCoordinates, int]
         ],
-    ) -> List[Union[Detector, Observable, ShiftCoordinates]]:
+    ) -> list[Detector | Observable | ShiftCoordinates]:
         """
         Construct a list of annotations with shifted measurement indices.
 
@@ -91,8 +90,8 @@ def merge_layers(circuit: Circuit, break_repeat_blocks: bool = False) -> Circuit
 
     merged_layers = []
     current_gate_layer = GateLayer()
-    current_annotations_and_offsets: List[
-        Tuple[Union[Detector, Observable, ShiftCoordinates], int]
+    current_annotations_and_offsets: list[
+        tuple[Detector | Observable | ShiftCoordinates, int]
     ] = []
     for layer in circuit.layers:
         if isinstance(layer, GateLayer):

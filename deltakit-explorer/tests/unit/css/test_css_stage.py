@@ -138,7 +138,7 @@ class TestCalculateDetectorCoordinates:
                 [
                     Stabiliser([PauliX(7)], Qubit(1.2)),
                     Stabiliser([PauliX(0), PauliY(3)]),
-                    Stabiliser([PauliX(1), PauliZ(("test"))]),
+                    Stabiliser([PauliX(1), PauliZ("test")]),
                 ],
                 (Coordinate(0, 0), Coordinate(1, 0)),
             ),

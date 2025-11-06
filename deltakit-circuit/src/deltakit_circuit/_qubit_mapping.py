@@ -2,12 +2,12 @@
 """Module which defines mappings between qubits that deltakit_circuit uses and indices
 which stim uses."""
 
-from typing import Dict, Iterable
+from collections.abc import Iterable
 
 from deltakit_circuit._qubit_identifiers import Qubit, T
 
 
-def default_qubit_mapping(qubits: Iterable[Qubit[T]]) -> Dict[Qubit[T], int]:
+def default_qubit_mapping(qubits: Iterable[Qubit[T]]) -> dict[Qubit[T], int]:
     """Generate a mapping from each qubit to an int by default.
     If the unique identifier for the qubit is an int then the unique
     identifier is the value for that qubit.

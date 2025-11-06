@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from functools import reduce
 from itertools import product
-from typing import Dict, List, Tuple
 
 import galois
 import numpy as np
@@ -24,8 +23,8 @@ from bposd.css import css_code
 
 
 def _find_anticommuting_pairs(
-    x_logs_as_vecs: List[List[int]], z_logs_as_vecs: List[List[int]], k: int, n: int
-) -> Tuple[List[List[int]], List[List[int]]]:
+    x_logs_as_vecs: list[list[int]], z_logs_as_vecs: list[list[int]], k: int, n: int
+) -> tuple[list[list[int]], list[list[int]]]:
     """
     Given a set of logical X and Z operators, find k anti-commuting pairs of
     logical operators that are also independent.
@@ -63,8 +62,8 @@ def _find_anticommuting_pairs(
     x_logs = [int("".join("01"[i] for i in vec), 2) for vec in x_logs_as_vecs]
     z_logs = [int("".join("01"[i] for i in vec), 2) for vec in z_logs_as_vecs]
 
-    chosen_x_logs: List[int] = []
-    chosen_z_logs: List[int] = []
+    chosen_x_logs: list[int] = []
+    chosen_z_logs: list[int] = []
     while len(chosen_x_logs) < k:
         if len(x_logs) == 0 or len(z_logs) == 0:
             msg = f"Unable to construct {k} logical operators, could only find {len(chosen_x_logs)}"
@@ -73,8 +72,8 @@ def _find_anticommuting_pairs(
             )
         # get which x anti-commutes with which z and vice-versa
         # use dictionaries for constant-time lookup
-        x_ac_with_z: Dict[int, Dict] = {x: {} for x in x_logs}
-        z_ac_with_x: Dict[int, Dict] = {z: {} for z in z_logs}
+        x_ac_with_z: dict[int, dict] = {x: {} for x in x_logs}
+        z_ac_with_x: dict[int, dict] = {z: {} for z in z_logs}
         for x_log, z_log in product(x_logs, z_logs):
             if (x_log & z_log).bit_count() % 2 == 1:
                 x_ac_with_z[x_log][z_log] = {}
@@ -216,11 +215,11 @@ class Polynomial:
     the IBM paper.
     """
 
-    def __init__(self, monomials: List[Monomial]):
+    def __init__(self, monomials: list[Monomial]):
         self.monomials = monomials
 
     @staticmethod
-    def from_vec(vec: List[int], l, m) -> Polynomial:  # noqa: E741
+    def from_vec(vec: list[int], l, m) -> Polynomial:  # noqa: E741
         """
         Create a Polynomial from a binary vector.
 
@@ -251,7 +250,7 @@ class Polynomial:
                 vec_of_monomials.append(Monomial(a_i, b_i, l, m))
         return Polynomial(vec_of_monomials)
 
-    def to_vec(self) -> List[int]:
+    def to_vec(self) -> list[int]:
         """
         Convert a Polynomial back to a binary vector.
 
@@ -378,8 +377,8 @@ class BivariateBicycleCode(CSSCode):
         self,
         param_l: int,
         param_m: int,
-        m_A_powers: List[int],
-        m_B_powers: List[int],
+        m_A_powers: list[int],
+        m_B_powers: list[int],
         validate: bool = True,
         check_logical_operators_are_independent: bool = False,
     ):
@@ -467,8 +466,8 @@ class BivariateBicycleCode(CSSCode):
     def _validate_input_parameters(
         ell: int,
         m: int,
-        m_A_powers: List[int],
-        m_B_powers: List[int],
+        m_A_powers: list[int],
+        m_B_powers: list[int],
     ):
         """
         Validate that the input parameters are valid as specified by
@@ -569,7 +568,7 @@ class BivariateBicycleCode(CSSCode):
 
     def _get_qubit_coords(
         self,
-    ) -> Tuple[Dict[int, Qubit], Dict[int, Qubit], Dict[int, Qubit], Dict[int, Qubit]]:
+    ) -> tuple[dict[int, Qubit], dict[int, Qubit], dict[int, Qubit], dict[int, Qubit]]:
         """
         Attempt to lay out the qubits on a square-ish grid, the size of which is dictated
         by the periodic boundary conditions of the torus the code may or may not
@@ -604,10 +603,10 @@ class BivariateBicycleCode(CSSCode):
         """
         # assign the first row of the Hx matrix to be the bottom-left-most qubit
         x_coord, y_coord, matrix_index_of_next_qubit = 0, 0, 0
-        x_lookup: Dict[int, Qubit] = {}
-        z_lookup: Dict[int, Qubit] = {}
-        dl_lookup: Dict[int, Qubit] = {}
-        dr_lookup: Dict[int, Qubit] = {}
+        x_lookup: dict[int, Qubit] = {}
+        z_lookup: dict[int, Qubit] = {}
+        dl_lookup: dict[int, Qubit] = {}
+        dr_lookup: dict[int, Qubit] = {}
 
         # when scanning over qubit connections, the bottom row alternates Z-anc to L-data
         # and alternate rows between R-data and X-anc, so use the qubit coord mod 2 to
@@ -679,7 +678,7 @@ class BivariateBicycleCode(CSSCode):
 
         return dl_lookup, dr_lookup, x_lookup, z_lookup
 
-    def _get_stabilisers(self) -> List[Stabiliser]:
+    def _get_stabilisers(self) -> list[Stabiliser]:
         """
         Given the appropriate matrices describing the code, construct
         the stabilisers with valid scheduling.
@@ -757,7 +756,7 @@ class BivariateBicycleCode(CSSCode):
 
     def _get_logicals(
         self,
-    ) -> Tuple[List[List[PauliX[Coord2D]]], List[List[PauliZ[Coord2D]]]]:
+    ) -> tuple[list[list[PauliX[Coord2D]]], list[list[PauliZ[Coord2D]]]]:
         """
         Will return a tuple of lists of the X and Z logicals, respectively.
         They are paired up in order, that is, they anticommute when the

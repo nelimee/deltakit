@@ -10,8 +10,7 @@ from __future__ import annotations
 import itertools
 from collections import Counter
 from functools import cached_property
-from typing import (Collection, FrozenSet, Iterable, List, Optional, Sequence,
-                    Set, Tuple)
+from collections.abc import Collection, Iterable, Sequence
 
 import galois
 import numpy as np
@@ -99,8 +98,8 @@ class CSSCode(StabiliserCode):
     def __init__(
         self,
         stabilisers: Sequence[Iterable[Stabiliser]],
-        x_logical_operators: Optional[Sequence[Collection[PauliGate]]] = None,
-        z_logical_operators: Optional[Sequence[Collection[PauliGate]]] = None,
+        x_logical_operators: Sequence[Collection[PauliGate]] | None = None,
+        z_logical_operators: Sequence[Collection[PauliGate]] | None = None,
         use_ancilla_qubits: bool = True,
         calculate_logical_operators: bool = False,
         check_logical_operators_are_independent: bool = False,
@@ -168,7 +167,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def x_and_z_operators_commute(
-        x_operator: Iterable[Optional[PauliX]], z_operator: Iterable[Optional[PauliZ]]
+        x_operator: Iterable[PauliX | None], z_operator: Iterable[PauliZ | None]
     ) -> bool:
         """
         Compute whether an X-type stabiliser commutes with a Z-type stabiliser.
@@ -185,7 +184,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_duplicate_stabilisers(
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...]
+        stabilisers: tuple[tuple[Stabiliser, ...], ...]
     ) -> None:
         for ind_lay, simultaneous_stabilisers in enumerate(stabilisers):
             if len(simultaneous_stabilisers) != len(set(simultaneous_stabilisers)):
@@ -215,9 +214,9 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_stabiliser_and_logical_operator_types(
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...],
-        x_logical_operators: Tuple[FrozenSet[PauliGate], ...],
-        z_logical_operators: Tuple[FrozenSet[PauliGate], ...],
+        stabilisers: tuple[tuple[Stabiliser, ...], ...],
+        x_logical_operators: tuple[frozenset[PauliGate], ...],
+        z_logical_operators: tuple[frozenset[PauliGate], ...],
     ) -> None:
         """
         Check the following:
@@ -302,8 +301,8 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _calculate_x_and_z_stabilisers(
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...],
-    ) -> Tuple[List[Set[Stabiliser]], List[Set[Stabiliser]]]:
+        stabilisers: tuple[tuple[Stabiliser, ...], ...],
+    ) -> tuple[list[set[Stabiliser]], list[set[Stabiliser]]]:
         """
         Return two lists, one containing the X-stabilisers and the other the
         Z-stabilisers.
@@ -313,8 +312,8 @@ class CSSCode(StabiliserCode):
         Tuple[List[Set[Stabiliser]], List[Set[Stabiliser]]]
             Tuple containing X-stabilisers and Z-stabilisers.
         """
-        x_stabilisers: List[Set[Stabiliser]] = []
-        z_stabilisers: List[Set[Stabiliser]] = []
+        x_stabilisers: list[set[Stabiliser]] = []
+        z_stabilisers: list[set[Stabiliser]] = []
         for simultaneous_stabilisers in stabilisers:
             x_layer = set()
             z_layer = set()
@@ -364,10 +363,10 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_commutation_relations(
-        x_stabilisers: List[Set[Stabiliser]],
-        z_stabilisers: List[Set[Stabiliser]],
-        x_logical_operators: Tuple[FrozenSet[PauliGate], ...],
-        z_logical_operators: Tuple[FrozenSet[PauliGate], ...],
+        x_stabilisers: list[set[Stabiliser]],
+        z_stabilisers: list[set[Stabiliser]],
+        x_logical_operators: tuple[frozenset[PauliGate], ...],
+        z_logical_operators: tuple[frozenset[PauliGate], ...],
         check_logical_operators_are_independent: bool,
     ) -> None:
         """
@@ -453,9 +452,9 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_ancilla_qubit_properties(
-        ancilla_qubits: Set[Qubit],
-        data_qubits: Set[Qubit],
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...],
+        ancilla_qubits: set[Qubit],
+        data_qubits: set[Qubit],
+        stabilisers: tuple[tuple[Stabiliser, ...], ...],
     ) -> None:
         """
         Check the following properties for ancilla qubits:
@@ -489,7 +488,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_logical_operators_are_supported_on_data_qubits(
-        logical_operators: Tuple[FrozenSet[PauliGate], ...], data_qubits: Set[Qubit]
+        logical_operators: tuple[frozenset[PauliGate], ...], data_qubits: set[Qubit]
     ) -> None:
         """
         Check that the logical operators are defined on the code's data qubits.
@@ -509,7 +508,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_stabiliser_lengths(
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...],
+        stabilisers: tuple[tuple[Stabiliser, ...], ...],
     ) -> None:
         """
         Assuming all stabilisers are measured using syndrome extraction circuits, check
@@ -539,7 +538,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_unique_data_qubits_in_layers(
-        stabilisers: Tuple[Tuple[Stabiliser, ...], ...],
+        stabilisers: tuple[tuple[Stabiliser, ...], ...],
     ):
         """
         Assuming all stabilisers are measured using syndrome extraction circuits, check
@@ -575,7 +574,7 @@ class CSSCode(StabiliserCode):
 
     @staticmethod
     def _check_schedule_is_valid(
-        x_stabilisers: List[Set[Stabiliser]], z_stabilisers: List[Set[Stabiliser]]
+        x_stabilisers: list[set[Stabiliser]], z_stabilisers: list[set[Stabiliser]]
     ) -> None:
         """
         Assuming all stabilisers are measured using syndrome extraction circuits,

@@ -1,5 +1,5 @@
 # (c) Copyright Riverlane 2020-2025.
-from typing import Dict, List, Sequence, Tuple
+from collections.abc import Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,8 +7,8 @@ from matplotlib.ticker import FuncFormatter
 
 
 def plot_correlation_matrix(
-    matrix: List[List[float]],
-    major_minor_mapping: Dict[Tuple[float, ...], List[int]],
+    matrix: list[list[float]],
+    major_minor_mapping: dict[tuple[float, ...], list[int]],
     labels: Sequence[str] = (),
 ):
     """Plot a given correlation matrix as a heatmap.

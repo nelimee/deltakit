@@ -3,7 +3,6 @@
 from collections.abc import Callable
 import math
 from itertools import combinations
-from typing import Dict, FrozenSet, List, Optional, Set, Tuple, Union
 
 import stim
 from deltakit_core.decoding_graphs import (DecodingEdge, DecodingHyperEdge,
@@ -17,11 +16,11 @@ from deltakit_decode.utils._derivation_tools import (_calculate_edge_prob_with_h
                                                      _n1_formula,
                                                      _n2_formula)
 
-PijData = Dict[FrozenSet[int], float]
+PijData = dict[frozenset[int], float]
 
 
 def _calculate_pij_degree_2(
-    key: FrozenSet[int],
+    key: frozenset[int],
     exp_values: PijData,
 ) -> float:
     """Calculate Pij values for degree 2 edges as per the formulae defined
@@ -50,7 +49,7 @@ def _calculate_pij_degree_2(
 
 
 def _calculate_pij_degree_3(
-    key: FrozenSet[int],
+    key: frozenset[int],
     exp_values: PijData,
 ) -> float:
     """Calculate Pij values for degree 3 hyperedges.
@@ -83,7 +82,7 @@ def _calculate_pij_degree_3(
 
 
 def _calculate_pij_degree_4(
-    key: FrozenSet[int],
+    key: frozenset[int],
     exp_values: PijData,
 ) -> float:
     """Calculate Pij values for degree 4 hyperedges.
@@ -107,16 +106,16 @@ def _calculate_pij_degree_4(
 
     n1 = _n1_formula(exp_values, [i, j, k, m])
 
-    n2 = math.prod((_n2_formula(exp_values, n3, [frozenset(x)
+    n2 = math.prod(_n2_formula(exp_values, n3, [frozenset(x)
                                                  for x in combinations(n3, 2)])
-                    for n3 in w3_nodes))
+                    for n3 in w3_nodes)
 
     d1 = _d1_formula(exp_values, w2_nodes)
 
     d2 = 1\
-        - (2 * math.fsum((exp_values.get(n, 0.0) for n in [i, j, k, m]))) \
-        + (4 * math.fsum((exp_values.get(n2, 0.0) for n2 in w2_nodes))) \
-        - (8 * math.fsum((exp_values.get(n3, 0.0) for n3 in w3_nodes))) \
+        - (2 * math.fsum(exp_values.get(n, 0.0) for n in [i, j, k, m])) \
+        + (4 * math.fsum(exp_values.get(n2, 0.0) for n2 in w2_nodes)) \
+        - (8 * math.fsum(exp_values.get(n3, 0.0) for n3 in w3_nodes)) \
         + (16 * exp_values.get(key, 0.0))
 
     inner_b = math.pow((n1 * n2) / (d1 * d2), 1 / 8)
@@ -125,7 +124,7 @@ def _calculate_pij_degree_4(
 
 def _get_calculate_pij_degree_callable(
     max_degree: int
-) -> Callable[[FrozenSet[int], PijData], float]:
+) -> Callable[[frozenset[int], PijData], float]:
     match max_degree:
         case 2:
             return _calculate_pij_degree_2
@@ -140,12 +139,10 @@ def _get_calculate_pij_degree_callable(
             )
 
 def calculate_pij_values(exp_values: PijData,
-                         graph: Optional[Union[NXDecodingGraph,
-                                               DecodingHyperGraph]] = None,
+                         graph: NXDecodingGraph | DecodingHyperGraph | None = None,
                          min_prob: float = -math.inf,
                          max_degree: int = 2,
-                         noise_floor_graph: Optional[Union[NXDecodingGraph,
-                                                           DecodingHyperGraph]] = None
+                         noise_floor_graph: NXDecodingGraph | DecodingHyperGraph | None = None
                          ) -> PijData:
     """Calculates the Pij values given the <Xi> <Xj> etc values.
     At most degree 4 edges are supported.
@@ -215,7 +212,7 @@ def calculate_pij_values(exp_values: PijData,
             edges_to_calc = [e - boundary for e in edges_to_calc]
 
     pij_data: PijData = {}
-    edges_for_recalc: List[FrozenSet[int]] = []
+    edges_for_recalc: list[frozenset[int]] = []
     for key in edges_to_calc:
         if len(key) < max_degree:
             # any edges less than max degree need to be re-calculated
@@ -250,8 +247,8 @@ def calculate_pij_values(exp_values: PijData,
 
 def create_dem_from_pij(
     pij_data: PijData,
-    graph: Union[NXDecodingGraph, DecodingHyperGraph],
-    logicals: List[Set[DecodingHyperEdge]]
+    graph: NXDecodingGraph | DecodingHyperGraph,
+    logicals: list[set[DecodingHyperEdge]]
 ) -> stim.DetectorErrorModel:
     """Create a detector error model from a Pij probabilities data set
     and accompanying stim Circuit.
@@ -322,7 +319,7 @@ def create_dem_from_pij(
 def pijs_edge_diff(
     pij1: PijData,
     pij2: PijData,
-) -> Tuple[Set, Set]:
+) -> tuple[set, set]:
     """Compare two Pij dicts to see if they contain the same edges.
 
     Parameters
@@ -380,7 +377,7 @@ def pij_and_dem_edge_diff(
     dem: stim.DetectorErrorModel,
     pij: PijData,
     is_hypergraph: bool = False,
-) -> Tuple[Set, Set]:
+) -> tuple[set, set]:
     """Given a stim.DetectorErrorModel and Pij dict,
     compare the two to see if they contain the same edges
     w.r.t nodes in the edges. Return a tuple of sets
@@ -406,7 +403,7 @@ def pij_and_dem_edge_diff(
         pij/dem respectively.
     """
     graph: HyperMultiGraph
-    graph_edges: Set[FrozenSet[int]]
+    graph_edges: set[frozenset[int]]
     if is_hypergraph:
         graph, _ = dem_to_hypergraph_and_logicals(dem)
         graph_edges = {e.vertices for e in graph.edges}

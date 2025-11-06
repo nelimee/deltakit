@@ -6,24 +6,14 @@ from __future__ import annotations
 from collections import Counter, UserDict, defaultdict
 from functools import cached_property
 from itertools import chain, repeat
-from typing import (
-    AbstractSet,
-    Any,
-    Self,
-    cast,
+from typing import Any, Self, cast, Literal, SupportsIndex, overload
+from collections.abc import (
     Collection,
-    Dict,
     Iterable,
     Iterator,
-    List,
-    Literal,
     Mapping,
-    Optional,
     Sequence,
-    SupportsIndex,
-    Tuple,
-    Union,
-    overload,
+    Set as AbstractSet,
 )
 
 import numpy as np
@@ -46,17 +36,17 @@ class DetectorRecord(UserDict):
     """
 
     def __init__(
-        self, spatial_coord: Tuple[float | int, ...] = (), time: int = 0, **kwargs
+        self, spatial_coord: tuple[float | int, ...] = (), time: int = 0, **kwargs
     ) -> None:
         super().__init__(spatial_coord=spatial_coord, time=time, **kwargs)
 
     @property
-    def spatial_coord(self) -> Tuple[float, ...]:
+    def spatial_coord(self) -> tuple[float, ...]:
         """Spatial coordinate of this detector."""
         return self.data["spatial_coord"]
 
     @spatial_coord.setter
-    def spatial_coord(self, value: Tuple[float, ...]):
+    def spatial_coord(self, value: tuple[float, ...]):
         self.data["spatial_coord"] = value
 
     @property
@@ -69,7 +59,7 @@ class DetectorRecord(UserDict):
         self.data["time"] = value
 
     @property
-    def full_coord(self) -> Tuple[float, ...]:
+    def full_coord(self) -> tuple[float, ...]:
         """Return the full coordinate for this detector, which is given in the form
         spatial coordinates then time coordinate.
         """
@@ -78,8 +68,8 @@ class DetectorRecord(UserDict):
     @classmethod
     def from_dict(
         cls,
-        property_dict: Dict[str, Any],
-    ) -> "DetectorRecord":
+        property_dict: dict[str, Any],
+    ) -> DetectorRecord:
         """Create a DetectorRecord from a given property dict of optional values.
         This is included for compatibility for network-x vertex representations.
 
@@ -142,7 +132,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
             self._detectors = dict.fromkeys(detectors)
 
     @cached_property
-    def _as_tuple(self) -> Tuple[int, ...]:
+    def _as_tuple(self) -> tuple[int, ...]:
         """Defined to create immutable object to hash, and to make `__getitem__` a O(1)
         method. Exists as a property to avoid duplication of data in core member
         attributes, and to have this be created only when needed.
@@ -187,7 +177,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
         """
         return OrderedSyndrome(np.flatnonzero(bitstring).tolist())
 
-    def as_bitstring(self, num_bits: int) -> List[Bit]:
+    def as_bitstring(self, num_bits: int) -> list[Bit]:
         """Convert OrderedSyndrome to a bitstring, with `num_bits` bits."""
         syndrome_bits = np.zeros(num_bits, dtype=np.uint8)
         syndrome_bits[list(self._detectors)] = 1
@@ -196,7 +186,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
 
     def split_at_symptom(
         self, split_detection_event: int
-    ) -> Tuple[List[int], List[int]]:
+    ) -> tuple[list[int], list[int]]:
         """Split OrderedSyndrome in to two lists of detection events in
         order, ending the first at the given detector event.
 
@@ -221,11 +211,11 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
 
     def split_by_time_coord(
         self, detector_records: Mapping[int, DetectorRecord], layers: int
-    ) -> List[OrderedSyndrome]:
+    ) -> list[OrderedSyndrome]:
         """Split the OrderedSyndrome into a time-ordered list of OrderedSyndromes, with
         `layers` number of items in the list.
         """
-        syndromes_by_time: Dict[int, List[int]] = defaultdict(list)
+        syndromes_by_time: dict[int, list[int]] = defaultdict(list)
         for detector in self:
             detector_time = detector_records[detector].time
             syndromes_by_time[detector_time].append(detector)
@@ -238,9 +228,9 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
 
     def as_layers(
         self,
-        syndromes_per_layer: Union[int, List[int]],
-        total_layers: Optional[int] = None,
-    ) -> List[List[int]]:
+        syndromes_per_layer: int | list[int],
+        total_layers: int | None = None,
+    ) -> list[list[int]]:
         """Create a sequence of layers from a syndrome, where each layer is a
         collection of integers representing the detectors triggered on that layer.
         Each layer should be contiguously indexed from 0.
@@ -264,7 +254,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
                 total_layers = len(syndromes_per_layer)
         if isinstance(syndromes_per_layer, int):
             syndromes_per_layer = [syndromes_per_layer for _ in range(total_layers)]
-        layers: List[List[int]] = [[] for _ in range(total_layers)]
+        layers: list[list[int]] = [[] for _ in range(total_layers)]
 
         if len(syndromes_per_layer) == 0:
             return layers
@@ -283,7 +273,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
 
     @classmethod
     def from_layers(
-        cls, layers: Sequence[Iterable[int]], syndromes_per_layer: Union[int, List[int]]
+        cls, layers: Sequence[Iterable[int]], syndromes_per_layer: int | list[int]
     ) -> OrderedSyndrome:
         """Create a syndrome from a sequence of layers, where each layer is a
         collection of integers representing the detectors triggered on that layer.
@@ -301,7 +291,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
         -------
         OrderedSyndrome
         """
-        syndrome: List[int] = []
+        syndrome: list[int] = []
         layer_synd_add = 0
         for i, layer in enumerate(layers):
             syndrome.extend([synd + layer_synd_add for synd in layer])
@@ -359,7 +349,7 @@ class Bitstring:
             value |= 1 << index
         return cls(value)
 
-    def to_indices(self) -> List[int]:
+    def to_indices(self) -> list[int]:
         """Create a list of indices of the non-zero elements in this bitstring
 
         Returns

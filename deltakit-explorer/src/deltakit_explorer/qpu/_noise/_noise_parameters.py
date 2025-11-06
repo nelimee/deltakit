@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from itertools import chain
-from typing import Callable, Dict, List, Optional, Type
+from collections.abc import Callable
 
 import numpy as np
 from deltakit_circuit import NoiseProfile, Qubit
@@ -108,17 +108,17 @@ class NoiseParameters:
 
     name = "noise_model"
 
-    gate_noise: List[NoiseProfile] = field(default_factory=list)
-    idle_noise: Optional[Callable[[Qubit, float], NoiseChannel]] = None
-    reset_noise: List[NoiseProfile] = field(default_factory=list)
-    measurement_noise_after: List[NoiseProfile] = field(default_factory=list)
-    measurement_noise_before: List[NoiseProfile] = field(default_factory=list)
+    gate_noise: list[NoiseProfile] = field(default_factory=list)
+    idle_noise: Callable[[Qubit, float], NoiseChannel] | None = None
+    reset_noise: list[NoiseProfile] = field(default_factory=list)
+    measurement_noise_after: list[NoiseProfile] = field(default_factory=list)
+    measurement_noise_before: list[NoiseProfile] = field(default_factory=list)
 
-    measurement_flip: Dict[
-        Type[_MeasurementGate], Callable[[_MeasurementGate], _MeasurementGate]
+    measurement_flip: dict[
+        type[_MeasurementGate], Callable[[_MeasurementGate], _MeasurementGate]
     ] = field(default_factory=dict)
 
-    def as_noise_profile_after_gate(self) -> List[NoiseProfile]:
+    def as_noise_profile_after_gate(self) -> list[NoiseProfile]:
         """
         Returns the noise profiles encapsulated by this object as a single generator
         of noise profiles. Omits the noise before measurement.

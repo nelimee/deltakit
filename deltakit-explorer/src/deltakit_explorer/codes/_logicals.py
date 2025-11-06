@@ -6,7 +6,7 @@ with a collection of stabilisers.
 
 from __future__ import annotations
 
-from typing import Collection, Iterable, Optional
+from collections.abc import Collection, Iterable
 
 from deltakit_circuit import PauliX, PauliY, PauliZ, Qubit
 from deltakit_circuit._qubit_identifiers import _PauliGate
@@ -44,7 +44,7 @@ def paulistring_to_operator(
 
 
 def get_str_logical_operators_from_tableau(
-    stabilisers: Collection[PauliString], num_logical_qubits: Optional[int] = None
+    stabilisers: Collection[PauliString], num_logical_qubits: int | None = None
 ) -> list[tuple[PauliString, PauliString]]:
     """
     For a general stabiliser code, computes the logical operators for a collection of
@@ -113,7 +113,7 @@ def get_str_logical_operators_from_tableau(
 
 
 def get_logical_operators_from_tableau(
-    stabilisers: Iterable[Stabiliser], num_logical_qubits: Optional[int] = None
+    stabilisers: Iterable[Stabiliser], num_logical_qubits: int | None = None
 ) -> tuple[tuple[set[_PauliGate], ...], tuple[set[_PauliGate], ...]]:
     """
     For a general stabiliser code, computes the logical operators for a collection of

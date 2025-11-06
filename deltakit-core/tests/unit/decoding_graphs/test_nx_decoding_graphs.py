@@ -4,7 +4,6 @@
 import math
 import re
 from itertools import chain, combinations, permutations, repeat
-from typing import Tuple
 
 import networkx as nx
 import numpy as np
@@ -837,7 +836,7 @@ class TestNXDecodingGraph:
         ],
     )
     def test_get_edge_record_from_edge(
-        self, graph: NXDecodingGraph, edge_dets: Tuple[int], expected_record: EdgeRecord
+        self, graph: NXDecodingGraph, edge_dets: tuple[int], expected_record: EdgeRecord
     ):
         assert graph.get_edge_record(*edge_dets).data == expected_record.data
 

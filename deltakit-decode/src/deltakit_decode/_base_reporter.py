@@ -6,7 +6,7 @@ from abc import abstractmethod
 from contextlib import AbstractContextManager
 from math import sqrt
 from time import time_ns
-from typing import Any, Dict, Self
+from typing import Any, Self
 
 from deltakit_decode.utils import make_logger
 
@@ -32,7 +32,7 @@ class BaseReporter(AbstractContextManager):
         """
 
     @abstractmethod
-    def get_reported_results(self) -> Dict[str, Any]:
+    def get_reported_results(self) -> dict[str, Any]:
         """Return the usage log values this reporter has recorded.
         This is given as a dictionary where the key is some string describing the data.
         """
@@ -106,7 +106,7 @@ class TimingReporter(BaseReporter):
             return sqrt(self._sum_of_square_deviations / (self._shots - 1))
         return 0
 
-    def get_reported_results(self) -> Dict[str, Any]:
+    def get_reported_results(self) -> dict[str, Any]:
         return {
             "avg_wall_ns": self.avg_wall_ns,
             "stderr_wall_ns": self.stderr_wall_ns

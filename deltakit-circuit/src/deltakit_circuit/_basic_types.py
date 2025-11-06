@@ -7,7 +7,7 @@ modelling.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import NamedTuple, Union
+from typing import NamedTuple
 
 from deltakit_circuit._qubit_identifiers import Coordinate
 from deltakit_circuit.gates import CX, CY, CZ, PauliBasis
@@ -15,7 +15,7 @@ from deltakit_circuit.gates import CX, CY, CZ, PauliBasis
 PauliBases = tuple[PauliBasis, ...]
 
 # pylint: disable=invalid-name
-CP = Union[CX, CY, CZ]
+CP = CX | CY | CZ
 
 
 class Coord2DDelta(NamedTuple):

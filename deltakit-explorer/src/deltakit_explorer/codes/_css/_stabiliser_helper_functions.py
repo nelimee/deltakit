@@ -3,7 +3,7 @@
 This module contains standalone functions which help extract information from
 stabilisers.
 """
-from typing import Iterable, Optional, Sequence, Tuple
+from collections.abc import Iterable, Sequence
 
 from deltakit_circuit import GateLayer, PauliX, PauliY, PauliZ, Qubit
 from deltakit_circuit._basic_maps import PAULI_TO_CP
@@ -44,7 +44,7 @@ def get_entangling_layer(
 
 def _transform_stabiliser(
     stabiliser: Stabiliser,
-    tableau_qubits: Tuple[Qubit],
+    tableau_qubits: tuple[Qubit],
     transform_tableau: Tableau,
 ) -> Stabiliser:
     """
@@ -113,7 +113,7 @@ def _get_data_qubits_from_stabilisers(
 
 
 def pauli_gates_to_stim_pauli_string(
-    pauli_gates: Iterable[Optional[PauliGate]],
+    pauli_gates: Iterable[PauliGate | None],
     data_qubit_to_index_lookup: dict[Qubit, int],
 ) -> PauliString:
     r"""

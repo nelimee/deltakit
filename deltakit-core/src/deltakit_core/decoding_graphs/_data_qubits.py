@@ -7,21 +7,14 @@ import math
 from collections import Counter, UserDict
 from functools import cached_property
 from itertools import chain
-from typing import (
-    AbstractSet,
-    Any,
+from typing import Any, Generic, TypeVar
+from collections.abc import (
     Collection,
-    Dict,
-    FrozenSet,
-    Generic,
     Iterable,
     Iterator,
-    List,
     Mapping,
-    Optional,
     Sequence,
-    Tuple,
-    TypeVar,
+    Set as AbstractSet,
 )
 
 from deltakit_core.decoding_graphs._syndromes import (
@@ -71,7 +64,7 @@ class EdgeRecord(UserDict):
     @classmethod
     def from_dict(
         cls,
-        property_dict: Dict[str, Any],
+        property_dict: dict[str, Any],
     ) -> EdgeRecord:
         """Create a EdgeRecord from a given property dict of optional values.
 
@@ -121,11 +114,11 @@ class DecodingHyperEdge(Collection[int]):
         self._hash = hash(self.vertices)
 
     @property
-    def vertices(self) -> FrozenSet[int]:
+    def vertices(self) -> frozenset[int]:
         """Vertices in this edge."""
         return self._vertices
 
-    def to_decoding_edge(self, boundary: Optional[int] = None) -> DecodingEdge:
+    def to_decoding_edge(self, boundary: int | None = None) -> DecodingEdge:
         """Cast this edge into a decoding edge if possible."""
         degree_target = 2
         if (degree := len(self.vertices)) == degree_target:
@@ -249,7 +242,7 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
 
     def __init__(
         self,
-        decoding_edges: Optional[Iterable[EdgeT]] = None,
+        decoding_edges: Iterable[EdgeT] | None = None,
         mod_2_filter: bool = True,
     ):
         _decoding_edges = [] if decoding_edges is None else decoding_edges
@@ -259,7 +252,7 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
             self._decoding_edges = dict.fromkeys(_decoding_edges)
 
     @staticmethod
-    def _mod_2_filter(decoding_edges: Iterable[EdgeT]) -> Dict[EdgeT, None]:
+    def _mod_2_filter(decoding_edges: Iterable[EdgeT]) -> dict[EdgeT, None]:
         edge_counts = Counter(decoding_edges)
         return dict.fromkeys(
             [edge for edge, count in edge_counts.items() if count % 2 == 1]
@@ -274,7 +267,7 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
             self._decoding_edges.update(other._decoding_edges)
 
     @cached_property
-    def _as_tuple(self) -> Tuple[EdgeT, ...]:
+    def _as_tuple(self) -> tuple[EdgeT, ...]:
         """Defined to create immutable object to hash, and to make `__getitem__` a O(1)
         method. Exists as a property to avoid duplication of data in core member
         attributes, and to have this be created only when needed.
@@ -311,7 +304,7 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
             and self._as_tuple == other._as_tuple
         )
 
-    def as_bitstring(self, edges: Sequence[EdgeT]) -> List[Bit]:
+    def as_bitstring(self, edges: Sequence[EdgeT]) -> list[Bit]:
         """Convert given edges to a bitstring representation of `len(edges)` bits
         from condition of each edge inside  _decoding_edges.
 
@@ -329,7 +322,7 @@ class OrderedDecodingEdges(Generic[EdgeT], Sequence[EdgeT], AbstractSet[EdgeT]):
 
     @classmethod
     def from_syndrome_indices(
-        cls, indices: Iterable[Tuple[int, int]]
+        cls, indices: Iterable[tuple[int, int]]
     ) -> OrderedDecodingEdges[DecodingEdge]:
         """Given a list of pairs of syndrome indices, construct the corresponding
         decoding edges and return in an `OrderedDecodingEdges` collection.

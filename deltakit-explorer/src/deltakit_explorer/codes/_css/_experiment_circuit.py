@@ -6,7 +6,7 @@ from a sequence of stages.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from deltakit_circuit import Circuit
 from deltakit_explorer.codes._css._css_stage import CSSStage

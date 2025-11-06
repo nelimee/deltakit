@@ -6,18 +6,8 @@ from __future__ import annotations
 import warnings
 from collections import abc
 from itertools import chain
-from typing import (
-    ClassVar,
-    Generic,
-    Hashable,
-    Iterable,
-    Iterator,
-    Mapping,
-    Sequence,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import ClassVar, Generic, TypeVar
+from collections.abc import Hashable, Iterable, Iterator, Mapping, Sequence
 
 import stim
 
@@ -66,7 +56,7 @@ class Qubit(Generic[T]):
             self._stim_identifier = stim_identifier
 
     @classmethod
-    def pairs_from_consecutive(cls, ids: Sequence[T]) -> Iterator[Tuple[Qubit, Qubit]]:
+    def pairs_from_consecutive(cls, ids: Sequence[T]) -> Iterator[tuple[Qubit, Qubit]]:
         """A generator yielding pairs of qubit instances from a single
         sequence.
 
@@ -114,7 +104,7 @@ class Qubit(Generic[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target gate target for this qubit."""
         return (stim.GateTarget(qubit_mapping[self]),)
 
@@ -163,7 +153,7 @@ class SweepBit:
         """Get the bit index for this sweep bit."""
         return self._bit_index
 
-    def stim_targets(self, *_) -> Tuple[stim.GateTarget]:
+    def stim_targets(self, *_) -> tuple[stim.GateTarget]:
         """Get this sweep bit as a stim gate target."""
         return (stim.GateTarget(stim.target_sweep_bit(self._bit_index)),)
 
@@ -177,7 +167,7 @@ class SweepBit:
         return f"SweepBit({self._bit_index})"
 
 
-class Coordinate(Tuple[float, ...]):
+class Coordinate(tuple[float, ...]):
     """Class which represents general coordinates.
 
     Parameters
@@ -221,7 +211,7 @@ class MeasurementRecord:
         """Get the lookback index"""
         return self._lookback_index
 
-    def stim_targets(self, *_) -> Tuple[stim.GateTarget]:
+    def stim_targets(self, *_) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (stim.GateTarget(stim.target_rec(self.lookback_index)),)
 
@@ -296,7 +286,7 @@ class PauliX(PauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (stim.GateTarget(stim.target_x(qubit_mapping[self.qubit])),)
 
@@ -315,7 +305,7 @@ class PauliY(PauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (stim.GateTarget(stim.target_y(qubit_mapping[self.qubit])),)
 
@@ -334,7 +324,7 @@ class PauliZ(PauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (stim.GateTarget(stim.target_z(qubit_mapping[self.qubit])),)
 
@@ -386,7 +376,7 @@ class InvertiblePauliX(InvertiblePauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (
             stim.GateTarget(
@@ -415,7 +405,7 @@ class InvertiblePauliY(InvertiblePauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (
             stim.GateTarget(
@@ -444,7 +434,7 @@ class InvertiblePauliZ(InvertiblePauliGate[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget]:
+    ) -> tuple[stim.GateTarget]:
         """Get the stim target for this gate."""
         return (
             stim.GateTarget(
@@ -456,10 +446,8 @@ class InvertiblePauliZ(InvertiblePauliGate[T]):
         return InvertiblePauliZ(self.qubit, invert=not self._is_inverted)
 
 
-_PauliGate = Union[PauliX[T], PauliY[T], PauliZ[T]]
-_InvertiblePauliGate = Union[
-    InvertiblePauliX[T], InvertiblePauliY[T], InvertiblePauliZ[T]
-]
+_PauliGate = PauliX[T] | PauliY[T] | PauliZ[T]
+_InvertiblePauliGate = InvertiblePauliX[T] | InvertiblePauliY[T] | InvertiblePauliZ[T]
 
 
 class MeasurementPauliProduct(Generic[T]):
@@ -484,11 +472,11 @@ class MeasurementPauliProduct(Generic[T]):
 
     def __init__(
         self,
-        pauli_gates: Union[
-            _PauliGate,
-            _InvertiblePauliGate,
-            Iterable[Union[_PauliGate, _InvertiblePauliGate]],
-        ],
+        pauli_gates: (
+            _PauliGate
+            | _InvertiblePauliGate
+            | Iterable[_PauliGate | _InvertiblePauliGate]
+        ),
     ):
         pauli_gates = (
             (pauli_gates,)
@@ -505,12 +493,12 @@ class MeasurementPauliProduct(Generic[T]):
         self._pauli_gates = pauli_gates
 
     @property
-    def pauli_gates(self) -> Tuple[_PauliGate | _InvertiblePauliGate, ...]:
+    def pauli_gates(self) -> tuple[_PauliGate | _InvertiblePauliGate, ...]:
         """Get the gates for this Pauli product."""
         return self._pauli_gates
 
     @property
-    def qubits(self) -> Tuple[Qubit[T], ...]:
+    def qubits(self) -> tuple[Qubit[T], ...]:
         """Get all qubits for this gate in a tuple."""
         return tuple(gate.qubit for gate in self.pauli_gates)
 
@@ -529,7 +517,7 @@ class MeasurementPauliProduct(Generic[T]):
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget, ...]:
+    ) -> tuple[stim.GateTarget, ...]:
         """Return all stim targets which specify this Pauli product."""
         # Create a list which is the same length as the final output and just
         # contains the stim combiners.
@@ -578,15 +566,15 @@ class PauliProduct(MeasurementPauliProduct[T]):
 
     def __init__(self, pauli_gates: _PauliGate | Iterable[_PauliGate]):
         super().__init__(pauli_gates)
-        self._pauli_gates: Tuple[_PauliGate]
+        self._pauli_gates: tuple[_PauliGate]
 
     @property
-    def pauli_gates(self) -> Tuple[_PauliGate, ...]:
+    def pauli_gates(self) -> tuple[_PauliGate, ...]:
         return self._pauli_gates
 
     def stim_targets(
         self, qubit_mapping: Mapping[Qubit[T], int]
-    ) -> Tuple[stim.GateTarget, ...]:
+    ) -> tuple[stim.GateTarget, ...]:
         """Return all stim targets which specify this Pauli product."""
         return tuple(
             chain.from_iterable(

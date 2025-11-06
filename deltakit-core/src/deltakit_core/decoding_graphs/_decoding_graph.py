@@ -10,25 +10,19 @@ from dataclasses import dataclass
 from functools import cached_property
 from itertools import chain, tee
 from typing import (
-    AbstractSet,
-    Callable,
     ClassVar,
-    DefaultDict,
-    Dict,
-    FrozenSet,
     Generic,
-    Iterable,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
     TypeGuard,
     TypeVar,
-    Union,
     cast,
+)
+from collections.abc import (
+    Callable,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+    Set as AbstractSet,
 )
 
 import networkx as nx
@@ -126,7 +120,7 @@ class HyperMultiGraph(ABC, Generic[AnyEdgeT]):
         """Return mapping of detector records, keyed by detector."""
 
     @property
-    def boundaries(self) -> FrozenSet[int]:
+    def boundaries(self) -> frozenset[int]:
         """Return all detectors in this graph that are labelled as boundaries."""
         return frozenset()
 
@@ -159,7 +153,7 @@ class HyperMultiGraph(ABC, Generic[AnyEdgeT]):
         """
 
 
-class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
+class DecodingHyperMultiGraph(HyperMultiGraph[tuple[DecodingHyperEdge, int]]):
     """Representation of a decoding multigraph with hyper-edges.
 
     Parameters
@@ -173,15 +167,13 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
     def __init__(
         self,
         edge_data: Iterable[
-            Union[
-                DecodingHyperEdge, Tuple[int, ...], Tuple[DecodingHyperEdge, EdgeRecord]
-            ]
+            DecodingHyperEdge | tuple[int, ...] | tuple[DecodingHyperEdge, EdgeRecord]
         ],
-        detector_records: Optional[Dict[int, DetectorRecord]] = None,
+        detector_records: dict[int, DetectorRecord] | None = None,
     ):
-        edge_records: Dict[Tuple[DecodingHyperEdge, int], EdgeRecord] = {}
-        edges: List[Tuple[DecodingHyperEdge, int]] = []
-        edge_count: Dict[DecodingHyperEdge, int] = defaultdict(int)
+        edge_records: dict[tuple[DecodingHyperEdge, int], EdgeRecord] = {}
+        edges: list[tuple[DecodingHyperEdge, int]] = []
+        edge_count: dict[DecodingHyperEdge, int] = defaultdict(int)
 
         for data in edge_data:
             if isinstance(data, DecodingHyperEdge):
@@ -212,29 +204,29 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
         return {node for edge, _ in self._edges for node in edge}
 
     @property
-    def detector_records(self) -> Dict[int, DetectorRecord]:
+    def detector_records(self) -> dict[int, DetectorRecord]:
         return self._detector_records
 
     @property
-    def edge_records(self) -> Dict[Tuple[DecodingHyperEdge, int], EdgeRecord]:
+    def edge_records(self) -> dict[tuple[DecodingHyperEdge, int], EdgeRecord]:
         return self._edge_records
 
     @property
-    def edges(self) -> List[Tuple[DecodingHyperEdge, int]]:
+    def edges(self) -> list[tuple[DecodingHyperEdge, int]]:
         return self._edges
 
     @cached_property
-    def nodes(self) -> List[int]:
+    def nodes(self) -> list[int]:
         return sorted(self._nodes_in_edges.union(set(self._detector_records.keys())))
 
     @cached_property
-    def boundary_edges(self) -> List[Tuple[DecodingHyperEdge, int]]:
+    def boundary_edges(self) -> list[tuple[DecodingHyperEdge, int]]:
         return [(edge, edge_id) for edge, edge_id in self.edges if len(edge) == 1]
 
     @cached_property
     def _nodes_to_full_edge(
         self,
-    ) -> DefaultDict[frozenset[int], List[Tuple[DecodingHyperEdge, int]]]:
+    ) -> defaultdict[frozenset[int], list[tuple[DecodingHyperEdge, int]]]:
         nodes_to_full_edge = defaultdict(list)
         for edge, edge_id in self.edges:
             nodes_to_full_edge[edge.vertices].append((edge, edge_id))
@@ -243,18 +235,18 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
     @cached_property
     def _node_to_incident_edges(
         self,
-    ) -> DefaultDict[int, List[Tuple[DecodingHyperEdge, int]]]:
+    ) -> defaultdict[int, list[tuple[DecodingHyperEdge, int]]]:
         detector_to_edges = defaultdict(list)
         for edge, edge_id in self.edges:
             for node in edge.vertices:
                 detector_to_edges[node].append((edge, edge_id))
         return detector_to_edges
 
-    def get_edges(self, *detectors: int) -> List[Tuple[DecodingHyperEdge, int]]:
+    def get_edges(self, *detectors: int) -> list[tuple[DecodingHyperEdge, int]]:
         """Fetch the edges connecting a sequence of detectors."""
         return self._nodes_to_full_edge[frozenset(detectors)]
 
-    def incident_edges(self, detector: int) -> Iterator[Tuple[DecodingHyperEdge, int]]:
+    def incident_edges(self, detector: int) -> Iterator[tuple[DecodingHyperEdge, int]]:
         yield from self._node_to_incident_edges[detector]
 
     def neighbors(self, detector: int) -> Iterator[int]:
@@ -311,7 +303,7 @@ class DecodingHyperMultiGraph(HyperMultiGraph[Tuple[DecodingHyperEdge, int]]):
         )
 
     def error_to_syndrome(
-        self, edges: Iterable[Tuple[DecodingHyperEdge, int]]
+        self, edges: Iterable[tuple[DecodingHyperEdge, int]]
     ) -> OrderedSyndrome:
         return OrderedSyndrome(
             symptom for symptom in chain.from_iterable(edge for edge, _ in edges)
@@ -338,14 +330,12 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
     def __init__(
         self,
         edge_data: Iterable[
-            Union[
-                DecodingHyperEdge, Tuple[int, ...], Tuple[DecodingHyperEdge, EdgeRecord]
-            ]
+            DecodingHyperEdge | tuple[int, ...] | tuple[DecodingHyperEdge, EdgeRecord]
         ],
-        detector_records: Optional[Dict[int, DetectorRecord]] = None,
+        detector_records: dict[int, DetectorRecord] | None = None,
     ):
-        edge_records: Dict[DecodingHyperEdge, EdgeRecord] = {}
-        edges: List[DecodingHyperEdge] = []
+        edge_records: dict[DecodingHyperEdge, EdgeRecord] = {}
+        edges: list[DecodingHyperEdge] = []
         for data in edge_data:
             if _is_decoding_hyper_edge_and_edge_record(data):
                 edge, edge_record = data
@@ -374,15 +364,15 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
         return set(chain.from_iterable(self._edges))
 
     @property
-    def detector_records(self) -> Dict[int, DetectorRecord]:
+    def detector_records(self) -> dict[int, DetectorRecord]:
         return self._detector_records
 
     @property
-    def edge_records(self) -> Dict[DecodingHyperEdge, EdgeRecord]:
+    def edge_records(self) -> dict[DecodingHyperEdge, EdgeRecord]:
         return self._edge_records
 
     @cached_property
-    def _node_to_incident_edges(self) -> DefaultDict[int, List[DecodingHyperEdge]]:
+    def _node_to_incident_edges(self) -> defaultdict[int, list[DecodingHyperEdge]]:
         detector_to_edges = defaultdict(list)
         for edge in self.edges:
             for node in edge.vertices:
@@ -390,18 +380,18 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
         return detector_to_edges
 
     @cached_property
-    def edges(self) -> List[DecodingHyperEdge]:
+    def edges(self) -> list[DecodingHyperEdge]:
         return self._edges
 
     @cached_property
-    def nodes(self) -> List[int]:
+    def nodes(self) -> list[int]:
         return sorted(self._nodes_in_edges.union(self._nodes_in_detector_records))
 
     @cached_property
-    def boundary_edges(self) -> List[DecodingHyperEdge]:
+    def boundary_edges(self) -> list[DecodingHyperEdge]:
         return [edge for edge in self.edges if len(edge) == 1]
 
-    def get_edges(self, *detectors: int) -> List[DecodingHyperEdge]:
+    def get_edges(self, *detectors: int) -> list[DecodingHyperEdge]:
         return (
             [edge]
             if (edge := DecodingHyperEdge(detectors)) in self.edge_records
@@ -446,7 +436,7 @@ class DecodingHyperGraph(HyperMultiGraph[DecodingHyperEdge]):
         if not self.nodes:
             return NXDecodingGraph.from_edge_list([])
         possible_boundary = max(self.nodes) + 1
-        normal_edges: List[Tuple[DecodingEdge, EdgeRecord]] = [
+        normal_edges: list[tuple[DecodingEdge, EdgeRecord]] = [
             (edge.to_decoding_edge(possible_boundary), self.edge_records[edge])
             for edge in self._edges
         ]
@@ -536,16 +526,16 @@ class NXGraph(HyperMultiGraph[AnyEdgeT], Generic[NXGraphT, AnyEdgeT]):
         return cast(NXGraphT, subgraph_view)
 
     @cached_property
-    def nodes(self) -> List[int]:
+    def nodes(self) -> list[int]:
         return sorted(self.graph.nodes)
 
     @property
-    def boundaries(self) -> FrozenSet[int]:
+    def boundaries(self) -> frozenset[int]:
         """Return all nodes of this graph that are labelled as boundaries."""
         return self._boundaries
 
     @cached_property
-    def detector_records(self) -> Dict[int, DetectorRecord]:
+    def detector_records(self) -> dict[int, DetectorRecord]:
         return dict(self.graph.nodes.data(data=True))
 
     @property
@@ -566,11 +556,11 @@ class NXGraph(HyperMultiGraph[AnyEdgeT], Generic[NXGraphT, AnyEdgeT]):
         """Return True if given detector is a boundary, False otherwise."""
         return self._boundaries_lookup[detector]
 
-    def get_relevant_nodes(self, logicals: Iterable[Set[DecodingEdge]]) -> Set[int]:
+    def get_relevant_nodes(self, logicals: Iterable[set[DecodingEdge]]) -> set[int]:
         """Return the nodes that have an edge with a path to logical that
         is not via the boundary"""
         components = nx.connected_components(self.no_boundary_view)
-        relevant_nodes: Set[int] = set()
+        relevant_nodes: set[int] = set()
         for logical in logicals:
             relevant_nodes.update(chain.from_iterable(logical))
             for component in components:
@@ -578,7 +568,7 @@ class NXGraph(HyperMultiGraph[AnyEdgeT], Generic[NXGraphT, AnyEdgeT]):
                     relevant_nodes.update(component)
         return relevant_nodes
 
-    def shortest_path(self, origin: int, destination: int) -> List[DecodingEdge]:
+    def shortest_path(self, origin: int, destination: int) -> list[DecodingEdge]:
         """Find the shortest path between two syndrome bits, as a sequence of decoding
         edges.
         """
@@ -594,7 +584,7 @@ class NXGraph(HyperMultiGraph[AnyEdgeT], Generic[NXGraphT, AnyEdgeT]):
 
     def shortest_path_no_boundaries(
         self, origin: int, destination: int
-    ) -> List[DecodingEdge]:
+    ) -> list[DecodingEdge]:
         """Find the shortest path between two syndrome bits without going via any
         boundaries, as a sequence of decoding edges.
         If origin or destination are boundaries, an exception will be raised.
@@ -629,7 +619,7 @@ class NXCode:
     logicals: NXLogicals
 
 
-class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
+class NXDecodingMultiGraph(NXGraph[_QECNXMG, tuple[DecodingEdge, int]]):
     """Implementation of a decoding multigraph using NetworkX and QEC syndrome
     and edge objects. All edges in this graph are size 2, and a pair of syndromes
     can be connected by multiple edges (a multi-edge). As with the non-multiedge
@@ -653,9 +643,9 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
     def from_edge_list(
         cls,
         edge_data: Iterable[
-            Union[DecodingEdge, Tuple[int, int], Tuple[DecodingEdge, EdgeRecord]]
+            DecodingEdge | tuple[int, int] | tuple[DecodingEdge, EdgeRecord]
         ],
-        detector_records: Optional[Dict[int, DetectorRecord]] = None,
+        detector_records: dict[int, DetectorRecord] | None = None,
         boundaries: Iterable[int] = frozenset(),
     ) -> NXDecodingMultiGraph:
         """Create a graph, where connectivity is defined by an edge list.
@@ -686,7 +676,7 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
         """  # noqa: E501
         nx_graph = cls.base_graph_class()
         detector_records = {} if detector_records is None else detector_records
-        edge_records: Dict[Tuple[DecodingEdge, int], EdgeRecord] = {}
+        edge_records: dict[tuple[DecodingEdge, int], EdgeRecord] = {}
         nx_graph.add_nodes_from(detector_records.items())
 
         for data in edge_data:
@@ -709,11 +699,11 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
         return cls(nx_graph, boundaries)
 
     @cached_property
-    def edges(self) -> List[Tuple[DecodingEdge, int]]:
+    def edges(self) -> list[tuple[DecodingEdge, int]]:
         return [(DecodingEdge(u, v), edge_id) for u, v, edge_id in self.graph.edges]
 
     @cached_property
-    def boundary_edges(self) -> set[Tuple[DecodingEdge, int]]:
+    def boundary_edges(self) -> set[tuple[DecodingEdge, int]]:
         return set(
             chain.from_iterable(
                 self.incident_edges(boundary) for boundary in self.boundaries
@@ -721,18 +711,18 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
         )
 
     @cached_property
-    def edge_records(self) -> Dict[Tuple[DecodingEdge, int], EdgeRecord]:
+    def edge_records(self) -> dict[tuple[DecodingEdge, int], EdgeRecord]:
         return {
             (DecodingEdge(u, v), k): record
             for (u, v, k), record in self._graph.edges.items()
         }
 
-    def get_edges(self, *detectors: int) -> Iterator[Tuple[DecodingEdge, int]]:
+    def get_edges(self, *detectors: int) -> Iterator[tuple[DecodingEdge, int]]:
         edge_data = self.graph.get_edge_data(*detectors)
         for edge_id in edge_data:  # type: ignore[union-attr]
             yield (DecodingEdge(*detectors), int(edge_id))
 
-    def incident_edges(self, detector: int) -> Iterator[Tuple[DecodingEdge, int]]:
+    def incident_edges(self, detector: int) -> Iterator[tuple[DecodingEdge, int]]:
         unique_detectors = {tuple(edge) for edge in self.graph.edges(detector)}
         for detectors in unique_detectors:
             yield from self.get_edges(*detectors)
@@ -775,7 +765,7 @@ class NXDecodingMultiGraph(NXGraph[_QECNXMG, Tuple[DecodingEdge, int]]):
         return new_graph
 
     def error_to_syndrome(
-        self, edges: Iterable[Tuple[DecodingEdge, int]]
+        self, edges: Iterable[tuple[DecodingEdge, int]]
     ) -> OrderedSyndrome:
         return OrderedSyndrome(
             symptom
@@ -809,9 +799,9 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
     def from_edge_list(
         cls,
         edge_data: Iterable[
-            Union[DecodingEdge, Tuple[int, int], Tuple[DecodingEdge, EdgeRecord]]
+            DecodingEdge | tuple[int, int] | tuple[DecodingEdge, EdgeRecord]
         ],
-        detector_records: Optional[Dict[int, DetectorRecord]] = None,
+        detector_records: dict[int, DetectorRecord] | None = None,
         boundaries: Iterable[int] = frozenset(),
     ) -> NXDecodingGraph:
         """Create a graph, where connectivity is defined by an edge list.
@@ -838,7 +828,7 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
         """  # noqa: E501
         nx_graph = cls.base_graph_class()
         detector_records = {} if detector_records is None else detector_records
-        edge_records: Dict[DecodingEdge, EdgeRecord] = {}
+        edge_records: dict[DecodingEdge, EdgeRecord] = {}
         nx_graph.add_nodes_from(detector_records.items())
 
         for data in edge_data:
@@ -869,7 +859,7 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
         }
         return DecodingHyperGraph(edge_data, detector_records=det_records_copy)
 
-    def get_edges(self, *detectors: int) -> List[DecodingEdge]:
+    def get_edges(self, *detectors: int) -> list[DecodingEdge]:
         return [edge] if (edge := DecodingEdge(*detectors)) in self.edges else []
 
     def get_edge(self, *detectors: int) -> DecodingEdge:
@@ -893,7 +883,7 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
         return self.edge_records[DecodingEdge(*detectors)]
 
     @cached_property
-    def edges(self) -> List[DecodingEdge]:
+    def edges(self) -> list[DecodingEdge]:
         return [DecodingEdge(u, v) for u, v in self._graph.edges]
 
     @cached_property
@@ -905,7 +895,7 @@ class NXDecodingGraph(NXGraph[_QECNX, DecodingEdge]):
         )
 
     @cached_property
-    def edge_records(self) -> Dict[DecodingEdge, EdgeRecord]:
+    def edge_records(self) -> dict[DecodingEdge, EdgeRecord]:
         return {
             DecodingEdge(u, v): record for (u, v), record in self._graph.edges.items()
         }

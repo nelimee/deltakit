@@ -3,7 +3,6 @@
 
 import re
 from itertools import combinations
-from typing import Tuple
 
 import numpy as np
 import numpy.typing as npt
@@ -196,7 +195,7 @@ class TestDecodingHyperGraph:
     def test_get_edge_record_from_edge(
         self,
         graph: DecodingHyperGraph,
-        edge_dets: Tuple[int],
+        edge_dets: tuple[int],
         expected_record: EdgeRecord,
     ):
         assert graph.get_edge_record(*edge_dets).data == expected_record.data

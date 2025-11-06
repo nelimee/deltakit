@@ -2,7 +2,6 @@
 import os
 from itertools import groupby
 from operator import itemgetter
-from typing import Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,7 +31,7 @@ filename = f"RPC_MWPM_X_MEM_{max_shots:.0e}_shots.csv"
 
 def rotated_planar_xmem_noiseless(
     x_distance: int, z_distance: int, num_rounds: int
-) -> Tuple[RotatedPlanarCode, Circuit]:
+) -> tuple[RotatedPlanarCode, Circuit]:
     """This function takes as input quantum memory parameters (X-distance, Z-distance,
     Num Rounds) and returns a noiseless logical-X quantum memory circuit in a default
     gate set.

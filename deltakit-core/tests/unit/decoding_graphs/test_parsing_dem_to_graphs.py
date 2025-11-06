@@ -1,6 +1,5 @@
 # (c) Copyright Riverlane 2020-2025.
 import math
-from typing import List, Set
 
 import stim
 
@@ -609,7 +608,7 @@ class TestDemToDecodingHyperGraph:
     def test_dem_with_multiple_logicals_give_expected_logicals(
         self,
         dem: stim.DetectorErrorModel,
-        expected_logicals: List[Set[DecodingHyperEdge]],
+        expected_logicals: list[set[DecodingHyperEdge]],
     ):
         _, logicals = dem_to_hypergraph_and_logicals(dem)
         assert logicals == expected_logicals
@@ -691,7 +690,7 @@ class TestDemToNXGraph:
         ],
     )
     def test_dem_with_multiple_logicals_give_expected_logicals(
-        self, dem: stim.DetectorErrorModel, expected_logicals: List[Set[DecodingEdge]]
+        self, dem: stim.DetectorErrorModel, expected_logicals: list[set[DecodingEdge]]
     ):
         _, logicals = dem_to_decoding_graph_and_logicals(dem)
         assert logicals == expected_logicals
