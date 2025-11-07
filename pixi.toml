@@ -39,6 +39,10 @@ cmd = "sphinx-autobuild -b html docs docs/_build/html --open-browser"
 description = "Build documentation, treating warnings as errors"
 cmd = "sphinx-build -W -b html docs docs/_build/html"
 
+[tasks.linkcheck]
+description = "Check all external links in the documentation"
+cmd = "sphinx-build -W -b linkcheck docs docs/_build/html"
+
 [tasks.serve_docs]
 description = "Serve documentation"
 cmd = "python -m http.server --directory docs/_build/html"
