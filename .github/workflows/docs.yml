@@ -46,3 +46,7 @@ jobs:
           pixi run build_docs
         env:
           DELTAKIT_TOKEN: ${{ secrets.DELTAKIT_TOKEN }}
+
+      - name: Check broken links
+        run: |
+          pixi run linkcheck
