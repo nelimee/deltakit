@@ -446,7 +446,7 @@ def dem_and_pij_edges_max_diff(
     if len(first_diff) != 0 or len(second_diff) != 0:
         msg = (
             "Pij matrices do not contain identical edges so cannot compare for maximum "
-            f":difference. Diff: {first_diff, second_diff}"
+            f"difference. Diff: {first_diff, second_diff}"
         )
         raise ValueError(msg)
     graph: HyperMultiGraph
