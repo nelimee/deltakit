@@ -6,7 +6,8 @@ from __future__ import annotations
 from collections import Counter, UserDict, defaultdict
 from functools import cached_property
 from itertools import chain, repeat
-from typing import Any, Self, cast, Literal, SupportsIndex, overload
+from typing import Any, cast, Literal, SupportsIndex, overload
+from typing_extensions import Self
 from collections.abc import (
     Collection,
     Iterable,
