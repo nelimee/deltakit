@@ -125,9 +125,7 @@ class NativeGateSetAndTimes:
                 "A gate time must be a non-negative float but that for "
                 f"{gate.stim_string} is {time}."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     def add_gate(self, gate: type[Gate], time: float = 1.0) -> None:
         """

@@ -69,14 +69,10 @@ def css_code_memory_circuit(
         raise ValueError(msg)
     if logical_basis not in [PauliBasis.X, PauliBasis.Z]:
         msg = "Invalid logical_basis, it has to be PauliBasis.X or PauliBasis.Z"
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
     if use_iswap_gates and client is None:
         msg = "`use_iswap_gates == True` is only supported when a `client` object is provided."
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
     if client is not None:
         return _cloud_css_code_experiment_circuit(deltakit_explorer.enums.QECExperimentType.QUANTUM_MEMORY,
                                               css_code, num_rounds, logical_basis, client, use_iswap_gates)
@@ -140,9 +136,7 @@ def _cloud_css_code_experiment_circuit(
     """
     if use_iswap_gates and client is None:
         msg = "`use_iswap_gates == True` is only supported when a `client` object is provided."
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
     if client is None:
         msg = "A `client` is required to obtain a stability circuit."
         raise NotImplementedError(msg)

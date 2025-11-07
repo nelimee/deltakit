@@ -67,9 +67,7 @@ def _find_anticommuting_pairs(
     while len(chosen_x_logs) < k:
         if len(x_logs) == 0 or len(z_logs) == 0:
             msg = f"Unable to construct {k} logical operators, could only find {len(chosen_x_logs)}"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         # get which x anti-commutes with which z and vice-versa
         # use dictionaries for constant-time lookup
         x_ac_with_z: dict[int, dict] = {x: {} for x in x_logs}
@@ -159,17 +157,13 @@ class Monomial:
     def __mul__(self, other: object) -> Monomial:
         if not isinstance(other, Monomial):
             msg = f"Can only multiply Monomials by other Monomials, not {type(other)}"
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         if self.l != other.l or self.m != other.m:
             msg = (
                 "Cannot multiply monomials of differing max degree."
                 f" lhs: l={self.l}, m={self.m} | rhs: l={other.l}, m={other.m}"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         return Monomial(
             (other.x_pow + self.x_pow) % self.l,
             (other.y_pow + self.y_pow) % self.m,
@@ -542,24 +536,16 @@ class BivariateBicycleCode(CSSCode):
         # (1) exactly 3 non-zero entries in any row or column
         if not (np.count_nonzero(m_A, axis=0) == 3).all():
             msg = "Matrix A should have exactly 3 non-zero entries in each column"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if not (np.count_nonzero(m_A, axis=1) == 3).all():
             msg = "Matrix A should have exactly 3 non-zero entries in each row"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if not (np.count_nonzero(m_B, axis=0) == 3).all():
             msg = "Matrix B should have exactly 3 non-zero entries in each column"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if not (np.count_nonzero(m_B, axis=1) == 3).all():
             msg = "Matrix B should have exactly 3 non-zero entries in each row"
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         # (2) AB = BA
         if not np.allclose(m_A @ m_B, m_B @ m_A):
@@ -672,9 +658,7 @@ class BivariateBicycleCode(CSSCode):
                 "Max iteration limit exceeded for coord placement; consider"
                 " changing code parameters"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         return dl_lookup, dr_lookup, x_lookup, z_lookup
 

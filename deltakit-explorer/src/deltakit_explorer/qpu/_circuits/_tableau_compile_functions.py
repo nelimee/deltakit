@@ -83,9 +83,7 @@ def _compile_to_native_gates_plus_unitaries(
                 "Unable to compile to provided native reset and measurement gates,"
                 " please try changing the native gate set."
             )
-            raise ValueError(
-                msg
-            ) from ke
+            raise ValueError(msg) from ke
 
         # look up the compilation from current gate to target native gate.
         # if the entry is not in the dictionary, the compilation is not
@@ -405,9 +403,7 @@ def _compile_two_qubit_gate_to_target(
         ubs = gate_to_intermediate_rep_dict[current_gate]
     except KeyError as ke:
         msg = "Current gate not present in gate_to_intermediate_rep_dict dictionary"
-        raise ValueError(
-            msg
-        ) from ke
+        raise ValueError(msg) from ke
     ub0 = ub0 + [g(qubit1_info[1]) for g in ubs[0]]
     ub1 = [g(qubit1_info[1]) for g in ubs[1]] + ub1
     ub2 = ub2 + [g(qubit2_info[1]) for g in ubs[2]]
@@ -423,9 +419,7 @@ def _compile_two_qubit_gate_to_target(
             "Cannot compile between groups -"
             f" {current_gate.stim_string} to {target_gate.stim_string} not supported"
         )
-        raise ValueError(
-            msg
-        ) from ke
+        raise ValueError(msg) from ke
 
     ub0 = ub0 + [g(qubit1_info[1]) for g in ubs_target[0]]
     ub1 = [g(qubit1_info[1]) for g in ubs_target[1]] + ub1
@@ -506,9 +500,7 @@ def _compile_two_qubit_gates_to_native_gates(
                     "Unable to compile to provided native two-qubit gates,"
                     " please try changing the native gate set."
                 )
-                raise ValueError(
-                    msg
-                ) from ke
+                raise ValueError(msg) from ke
 
             # compile the two qubit gate, by getting the new unitary blocks
             updated_unitaries = _compile_two_qubit_gate_to_target(

@@ -409,7 +409,7 @@ class TestOrderedDecodingEdges:
     def test_add_ordered_decoding_edges_does_not_mutate_operands(self):
         left_ode = OrderedDecodingEdges([DecodingEdge(0, 1)])
         right_ode = OrderedDecodingEdges([DecodingEdge(1, 2)])
-        left_ode + right_ode  # pyright: ignore[reportUnusedExpression]
+        left_ode + right_ode
 
         assert left_ode == OrderedDecodingEdges([DecodingEdge(0, 1)])
         assert right_ode == OrderedDecodingEdges([DecodingEdge(1, 2)])

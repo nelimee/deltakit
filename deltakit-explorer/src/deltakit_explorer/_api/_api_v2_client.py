@@ -212,9 +212,7 @@ class APIv2Client(APIClient):
         except KeyboardInterrupt:
             count = self.kill(job.request_id)
             msg = f"Cancelled job {job.request_id} ({count} worker(s))."
-            raise InterruptedError(
-                msg
-            )
+            raise InterruptedError(msg)
 
     @override
     def kill(self, request_id: str) -> int:

@@ -67,9 +67,7 @@ class _CloudDecoder:
         self.text_circuit = circuit
         if client is None:
             msg = "Currently, a `client` must be provided to instantiate this class."
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         self.client = client
 
     def decode_batch_to_logical_flip(
@@ -86,9 +84,7 @@ class _CloudDecoder:
                 "Please make sure your circuit has observables or provide "
                 f"`num_observables` when instantiating an `{self.__class__.__name__}`."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         observables = types.ObservableFlips(
             np.zeros((num_shots, self.num_observables), dtype=syndrome_batch.dtype)
         )

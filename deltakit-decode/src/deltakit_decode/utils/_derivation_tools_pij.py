@@ -134,9 +134,7 @@ def _get_calculate_pij_degree_callable(
             return _calculate_pij_degree_4
         case _:
             msg = f"{max_degree} is not a valid degree, must be between 2-4 inclusive."
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
 
 def calculate_pij_values(exp_values: PijData,
                          graph: NXDecodingGraph | DecodingHyperGraph | None = None,
@@ -365,9 +363,8 @@ def pij_edges_max_diff(
     first_diff, second_diff = pijs_edge_diff(pij1, pij2)
     if len(first_diff) > 0 or len(second_diff) > 0:
         msg = (
-            "Pij matrices do not contain identical edges so"
-                         " cannot compare for maximum difference."
-                         f" Diff: {first_diff, second_diff}"
+            "Pij matrices do not contain identical edges so cannot compare for maximum "
+            f"difference. Diff: {first_diff, second_diff}"
         )
         raise ValueError(msg)
     return max((abs(prob - pij2[edge]) for edge, prob in pij1.items()), default=0.0)
@@ -448,9 +445,8 @@ def dem_and_pij_edges_max_diff(
         dem, pij, is_hypergraph=is_hypergraph)
     if len(first_diff) != 0 or len(second_diff) != 0:
         msg = (
-            "Pij matrices do not contain identical edges so"
-                         " cannot compare for maximum difference."
-                         f" Diff: {first_diff, second_diff}"
+            "Pij matrices do not contain identical edges so cannot compare for maximum "
+            f":difference. Diff: {first_diff, second_diff}"
         )
         raise ValueError(msg)
     graph: HyperMultiGraph

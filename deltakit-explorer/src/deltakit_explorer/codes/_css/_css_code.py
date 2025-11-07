@@ -129,9 +129,7 @@ class CSSCode(StabiliserCode):
         if calculate_logical_operators:
             if (x_logical_operators is not None) or (z_logical_operators is not None):
                 msg = "No logicals should be provided if calculate_logical_operators is set to True."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
             (
                 x_logical_operators,
                 z_logical_operators,
@@ -202,15 +200,11 @@ class CSSCode(StabiliserCode):
         for x_log_op in x_logical_operators:
             if len(set(x_log_op)) < len(x_log_op):
                 msg = "One of the X-logical operators contains duplicate PauliX objects."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
         for z_log_op in z_logical_operators:
             if len(set(z_log_op)) < len(z_log_op):
                 msg = "One of the Z-logical operators contains duplicate PauliZ objects."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
     @staticmethod
     def _check_stabiliser_and_logical_operator_types(
@@ -245,9 +239,7 @@ class CSSCode(StabiliserCode):
                         "stabilisers. Each stabiliser must consist of either all X or "
                         "all Z Paulis terms."
                     )
-                    raise ValueError(
-                        msg
-                    )
+                    raise ValueError(msg)
         # Check condition 2)
         if (
             sum(
@@ -264,40 +256,30 @@ class CSSCode(StabiliserCode):
                 "The lengths of x_logical_operators and z_logical_operators are not "
                 "equal."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         # Check condition 4)
         if any(len(x_logical) == 0 for x_logical in x_logical_operators):
             msg = (
                 "x_logical_operators contains an empty Iterable. Identity cannot be a"
                 " logical operator."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if any(len(z_logical) == 0 for z_logical in z_logical_operators):
             msg = (
                 "z_logical_operators contains an empty Iterable. Identity cannot be a"
                 " logical operator."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         # Check condition 5)
         for x_logical in x_logical_operators:
             if not all(isinstance(pauli, PauliX) for pauli in x_logical):
                 msg = "All X logical operators should consist of only X Pauli terms."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
         # Check condition 6)
         for z_logical in z_logical_operators:
             if not all(isinstance(pauli, PauliZ) for pauli in z_logical):
                 msg = "All Z logical operators should consist of only Z Pauli terms."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
     @staticmethod
     def _calculate_x_and_z_stabilisers(
@@ -343,9 +325,7 @@ class CSSCode(StabiliserCode):
                     f"The X and Z logical operators with the same index should anticommute,"
                     f" but at index {i} found {x_logical} and {z_logical}."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
             for other_x_logical, other_z_logical in logicals_zipped[i + 1 :]:
                 for logical, other_logical in (
@@ -357,9 +337,7 @@ class CSSCode(StabiliserCode):
                             "Two logical operators with different indices should commute,"
                             f" but found operators {logical} and {other_logical}."
                         )
-                        raise ValueError(
-                            msg
-                        )
+                        raise ValueError(msg)
 
     @staticmethod
     def _check_commutation_relations(
@@ -392,9 +370,7 @@ class CSSCode(StabiliserCode):
                     f"{x_stab.data_qubits} anticommutes with the Z-stabiliser "
                     f"defined on data qubits {z_stab.data_qubits}."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
         # Check condition 2)
         for x_stab, z_log in itertools.product(x_stabilisers_flat, z_logical_operators):
             if not CSSCode.x_and_z_operators_commute(x_stab.paulis, z_log):
@@ -404,9 +380,7 @@ class CSSCode(StabiliserCode):
                     f"X-stabiliser defined on data qubits {x_stab.data_qubits} "
                     f"anticommutes with the Z-logical operator {z_log}."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
         for z_stab, x_log in itertools.product(z_stabilisers_flat, x_logical_operators):
             if not CSSCode.x_and_z_operators_commute(z_stab.paulis, x_log):
                 msg = (
@@ -416,9 +390,7 @@ class CSSCode(StabiliserCode):
                     "anticommutes with the "
                     f"X-logical operator {x_log} "
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
         # Check condition 3)
         for (x_ind, x_log), (z_ind, z_log) in itertools.product(
             enumerate(x_logical_operators), enumerate(z_logical_operators)
@@ -431,9 +403,7 @@ class CSSCode(StabiliserCode):
                     f"is {x_log}, and the Z-logical operator at index {z_ind} is "
                     f"{z_log}."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
             if (
                 check_logical_operators_are_independent
                 and x_ind != z_ind
@@ -446,9 +416,7 @@ class CSSCode(StabiliserCode):
                     f"is {x_log}, and the Z-logical operator at index {z_ind} is "
                     f"{z_log}."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
     @staticmethod
     def _check_ancilla_qubit_properties(
@@ -470,9 +438,7 @@ class CSSCode(StabiliserCode):
                     f"The following ancilla qubits are also used as data qubits: "
                     f"{data_qubits.intersection(ancilla_qubits)}"
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
             for ind, simultaneous_stabilisers in enumerate(stabilisers):
                 simultaneous_ancillas = {
                     stab.ancilla_qubit for stab in simultaneous_stabilisers
@@ -482,9 +448,7 @@ class CSSCode(StabiliserCode):
                         f"There are duplicate ancilla qubits in layer {ind} of "
                         "stabilisers."
                     )
-                    raise ValueError(
-                        msg
-                    )
+                    raise ValueError(msg)
 
     @staticmethod
     def _check_logical_operators_are_supported_on_data_qubits(
@@ -502,9 +466,7 @@ class CSSCode(StabiliserCode):
                 "Some logical operators are not supported on the CSS code's data "
                 "qubits."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     @staticmethod
     def _check_stabiliser_lengths(
@@ -532,9 +494,7 @@ class CSSCode(StabiliserCode):
                     f"Layer {ind} of stabilisers contains two elements whose paulis "
                     "attributes are of different lengths."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
     @staticmethod
     def _check_unique_data_qubits_in_layers(
@@ -568,9 +528,7 @@ class CSSCode(StabiliserCode):
                         "extraction circuit is invalid, as each layer should "
                         "contain unique qubits only."
                     )
-                    raise ValueError(
-                        msg
-                    )
+                    raise ValueError(msg)
 
     @staticmethod
     def _check_schedule_is_valid(
@@ -642,9 +600,7 @@ class CSSCode(StabiliserCode):
                 "No logical Z operators provided so cannot prepare logical zeroes "
                 "state."
             )
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         return CSSStage(final_round_resets=[RZ(qubit) for qubit in self._data_qubits])
 
     def encode_logical_pluses(self) -> CSSStage:
@@ -653,17 +609,13 @@ class CSSCode(StabiliserCode):
                 "No logical X operators provided so cannot prepare logical pluses "
                 "state."
             )
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         return CSSStage(final_round_resets=[RX(qubit) for qubit in self._data_qubits])
 
     def measure_z_logicals(self) -> CSSStage:
         if len(self.z_logical_operators) == 0:
             msg = "No logical Z operators provided so cannot measure logical Z operators."
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         return CSSStage(
             first_round_measurements=[MZ(qubit) for qubit in self._data_qubits],
             observable_definitions={
@@ -675,9 +627,7 @@ class CSSCode(StabiliserCode):
     def measure_x_logicals(self) -> CSSStage:
         if len(self.x_logical_operators) == 0:
             msg = "No logical X operators provided so cannot measure logical X operators."
-            raise NotImplementedError(
-                msg
-            )
+            raise NotImplementedError(msg)
         return CSSStage(
             first_round_measurements=[MX(qubit) for qubit in self._data_qubits],
             observable_definitions={
@@ -747,9 +697,7 @@ class CSSCode(StabiliserCode):
             raise ValueError(msg)
         if num_qubits_x > 0 and num_qubits_z > 0 and num_qubits_x != num_qubits_z:
             msg = "The matrices h_x and h_z need to have the same number of columns."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         num_qubits = num_qubits_x if num_qubits_x > 0 else num_qubits_z
         num_x_log_ops, num_qubits_log_x = np.shape(log_x_ops)
@@ -761,26 +709,18 @@ class CSSCode(StabiliserCode):
                 "The matrices log_x_ops and log_z_ops cannot have different numbers of "
                 "rows."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if num_qubits_log_x not in [0, num_qubits]:
             msg = "The matrix log_x_ops has a different number of columns to h_x or h_z."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if num_qubits_log_z not in [0, num_qubits]:
             msg = "The matrix log_z_ops has a different number of columns to h_x or h_z."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         def _check_and_return_entry(entry):
             if entry not in [0, 1]:
                 msg = "Some elements in the provided matrices are not 0 or 1."
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
             return entry
 
         x_stabilisers = (

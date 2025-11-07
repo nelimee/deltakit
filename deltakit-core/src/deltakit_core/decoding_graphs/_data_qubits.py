@@ -62,10 +62,7 @@ class EdgeRecord(UserDict):
         self.data["weight"] = self.weight
 
     @classmethod
-    def from_dict(
-        cls,
-        property_dict: dict[str, Any],
-    ) -> EdgeRecord:
+    def from_dict(cls, property_dict: dict[str, Any]) -> EdgeRecord:
         """Create a EdgeRecord from a given property dict of optional values.
 
         Parameters

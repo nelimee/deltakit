@@ -66,10 +66,7 @@ class DetectorRecord(UserDict):
         return (*self.spatial_coord, self.time)
 
     @classmethod
-    def from_dict(
-        cls,
-        property_dict: dict[str, Any],
-    ) -> DetectorRecord:
+    def from_dict(cls, property_dict: dict[str, Any]) -> DetectorRecord:
         """Create a DetectorRecord from a given property dict of optional values.
         This is included for compatibility for network-x vertex representations.
 
@@ -227,9 +224,7 @@ class OrderedSyndrome(Sequence[int], AbstractSet[int]):
         return result
 
     def as_layers(
-        self,
-        syndromes_per_layer: int | list[int],
-        total_layers: int | None = None,
+        self, syndromes_per_layer: int | list[int], total_layers: int | None = None
     ) -> list[list[int]]:
         """Create a sequence of layers from a syndrome, where each layer is a
         collection of integers representing the detectors triggered on that layer.

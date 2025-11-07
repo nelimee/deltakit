@@ -95,8 +95,8 @@ def _generate_expectation_data_singleprocess(
 ):
     if num_processes != 1:
         msg = (
-            "Generators may only be passed in single-threaded"
-                                  " mode. Please set num_processes=1"
+            "Generators may only be passed in single-threaded mode. Please set "
+            "num_processes=1"
         )
         raise NotImplementedError(msg)
 
@@ -183,8 +183,8 @@ def generate_expectation_data(
                                                        max_degree,
                                                        num_processes)
     msg = (
-        f"Unrecognised argument type: {type(samples)},"
-                              " argument must be a Generator or Collection."
+        f"Unrecognised argument type: {type(samples)}, argument must be a Generator or "
+        "Collection."
     )
     raise NotImplementedError(msg)
 

@@ -46,9 +46,7 @@ class StabiliserCode(ABC):
 
         if (x_logical_operators is None) != (z_logical_operators is None):
             msg = "Either both or neither of the logical operators should be provided."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         self._x_logical_operators = (
             tuple(frozenset(x_logical) for x_logical in x_logical_operators)
@@ -125,9 +123,7 @@ class StabiliserCode(ABC):
                 "In order to perform syndrome extraction using ancilla qubits, all "
                 "the Stabilisers must have ancilla qubits defined."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         return ancilla_attrs
 
     def measure_stabilisers(self, num_rounds: int) -> CSSStage:
@@ -396,9 +392,7 @@ class StabiliserCode(ABC):
                 f" but there are {len(new_logicals)}"
                 f" while there should be {len(opposite_type_logicals)}"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if any(len(log) == 0 for log in new_logicals):
             msg = "Logicals cannot be weight 0"
             raise ValueError(msg)
@@ -424,9 +418,7 @@ class StabiliserCode(ABC):
                 for other_new_logical in new_logs_as_pauli_string[i + 1 :]
             ):
                 msg = f"New logical at index {i} anti-commutes with other new logicals"
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
             # Check logical commutes with all stabilisers
             if not all(
@@ -434,9 +426,7 @@ class StabiliserCode(ABC):
                 for stab in stabilisers_as_pauli_strings
             ):
                 msg = f"New logical at index {i} anti-commutes with stabilisers"
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
             # Check for anti-commutation if this isn't the first time setting logicals
             if (
@@ -450,9 +440,7 @@ class StabiliserCode(ABC):
                         f"New logical at index {i} must anti-commute with opposite type"
                         f" logical at index {i}"
                     )
-                    raise ValueError(
-                        msg
-                    )
+                    raise ValueError(msg)
 
                 # Check new logical at index i commutes with all the other opposite-type
                 # logical operators
@@ -465,6 +453,4 @@ class StabiliserCode(ABC):
                         f"New logical at index {i} anti-commutes with opposite-type"
                         f" logicals other than at index {i}"
                     )
-                    raise ValueError(
-                        msg
-                    )
+                    raise ValueError(msg)

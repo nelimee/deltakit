@@ -231,9 +231,7 @@ class VisDecodingGraph3D:
                 f"SyndromeBits must belong to DecodingGraph. \
                             Invalid syndrome: {syndrome}"
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if len(syndrome) != 0:
             scatter = get_scatter_for_node(
                 self.decoding_graph,

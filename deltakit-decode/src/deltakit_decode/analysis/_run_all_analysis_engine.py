@@ -136,9 +136,7 @@ class RunAllAnalysisEngine:
         """Return the file path to be used for the results data."""
         if not self.data_directory:
             msg = "Cannot construct file path as no data directory is specified."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         return self.data_directory / f"{self.experiment_name}.csv"
 
     def save_results(self, results: list[dict], file_path: Path):
@@ -166,7 +164,8 @@ class RunAllAnalysisEngine:
             extra={
                 "decoder_manager": decoder_manager,
                 "metadada": decoder_manager.metadata,
-            },        )
+            }
+        )
         if self.parallel:
             decoder_manager.configure_pool(pool, self.num_parallel_processes)
 

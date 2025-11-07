@@ -5,10 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import chain
-from typing import (
-    TYPE_CHECKING,
-    no_type_check,
-)
+from typing import TYPE_CHECKING, no_type_check
 from collections.abc import Callable, Iterable, Mapping, Sequence
 
 from deltakit_circuit.gates import Gate, OneQubitCliffordGate, TwoOperandGate, _Gate

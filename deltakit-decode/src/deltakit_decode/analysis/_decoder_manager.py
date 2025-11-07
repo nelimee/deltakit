@@ -5,8 +5,7 @@ from abc import ABC, abstractmethod
 from contextlib import ExitStack
 from functools import cached_property, partial
 from itertools import islice
-from typing import (TYPE_CHECKING, Any, Generic,
-                    TypeVar)
+from typing import Any, Generic, TypeVar
 from collections.abc import Iterable, Iterator
 from uuid import UUID, uuid4
 from warnings import warn
@@ -17,8 +16,6 @@ from deltakit_decode.analysis._empirical_decoding_error_distribution import \
 from deltakit_decode.noise_sources._generic_noise_sources import (
     BatchErrorGenerator, MonteCarloNoise, NoiseModel, SequentialNoise)
 
-if TYPE_CHECKING:
-    pass
 
 ErrorT = TypeVar('ErrorT')
 CodeDataT = TypeVar('CodeDataT')
@@ -252,8 +249,7 @@ def _run_process(state_token: UUID, batch_limit: int | None, jobs: int, job_no: 
                                       job_no)
     else:
         msg = "Process state not configured with decoder manager."
-        raise InvalidGlobalManagerStateError(
-            msg)
+        raise InvalidGlobalManagerStateError(msg)
     return result
 
 
@@ -313,8 +309,8 @@ class NoiseModelDecoderManager(DecoderManager,
             error_generator = islice(error_generator, int(batch_limit))
         elif isinstance(self._noise_model, MonteCarloNoise):
             msg = (
-                "Cannot use MonteCarlo noise source "
-                             f"{self._noise_model} without a specified batch_limit."
+                f"Cannot use MonteCarlo noise source {self._noise_model} without a "
+                "specified batch_limit."
             )
             raise ValueError(msg)
 
@@ -378,8 +374,8 @@ class NoiseModelDecoderManager(DecoderManager,
         if batch_limit is None:
             if isinstance(self._noise_model, MonteCarloNoise):
                 msg = (
-                    "Cannot use MonteCarlo noise source "
-                                 f"{self._noise_model} without a specified batch_limit."
+                    f"Cannot use MonteCarlo noise source {self._noise_model} without a "
+                    "specified batch_limit."
                 )
                 raise ValueError(msg)
             task_num = self._noise_model.sequence_size(self._get_code_data())
@@ -447,8 +443,7 @@ class NoiseModelDecoderManager(DecoderManager,
                                   list[BaseReporter]]:
         if state_token != self._mp_token:
             msg = "Worker decoder manager global has invalid token."
-            raise InvalidGlobalManagerStateError(
-                msg)
+            raise InvalidGlobalManagerStateError(msg)
         self.reset()
 
         seed = self._seed if self._seed is None else self._seed + job_no

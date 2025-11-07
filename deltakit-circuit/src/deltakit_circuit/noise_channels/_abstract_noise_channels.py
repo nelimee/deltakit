@@ -5,11 +5,7 @@ from __future__ import annotations
 
 import math
 from abc import ABC, abstractmethod
-from typing import (
-    ClassVar,
-    Generic,
-    TypeVar,
-)
+from typing import ClassVar, Generic, TypeVar
 from collections.abc import Callable, Generator, Iterable, Mapping, Sequence
 
 import stim
@@ -243,10 +239,7 @@ class OneQubitNoiseChannel(NoiseChannel[T]):
 
     @classmethod
     def generator_from_prob(
-        cls,
-        *gate_args,
-        tag: str | None = None,
-        **gate_kwargs,
+        cls, *gate_args, tag: str | None = None, **gate_kwargs
     ) -> Callable[[Iterable[Qubit[T]] | T], list[Self]]:
         """Return a classmethod that can be used to create a noise channel
         with a predetermined probability"""
@@ -324,10 +317,7 @@ class TwoQubitNoiseChannel(NoiseChannel[T]):
 
     @classmethod
     def generator_from_prob(
-        cls,
-        *gate_args,
-        tag: str | None = None,
-        **gate_kwargs,
+        cls, *gate_args, tag: str | None = None, **gate_kwargs
     ) -> Callable[[Sequence[Qubit[T] | T]], list[Self]]:
         """Return a classmethod that can be used to create a noise channel
         with a predetermined probability"""
@@ -426,9 +416,6 @@ class OneQubitOneProbabilityNoiseChannel(
         )
 
 
-PPN = TypeVar("PPN", bound="PauliProductNoise")
-
-
 class PauliProductNoise(OneProbabilityNoiseChannel[T]):
     """Abstract noise channel which takes a Pauli product as argument.
 
@@ -462,10 +449,7 @@ class PauliProductNoise(OneProbabilityNoiseChannel[T]):
 
     @classmethod
     def generator_from_prob(
-        cls,
-        pauli_gate_t: type[_PauliGate],
-        probability: float,
-        tag: str | None = None,
+        cls, pauli_gate_t: type[_PauliGate], probability: float, tag: str | None = None
     ) -> Callable[[Sequence[Qubit[T] | T]], Sequence[Self]]:
         """Return a classmethod that can be used to create a noise channel
         with a predetermined probability"""

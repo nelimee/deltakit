@@ -5,9 +5,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from itertools import chain, permutations
-from typing import (
-    Generic,
-)
+from typing import Generic
 from collections.abc import Iterable, Mapping
 
 import stim

@@ -414,11 +414,11 @@ class TestGetCompilationDict:
         # it will pick one at random. e.g, +X,+Y can be SQRT_X*X or X*SQRT_X.
         assert any(
 
-                _get_compilation_dict(
-                    NativeGateSet(one_qubit_gates=native_gate_set), max_length=weight
-                )[0]
-                == expected_dict
-                for expected_dict in possible_dicts
+            _get_compilation_dict(
+                NativeGateSet(one_qubit_gates=native_gate_set), max_length=weight
+            )[0]
+            == expected_dict
+            for expected_dict in possible_dicts
 
         )
 
@@ -581,15 +581,13 @@ class TestGetCompilationDict:
         # is non-deterministic in its order, and when two sets of gates evaluate to the same tableau,
         # it will pick one at random. e.g, X,Y can be SQRT_X*X or X*SQRT_X.
         assert any(
-
-                _get_compilation_dict(
-                    NativeGateSet(one_qubit_gates=native_gate_set),
-                    max_length=weight,
-                    up_to_paulis=True,
-                )[0]
-                == expected_dict
-                for expected_dict in possible_dicts
-
+            _get_compilation_dict(
+                NativeGateSet(one_qubit_gates=native_gate_set),
+                max_length=weight,
+                up_to_paulis=True,
+            )[0]
+            == expected_dict
+            for expected_dict in possible_dicts
         )
 
     @pytest.mark.parametrize(
@@ -760,14 +758,12 @@ class TestGetCompilationDict:
         # is non-deterministic in its order, and when two sets of gates evaluate to the same tableau,
         # it will pick one at random. e.g, X,Y can be SQRT_X*X or X*SQRT_X.
         assert any(
-
-                _get_compilation_dict(
-                    NativeGateSet(one_qubit_gates=native_gate_set),
-                    up_to_paulis=True,
-                )[0]
-                == expected_dict
-                for expected_dict in possible_dicts
-
+            _get_compilation_dict(
+                NativeGateSet(one_qubit_gates=native_gate_set),
+                up_to_paulis=True,
+            )[0]
+            == expected_dict
+            for expected_dict in possible_dicts
         )
 
     @pytest.mark.parametrize(
@@ -829,10 +825,8 @@ class TestGetCompilationDict:
             NativeGateSet(one_qubit_gates=native_gate_set)
         )[1]
         assert any(
-
-                (equiv_dict[k] == v for k, v in possible_dict)
-                for possible_dict in possible_dicts
-
+            (equiv_dict[k] == v for k, v in possible_dict)
+            for possible_dict in possible_dicts
         )
 
     @pytest.mark.parametrize("up_to_paulis", [True, False])
@@ -909,10 +903,8 @@ class TestGetCompilationDict:
             NativeGateSet(one_qubit_gates=native_gate_set), up_to_paulis=True
         )[1]
         assert any(
-
-                (equiv_dict[k] == v for k, v in possible_dict)
-                for possible_dict in possible_dicts
-
+            (equiv_dict[k] == v for k, v in possible_dict)
+            for possible_dict in possible_dicts
         )
 
 

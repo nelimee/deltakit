@@ -21,19 +21,23 @@ from pytest_mock import MockerFixture
 
 
 class TestCoordinateOffset:
+    # Note about ignored lint rule below:
+    # CoordinateOffset inherits from tuple, so ruff would prefer the below lines to be
+    # (*CoordinateOffset(), 0, 1, 2, 3). But we explicitly want to test the "+"
+    # implementation, so we use it and ignore the rule.
     def test_adding_tuple_to_empty_coordinate_offset_returns_coordinate_offset_of_tuple(
         self,
     ):
-        assert (*CoordinateOffset(), 0, 1, 2, 3) == CoordinateOffset((0, 1, 2, 3))
+        assert CoordinateOffset() + (0, 1, 2, 3) == CoordinateOffset((0, 1, 2, 3))  # noqa: RUF005
 
     def test_adding_initialised_offset_to_tuple_returns_correct_offset(self):
-        assert (*CoordinateOffset((1, 1, 1)), 1, 1, 1) == CoordinateOffset((2, 2, 2))
+        assert CoordinateOffset((1, 1, 1)) + (1, 1, 1) == CoordinateOffset((2, 2, 2))  # noqa: RUF005
 
     def test_adding_tuple_to_initialised_offset_returns_correct_offset(self):
-        assert (1, 1, 1, *CoordinateOffset((1, 1, 1))) == CoordinateOffset((2, 2, 2))
+        assert (1, 1, 1) + CoordinateOffset((1, 1, 1)) == CoordinateOffset((2, 2, 2))  # noqa: RUF005
 
     def test_adding_initialised_offset_to_longer_tuple_returns_correct_offset(self):
-        assert (*CoordinateOffset((1, 1)), 1, 1, 1) == CoordinateOffset((2, 2, 1))
+        assert CoordinateOffset((1, 1)) + (1, 1, 1) == CoordinateOffset((2, 2, 1))  # noqa: RUF005
 
 
 def empty_handler(*args, **kwargs): ...

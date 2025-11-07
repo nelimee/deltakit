@@ -61,9 +61,7 @@ def parallelise_disjoint_circuits(circuits: list[Circuit]) -> Circuit:
     iterations = circuits[0].iterations
     if any(circuit.iterations != iterations for circuit in circuits):
         msg = "Circuits to be parallelised must have the same number of iterations."
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     def _any_annotations(circuit: Circuit) -> bool:
         for layer in circuit.layers:
@@ -104,9 +102,7 @@ def parallelise_disjoint_circuits(circuits: list[Circuit]) -> Circuit:
                 "If one circuit to be parallelised contains annotations, "
                 "no other circuit can contain measurements."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
     elif sum(any_annotations) > 1:
         msg = "Only one circuit to be parallelised can contain annotations."
         raise ValueError(msg)
@@ -114,9 +110,7 @@ def parallelise_disjoint_circuits(circuits: list[Circuit]) -> Circuit:
     # Check how many circuits contain a nested circuit
     if sum(_any_circuit_layers(circuit) for circuit in circuits) > 1:
         msg = "Only one circuit to be parallelised can contain a nested Circuit."
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     # In future, this can be simplified to the length of non-recursive gate_layers
     circuit_lengths = [
@@ -154,9 +148,7 @@ def parallelise_disjoint_circuits(circuits: list[Circuit]) -> Circuit:
         new_qubits = circuit.qubits
         if len(qubits.union(new_qubits)) != len(qubits) + len(new_qubits):
             msg = "Circuits to be parallelised do not act on distinct qubits."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         qubits = qubits.union(new_qubits)
 
         # set variable to record previous layer in parallelised circuit into which
@@ -231,18 +223,14 @@ def parallelise_same_length_circuits(circuits: list[Circuit]) -> Circuit:
     iterations = circuits[0].iterations
     if any(circuit.iterations != iterations for circuit in circuits):
         msg = "Circuits to be parallelised must have the same number of iterations."
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     if any(
         not all(isinstance(layer, GateLayer) for layer in circuit.layers)
         for circuit in circuits
     ):
         msg = "Circuits can only be parallelised if they contain only GateLayers."
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     circuit_lengths = [len(circuit.layers) for circuit in circuits]
     num_layers = circuit_lengths[0]

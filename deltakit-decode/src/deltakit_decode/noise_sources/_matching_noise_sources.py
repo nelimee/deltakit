@@ -6,7 +6,7 @@ from decimal import Decimal
 from functools import partial
 from itertools import chain, combinations, product, repeat
 from math import comb, floor, prod
-from typing import (Any, ClassVar)
+from typing import Any, ClassVar, TypeAlias
 from collections.abc import Callable, Iterable, Iterator, Sequence
 
 import numpy as np
@@ -14,7 +14,6 @@ from deltakit_core.decoding_graphs import (EdgeT, HyperMultiGraph,
                                            OrderedDecodingEdges)
 from deltakit_decode.noise_sources._generic_noise_sources import (
     CombinedSequences, MonteCarloNoise, SequentialNoise, offset_seed)
-from typing import TypeAlias
 
 
 def _empty_generator() -> Iterator[OrderedDecodingEdges]:
@@ -365,10 +364,7 @@ class EdgeProbabilityMatchingNoise(IndependentMatchingNoise):
         return combined_edge_decomposition
 
     def __add__(self, other):
-        msg = (
-            "Cannot add edge probability noise to "
-                                  "any other noise."
-        )
+        msg = "Cannot add edge probability noise to any other noise."
         raise NotImplementedError(msg)
 
     def __eq__(self, other: object) -> bool:
@@ -400,8 +396,7 @@ class AdditiveMatchingNoise(IndependentMatchingNoise):
                 "Additive noise is for two or more noise sources that do not reduce "
                 "to less sources when summed."
             )
-            raise ValueError(
-                msg)
+            raise ValueError(msg)
 
     def error_generator(
         self, code_data: HyperMultiGraph, seed: int | None = None
@@ -517,9 +512,7 @@ class AdditiveSequentialMatchingNoise(
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
         )
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
 class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
                                               OrderedDecodingEdges]):
@@ -571,9 +564,7 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
         )
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
     def __repr__(self) -> str:
         if self.weight is None:
@@ -587,10 +578,7 @@ class ExhaustiveMatchingNoise(SequentialNoise[HyperMultiGraph,
         seed: int | None = None
     ) -> tuple[tuple[Iterator[OrderedDecodingEdges], int], ...]:
         if self.weight is None:
-            msg = (
-                "Ascending exhaustive split generator is not "
-                                      "implemented."
-            )
+            msg = "Ascending exhaustive split generator is not implemented."
             raise NotImplementedError(msg)
         if self.weight == 0:
             return NoNoiseMatchingSequence().split_error_generator(code_data, num_splits,
@@ -700,9 +688,7 @@ class ExhaustiveWeightedMatchingNoise(SequentialNoise[HyperMultiGraph,
             "Implementation voluntarily not provided. If you think you need it, please "
             "open an issue at https://github.com/Deltakit/deltakit/issues/new/choose"
         )
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
     def field_values(self) -> dict[str, Any]:
         base_dict = super().field_values()

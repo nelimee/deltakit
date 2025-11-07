@@ -151,9 +151,7 @@ def pauli_gates_to_stim_pauli_string(
             "data_qubit_to_index_lookup does not contain entries for"
             f" {missing_qubits} in pauli_gates"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
     paulistr = "*".join(
         pauli.stim_identifier + str(data_qubit_to_index_lookup[pauli.qubit])
         for pauli in pauli_gates

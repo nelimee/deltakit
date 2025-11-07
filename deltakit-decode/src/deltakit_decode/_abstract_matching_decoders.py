@@ -4,7 +4,7 @@ import warnings
 from abc import ABC, abstractmethod
 from functools import cached_property
 from itertools import chain, islice
-from typing import (Generic, Protocol, TypeVar)
+from typing import Generic, Protocol, TypeVar, TypeAlias
 from collections.abc import Sequence, Set as AbstractSet
 
 import networkx as nx
@@ -16,7 +16,6 @@ from deltakit_core.decoding_graphs import (DecodingEdge, DecodingHyperEdge,
                                            OrderedDecodingEdges,
                                            OrderedSyndrome)
 from deltakit_decode.utils import make_logger
-from typing import TypeAlias
 
 Matching: TypeAlias = list[tuple[int, int]]
 
@@ -134,8 +133,7 @@ class GraphDecoder(DecoderProtocol, ABC, Generic[GraphT]):
         if not all(logical_edge in decoding_graph.edges
                    for logical_edge in chain.from_iterable(logicals)):
             msg = (
-                f"Logicals {logicals} are not entirely within "
-                             f"{decoding_graph.edges}."
+                f"Logicals {logicals} are not entirely within {decoding_graph.edges}."
             )
             raise ValueError(msg)
 

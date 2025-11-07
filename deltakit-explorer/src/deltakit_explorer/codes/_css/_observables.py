@@ -66,9 +66,7 @@ def _construct_observables(
                     "thus its measurement result cannot be included in a "
                     "logical observable."
                 )
-                raise ValueError(
-                    msg
-                ) from ve
+                raise ValueError(msg) from ve
             measurement_records.append(MeasurementRecord(meas_ind))
 
         observables.append(Observable(observable_ind, measurement_records))

@@ -124,9 +124,7 @@ def merge_layers(circuit: Circuit, break_repeat_blocks: bool = False) -> Circuit
             merged_layers.append(merge_layers(layer, break_repeat_blocks))
         elif isinstance(layer, NoiseLayer):
             msg = "Layer merge cannot be carried out on a circuit with noise layers."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         else:
             # add annotation to current annotation layers
             current_annotations_and_offsets.append((layer, 0))

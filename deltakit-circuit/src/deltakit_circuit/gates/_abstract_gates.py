@@ -6,12 +6,7 @@ from __future__ import annotations
 import math
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import (
-    ClassVar,
-    Generic,
-    TypeVar,
-    cast,
-)
+from typing import ClassVar, Generic, TypeVar, cast
 from collections.abc import Generator, Mapping, Sequence
 
 import stim

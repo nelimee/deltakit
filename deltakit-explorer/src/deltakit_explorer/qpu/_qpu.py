@@ -70,9 +70,7 @@ class QPU:
         if not circuit.qubits.issubset(self.qubits):
             qubit_ids = {q.unique_identifier for q in circuit.qubits - self.qubits}
             msg = f"Qubits {qubit_ids} in the circuit are not present on the QPU."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         nonnative_gateset = set()
         active_times_list, previous_layer_times = [], []
@@ -143,9 +141,7 @@ class QPU:
                 f"Gate(s) {nonnative_gateset} present in the circuit "
                 "do not belong to the native gate set."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         return CircuitSchedule(active_times_list, previous_layer_times)
 
     def _apply_idle_noise(self, circuit: Circuit) -> Circuit:
@@ -308,9 +304,7 @@ class QPU:
                     "A valid circuit-to-QPU qubit mapping could not be found "
                     f"because qubit {qubit} is not present in the QPU."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
             mapping[qubit] = qubit
 
         return mapping

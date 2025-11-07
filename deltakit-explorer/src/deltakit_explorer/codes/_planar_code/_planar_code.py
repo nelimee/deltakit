@@ -622,9 +622,7 @@ class PlanarCode(CSSCode, ABC):
                 for pauli in new_logical:
                     if pauli.qubit not in self.data_qubits:
                         msg = f"Pauli operator on qubit {pauli.qubit} is not contained in the patch data qubits after shifting by {tuple(delta)}"
-                        raise ValueError(
-                            msg
-                        )
+                        raise ValueError(msg)
             else:
                 warnings.warn(
                     "Logical shifting validation is disabled for the UnrotatedToricCode; new logicals may be invalid"

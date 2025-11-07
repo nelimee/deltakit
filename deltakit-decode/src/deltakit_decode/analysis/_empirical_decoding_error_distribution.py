@@ -153,17 +153,16 @@ class EmpiricalDecodingErrorDistribution:
         if isinstance(index, tuple) and all(isinstance(item, bool) for item in index):
             if len(index) != self.number_of_logicals:
                 msg = (
-                    f"EmpiricalDecodingErrorDistribution index tuples "
-                                f"must be of length {self.number_of_logicals}, "
-                                f"not {len(index)}"
+                    f"EmpiricalDecodingErrorDistribution index tuples must be of "
+                    f"length {self.number_of_logicals}, not {len(index)}"
                 )
                 raise TypeError(msg)
             event = sum((1 << i) * parity
                         for i, parity in enumerate(index))
             return self[event]
         msg = (
-            "EmpiricalDecodingErrorDistribution indices "
-                        f"must be integers or Tuple[bool], not {type(index)}"
+            "EmpiricalDecodingErrorDistribution indices must be integers or "
+            f"Tuple[bool], not {type(index)}"
         )
         raise TypeError(msg)
 

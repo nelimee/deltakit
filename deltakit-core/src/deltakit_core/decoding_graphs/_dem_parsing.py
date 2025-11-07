@@ -7,12 +7,7 @@ import collections.abc
 import warnings
 from collections import Counter
 from itertools import chain, zip_longest
-from typing import (
-    Generic,
-    Protocol,
-    TypeVar,
-    cast,
-)
+from typing import Generic, Protocol, TypeVar, cast
 from collections.abc import Iterable, Iterator
 
 import stim

@@ -6,11 +6,10 @@ from functools import reduce
 from itertools import chain, count, islice, product, repeat
 from math import prod
 from operator import itemgetter, mul
-from typing import (Any, Generic, TypeVar)
+from typing import Any, Generic, TypeVar, TypeAlias
 from collections.abc import Callable, Iterable, Iterator
 
 import numpy.random as npr
-from typing import TypeAlias
 
 ErrorT = TypeVar('ErrorT')
 CodeT = TypeVar('CodeT')

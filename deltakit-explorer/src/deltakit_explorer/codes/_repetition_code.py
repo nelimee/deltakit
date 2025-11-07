@@ -104,9 +104,7 @@ class RepetitionCode(CSSCode):
                 f"{stabiliser_type} is unsupported, only PauliBasis.X and "
                 "PauliBasis.Z are allowed."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     @staticmethod
     def _check_distance_at_least_two(distance: int):

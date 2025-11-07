@@ -486,9 +486,7 @@ def _get_compilation_with_projectors_before_unitaries(
         compilation_dict = compilation_dict_with_y
     else:
         msg = f"{projector_before_unitaries.stim_string} is not a recognised projector"
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
     # for the basis of the reset or measurement before a unitary block, we can just consider
     # the part of the Tableau relevant to the basis.
@@ -508,9 +506,7 @@ def _get_compilation_with_projectors_before_unitaries(
             " in the native gate set. Try compiling unitary_block to the"
             " native gate set first."
         )
-        raise KeyError(
-            msg
-        )
+        raise KeyError(msg)
 
     return shortest_gates
 
@@ -635,9 +631,7 @@ def _get_single_qubits_tableau_key_from_two_qubit_tableau(
     """
     if two_qubit_tableau.to_unitary_matrix(endian="little").shape != (4, 4):
         msg = "The given tableau does not describe a two qubit gate"
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
     if qubit_index == 0:
         tableau_key = (
             str(two_qubit_tableau.x_output(qubit_index))[
@@ -897,9 +891,7 @@ def _get_compilation_with_two_qubit_gates(
                         ]
                     except KeyError as ke:
                         msg = f"Tableau missing from compilation dictionary: {ke!s}"
-                        raise KeyError(
-                            msg
-                        ) from ke
+                        raise KeyError(msg) from ke
 
                     # update pre-2q gate unitaries
                     # = original block up to where our outer index is

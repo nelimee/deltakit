@@ -55,9 +55,7 @@ def experiment_circuit(experiment: Sequence[CSSStage]) -> Circuit:
             "Experiment should end with a CSSStage with properties as described in "
             "allowable_final_stage."
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
     circuit = experiment[0].remaining_rounds
 
     # Get the detectors for stage transitions.

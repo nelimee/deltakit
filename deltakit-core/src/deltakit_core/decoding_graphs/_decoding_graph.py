@@ -9,13 +9,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import chain, tee
-from typing import (
-    ClassVar,
-    Generic,
-    TypeGuard,
-    TypeVar,
-    cast,
-)
+from typing import ClassVar, Generic, TypeGuard, TypeVar, cast
 from collections.abc import (
     Callable,
     Iterable,

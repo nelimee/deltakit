@@ -115,16 +115,12 @@ class CSSStage:
             len(stabiliser_set) == 0 for stabiliser_set in self._stabilisers
         ):
             msg = "Non-zero number of rounds requires non-zero number of stabilisers."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if self._num_rounds == 0 and any(
             len(stabiliser_set) > 0 for stabiliser_set in self._stabilisers
         ):
             msg = "Non-zero number of stabilisers requires non-zero number of rounds."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         self._first_round_measurements = (
             ()
@@ -210,15 +206,11 @@ class CSSStage:
                 "Initial measurement qubits and qubits in stabilisers "
                 "should be disjoint."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
         if not stabiliser_qubits.isdisjoint(reset_qubits):
             msg = "Final reset qubits and qubits in stabilisers should be disjoint."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
 
     @staticmethod
     def _check_first_round_gates(
@@ -241,9 +233,7 @@ class CSSStage:
                 "If first_round_gates is non-empty, then first_round_measurements has "
                 "to be empty."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         # Check 2).
         if all(
             len(simultaneous_stabilisers) == 0
@@ -253,9 +243,7 @@ class CSSStage:
                 "The stabilisers parameter is empty, which is not allowed when "
                 "first_round_gates is not empty."
             )
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         # Check 3).
         for gate in gates:
             if len(set(gate.qubits).intersection(first_round_data_qubits)) == 0:
@@ -263,9 +251,7 @@ class CSSStage:
                     f"The gate {gate} from first_round_gates is not supported on any "
                     "data qubits, which is not allowed."
                 )
-                raise ValueError(
-                    msg
-                )
+                raise ValueError(msg)
 
     @staticmethod
     def _determine_ancilla_uniqueness(
@@ -321,9 +307,7 @@ class CSSStage:
         if not any(ancillas_defined):
             return False
         msg = "Either all stabilisers or no stabilisers should have an ancilla defined."
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     def _construct_mpp_syndrome_extraction_layers(self) -> list[GateLayer]:
         """Construct the syndrome extraction circuit for the stabilisers using MPPs."""
@@ -443,9 +427,7 @@ class CSSStage:
         )
 
     @cached_property
-    def stabilisers_before(
-        self,
-    ) -> tuple[Stabiliser, ...]:
+    def stabilisers_before(self) -> tuple[Stabiliser, ...]:
         """
         A transformed version of ordered_stabilisers with removed ancilla_qubits that
         correspond to the stabilisers before first_round_gates. As ancillas are changed
@@ -486,7 +468,11 @@ class CSSStage:
         bool
             True if resets only.
         """
-        return not (len(self.ordered_stabilisers) > 0 or len(self._first_round_measurements) > 0 or len(self._observable_definitions) > 0)
+        return not (
+            len(self.ordered_stabilisers) > 0
+            or len(self._first_round_measurements) > 0
+            or len(self._observable_definitions) > 0
+        )
 
     @cached_property
     def allowable_final_stage(self) -> bool:
@@ -503,7 +489,10 @@ class CSSStage:
         """
         if len(self._final_round_resets) > 0:
             return False
-        return not (len(self.ordered_stabilisers) > 0 and (self._num_rounds > 1 or self._use_ancilla_qubits))
+        return not (
+            len(self.ordered_stabilisers) > 0
+            and (self._num_rounds > 1 or self._use_ancilla_qubits)
+        )
 
     @property
     def first_round(self) -> Circuit:

@@ -107,7 +107,11 @@ def _get_coordinate_from_data_qubits(
         return None
     qubit_coord_len = len(qubit_coords[0])
 
-    full_coord = (*tuple(float(np.mean([qubit_coord[i] for qubit_coord in qubit_coords])) for i in range(qubit_coord_len)), 0)
+    full_coord = (
+        *tuple(
+            float(np.mean([qubit_coord[i] for qubit_coord in qubit_coords]))
+            for i in range(qubit_coord_len)
+        ), 0)
     return Coordinate(*full_coord)
 
 
@@ -145,12 +149,14 @@ def _calculate_detector_coordinates(
     for stabiliser in stabilisers:
         # attempt to get a coordinate from the ancilla qubit
         detector_coord = _get_coordinate_from_ancilla_qubit(stabiliser.ancilla_qubit)
-        if (detector_coord is not None
+        if (
+            detector_coord is not None
             # check if detector coordinate length is consistent with previous lengths
-            and (len(detector_coords) == 0 or coord_len == len(detector_coord))):
-                detector_coords.append(detector_coord)
-                coord_len = len(detector_coord)
-                continue
+            and (len(detector_coords) == 0 or coord_len == len(detector_coord))
+        ):
+            detector_coords.append(detector_coord)
+            coord_len = len(detector_coord)
+            continue
 
         # attempt to get a coordinate from the data qubits
         detector_coord = _get_coordinate_from_data_qubits(
