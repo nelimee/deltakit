@@ -9,6 +9,7 @@ from typing import Any, Generic, TypeVar
 from collections.abc import Iterable, Iterator
 from uuid import UUID, uuid4
 from warnings import warn
+from typing_extensions import override
 
 from deltakit_decode._base_reporter import BaseReporter
 from deltakit_decode.analysis._empirical_decoding_error_distribution import \
@@ -120,11 +121,12 @@ class DecoderManager(ABC):
         """
         pool.map(lambda _: _clear_process_global_memory(), range(total_processes))
 
+    @abstractmethod
     def run_batch_shots_parallel(self,
                                  batch_limit: int | None,
-                                 processes: int,  # noqa: ARG002
-                                 pool,  # noqa: ARG002
-                                 min_tasks_per_process: int = 50  # noqa: ARG002
+                                 processes: int,
+                                 pool,
+                                 min_tasks_per_process: int = 502
                                  ) -> tuple[int, int]:
         """Run batch of shots in parallel using `processes` number of runners from
         `pool`. Cap the number of processes created such that a minimum of
@@ -167,7 +169,6 @@ class DecoderManager(ABC):
                 )
             decoder_manager.clear_pool_manager(pool, num_parallel_processes)
         """
-        # pylint: disable=unused-argument
         return self.run_batch_shots(batch_limit=batch_limit)
 
     def get_reporter_results(self) -> dict[str, Any]:
@@ -365,6 +366,7 @@ class NoiseModelDecoderManager(DecoderManager,
             self._exec_shots_atomic(self.error_generator, batch_limit)
         return self.shots, self.fails
 
+    @override
     def run_batch_shots_parallel(self,
                                  batch_limit: int | None,
                                  processes: int,
