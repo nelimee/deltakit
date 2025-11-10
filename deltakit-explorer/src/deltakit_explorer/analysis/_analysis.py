@@ -28,8 +28,8 @@ def get_exp_fit(
 ]:
     """
     Implement logical error probability per round fit as described in
-    https://arxiv.org/pdf/2310.05900.pdf (p.40) and
-    https://arxiv.org/pdf/2207.06431.pdf (p.21). The first round (`r=0`)
+    https://arxiv.org/pdf/2310.05900 (p.40) and
+    https://arxiv.org/pdf/2207.06431 (p.21). The first round (`r=0`)
     data points are excluded as the error suppression is stronger there
     than in consecutive rounds.
 
