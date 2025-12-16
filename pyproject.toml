@@ -44,7 +44,7 @@ Changelog = "https://github.com/Deltakit/deltakit/releases"
 
 [dependency-groups]
 tests_extras = ["matplotlib", "numpy", "pandas", "stim"]
-tests = [
+test = [
   "pytest",
   "pytest-cov",
   "pytest-skip-slow",
@@ -68,7 +68,7 @@ docs = [
 security = ["bandit", "ochrona", "pip-audit"]
 build = ["build"]
 dev = [
-  { include-group = "tests" },
+  { include-group = "test" },
   { include-group = "lint" },
   { include-group = "docs" },
   { include-group = "security" },

@@ -32,7 +32,7 @@ classifiers = [
 dependencies = ["numpy", "networkx", "stim", "typing_extensions", "semver"]
 
 [dependency-groups]
-tests = [
+test = [
   "pytest",
   "pytest-cov",
   "pytest-mock",
@@ -41,12 +41,10 @@ tests = [
 ]
 lint = ["mypy", "ruff>=0.14", "typos", "deptry", "types-networkx"]
 security = ["bandit", "ochrona", "pip-audit"]
-build = ["build"]
 dev = [
-  { include-group = "tests" },
+  { include-group = "test" },
   { include-group = "lint" },
   { include-group = "security" },
-  { include-group = "build" },
 ]
 
 [project.urls]

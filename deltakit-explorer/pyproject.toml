@@ -50,7 +50,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-tests = ["pytest", "pytest-cov", "pytest-mock", "pytest-skip-slow"]
+test = ["pytest", "pytest-cov", "pytest-mock", "pytest-skip-slow"]
 stubs = [
   "typing-extensions",
   "pandas-stubs",
@@ -61,12 +61,10 @@ stubs = [
 ]
 lint = ["mypy", "ruff>=0.14", "typos", "deptry", { include-group = "stubs" }]
 security = ["bandit", "ochrona", "pip-audit"]
-build = ["build"]
 dev = [
-  { include-group = "tests" },
+  { include-group = "test" },
   { include-group = "lint" },
   { include-group = "security" },
-  { include-group = "build" },
 ]
 
 [project.urls]

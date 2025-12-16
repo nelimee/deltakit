@@ -32,15 +32,13 @@ classifiers = [
 dependencies = ["stim>=1.9.0", "typing-extensions"]
 
 [dependency-groups]
-tests = ["pytest", "pytest-cov", "pytest-skip-slow"]
+test = ["pytest", "pytest-cov", "pytest-skip-slow"]
 lint = ["mypy", "ruff>=0.14", "typos", "deptry"]
 security = ["bandit", "ochrona", "pip-audit"]
-build = ["build"]
 dev = [
-  { include-group = "tests" },
+  { include-group = "test" },
   { include-group = "lint" },
   { include-group = "security" },
-  { include-group = "build" },
 ]
 
 [project.urls]
