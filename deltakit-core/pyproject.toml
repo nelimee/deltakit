@@ -29,20 +29,24 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Quantum Computing",
   "Typing :: Typed",
 ]
-dependencies = [
-  "numpy", "networkx", "stim", "typing_extensions", "semver"
-]
+dependencies = ["numpy", "networkx", "stim", "typing_extensions", "semver"]
 
 [dependency-groups]
-tests = ["pytest", "pytest-cov", "pytest-mock", "pytest-skip-slow", "pytest-lazy-fixtures"]
+tests = [
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "pytest-skip-slow",
+  "pytest-lazy-fixtures",
+]
 lint = ["mypy", "ruff>=0.14", "typos", "deptry", "types-networkx"]
 security = ["bandit", "ochrona", "pip-audit"]
 build = ["build"]
 dev = [
-    {include-group = "tests"},
-    {include-group = "lint"},
-    {include-group = "security"},
-    {include-group = "build"},
+  { include-group = "tests" },
+  { include-group = "lint" },
+  { include-group = "security" },
+  { include-group = "build" },
 ]
 
 [project.urls]

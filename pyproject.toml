@@ -31,10 +31,10 @@ classifiers = [
 ]
 
 dependencies = [
-    "deltakit_circuit",
-    "deltakit_core",
-    "deltakit_decode",
-    "deltakit_explorer",
+  "deltakit_circuit",
+  "deltakit_core",
+  "deltakit_decode",
+  "deltakit_explorer",
 ]
 
 [project.urls]
@@ -44,37 +44,58 @@ Changelog = "https://github.com/Deltakit/deltakit/releases"
 
 [dependency-groups]
 tests_extras = ["matplotlib", "numpy", "pandas", "stim"]
-tests = ["pytest", "pytest-cov", "pytest-skip-slow", {include-group = "tests_extras"}]
+tests = [
+  "pytest",
+  "pytest-cov",
+  "pytest-skip-slow",
+  { include-group = "tests_extras" },
+]
 lint = ["mypy", "ruff>=0.14", "typos", "deptry"]
 docs = [
-    "myst_nb",
-    "sphinxawesome-theme",
-    "sphinx-autodoc-typehints",
-    "sphinx-copybutton",
-    "pip-licenses",
-    "sphinx-design",
-    "sphinx-autobuild",
-    "myst-parser",
-    "vale",
-    "jupytext",
-    "jupyter",
-    "ipykernel"
+  "myst_nb",
+  "sphinxawesome-theme",
+  "sphinx-autodoc-typehints",
+  "sphinx-copybutton",
+  "pip-licenses",
+  "sphinx-design",
+  "sphinx-autobuild",
+  "myst-parser",
+  "vale",
+  "jupytext",
+  "jupyter",
+  "ipykernel",
 ]
 security = ["bandit", "ochrona", "pip-audit"]
 build = ["build"]
 dev = [
-    {include-group = "tests"},
-    {include-group = "lint"},
-    {include-group = "docs"},
-    {include-group = "security"},
-    {include-group = "build"},
-    # other
-    "pre-commit",
-    "validate-pyproject",
-    "python-semantic-release",
+  { include-group = "tests" },
+  { include-group = "lint" },
+  { include-group = "docs" },
+  { include-group = "security" },
+  { include-group = "build" },
+  # other
+  "pre-commit",
+  "validate-pyproject",
+  "python-semantic-release",
 ]
 
-# for mypy configuration, see `mypy.ini`.
+[tool.uv.workspace]
+members = [
+  "deltakit-core",
+  "deltakit-circuit",
+  "deltakit-decode",
+  "deltakit-explorer",
+]
+
+[tool.uv.sources]
+deltakit-core = { workspace = true }
+deltakit-circuit = { workspace = true }
+deltakit-decode = { workspace = true }
+deltakit-explorer = { workspace = true }
+
+[tool.mypy]
+files = "src/**/*.py"
+
 # for ruff configuration, see `ruff.toml`
 
 [tool.pytest.ini_options]
@@ -84,8 +105,18 @@ filterwarnings = ["error"]
 
 [tool.bandit]
 # './tools/vale.py' is for `pixi run bandit`; 'tools/vale.py' is for pre-commit
-exclude_dirs = ['.github', '.pixi', '.tox', '.venv', './tools/vale.py', 'tools/vale.py']
-skips = ['B101', 'B311']  # B101 is just use of `assert`; 'B311' is use of random module
+exclude_dirs = [
+  '.github',
+  '.pixi',
+  '.tox',
+  '.venv',
+  './tools/vale.py',
+  'tools/vale.py',
+]
+skips = [
+  'B101',
+  'B311',
+] # B101 is just use of `assert`; 'B311' is use of random module
 
 [tool.typos.default]
 locale = 'en-gb'
@@ -99,24 +130,29 @@ youre = "you're"
 distribtuion = "distribution"
 interm = "interm"
 ket = "ket"
-ND = "ND"  # part of NDArray
+ND = "ND"                         # part of NDArray
 Alise = "Alise"
 DEPOLARIZE = "DEPOLARIZE"
 depolarization = "depolarization"
-Authorization = "Authorization" # Web-related field.
-color = "color" # Used in matplotlib and stim APIs.
+Authorization = "Authorization"   # Web-related field.
+color = "color"                   # Used in matplotlib and stim APIs.
 colors = "colors"
-optimize = "optimize" # scipy.optimize
-ax = "ax" # Typical naming for matplotlib Axes instances.
+optimize = "optimize"             # scipy.optimize
+ax = "ax"                         # Typical naming for matplotlib Axes instances.
 center = "center"
 stabilizer = "stabilizer"
 stabilizers = "stabilizers"
-synchronize = "synchronize" # multiprocessing import
+synchronize = "synchronize"       # multiprocessing import
 neighbors = "neighbors"
 
 [tool.typos.files]
 # Paths/patterns to exclude from spell checking
-extend-exclude = ["docs/styles", "**/LICENSE", "**/*.html", "licenses.confluence"]
+extend-exclude = [
+  "docs/styles",
+  "**/LICENSE",
+  "**/*.html",
+  "licenses.confluence",
+]
 
 [tool.semantic_release]
 allow_zero_version = true
@@ -130,36 +166,42 @@ match = ".*"
 
 [tool.semantic_release.changelog]
 exclude_commit_patterns = [
-    '''task(?:\([^)]*?\))?: .+''',
-    '''chore(?:\([^)]*?\))?: .+''',
-    '''ci(?:\([^)]*?\))?: .+''',
-    '''refactor(?:\([^)]*?\))?: .+''',
-    '''style(?:\([^)]*?\))?: .+''',
-    '''tests?(?:\([^)]*?\))?: .+''',
-    '''build\((?!deps\): .+)''',
-    '''release(?:\([^)]*?\))?: .+''',
-    '''dev(?:\([^)]*?\))?: .+''',
-    '''Initial [Cc]ommit.*''',
+  '''task(?:\([^)]*?\))?: .+''',
+  '''chore(?:\([^)]*?\))?: .+''',
+  '''ci(?:\([^)]*?\))?: .+''',
+  '''refactor(?:\([^)]*?\))?: .+''',
+  '''style(?:\([^)]*?\))?: .+''',
+  '''tests?(?:\([^)]*?\))?: .+''',
+  '''build\((?!deps\): .+)''',
+  '''release(?:\([^)]*?\))?: .+''',
+  '''dev(?:\([^)]*?\))?: .+''',
+  '''Initial [Cc]ommit.*''',
 ]
 mode = "update"
 
 [tool.semantic_release.commit_parser_options]
-other_allowed_tags = ["build", "chore", "ci", "docs", "style", "refactor", "tests", "release", "dev"]
-allowed_tags = ["feat", "fix", "perf", "build", "chore", "ci", "docs", "style", "refactor", "tests", "release", "dev"]
-
-[tool.uv.workspace]
-members = [
-  "deltakit-core",
-  "deltakit-circuit",
-  "deltakit-decode",
-  "deltakit-explorer",
+other_allowed_tags = [
+  "build",
+  "chore",
+  "ci",
+  "docs",
+  "style",
+  "refactor",
+  "tests",
+  "release",
+  "dev",
 ]
-
-[tool.uv.sources]
-deltakit-core     = { workspace = true }
-deltakit-circuit  = { workspace = true }
-deltakit-decode   = { workspace = true }
-deltakit-explorer = { workspace = true }
-
-[tool.mypy]
-files = "src/**/*.py"
+allowed_tags = [
+  "feat",
+  "fix",
+  "perf",
+  "build",
+  "chore",
+  "ci",
+  "docs",
+  "style",
+  "refactor",
+  "tests",
+  "release",
+  "dev",
+]

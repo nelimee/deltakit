@@ -37,10 +37,10 @@ lint = ["mypy", "ruff>=0.14", "typos", "deptry"]
 security = ["bandit", "ochrona", "pip-audit"]
 build = ["build"]
 dev = [
-    {include-group = "tests"},
-    {include-group = "lint"},
-    {include-group = "security"},
-    {include-group = "build"},
+  { include-group = "tests" },
+  { include-group = "lint" },
+  { include-group = "security" },
+  { include-group = "build" },
 ]
 
 [project.urls]
