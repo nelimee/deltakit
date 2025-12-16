@@ -30,27 +30,62 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-    "gql",
-    "graphql_core",
-    "numpy",
-    "stim",
-    "matplotlib",
-    "requests",
-    "seaborn",
-    "tqdm",
-    "requests_toolbelt",  # needed by gql, which doesn't automatically install it
-    "pymatching",
-    "galois",
-    # Needed for the moment to have the changes from https://github.com/quantumgizmos/bp_osd/pull/20
-    # until a new release including these changes lands on PyPI (https://pypi.org/project/bposd/).
-    "bposd @ git+https://github.com/quantumgizmos/bp_osd.git@8894ec654b24ae875c07e5a361dcae9a77d748ce",
-    "pandas",
+  "deltakit_core",
+  "deltakit_circuit",
+  "deltakit_decode",
+  "gql[requests]",
+  "graphql_core",
+  "numpy",
+  "scipy",
+  "stim",
+  "matplotlib",
+  "requests",
+  "seaborn",
+  "tqdm",
+  "galois",
+  # Needed for the moment to have the changes from https://github.com/quantumgizmos/bp_osd/pull/20
+  # until a new release including these changes lands on PyPI (https://pypi.org/project/bposd/).
+  "bposd @ git+https://github.com/quantumgizmos/bp_osd.git@8894ec654b24ae875c07e5a361dcae9a77d748ce",
+  "semver",
 ]
 
 [dependency-groups]
-dev = ["typing-extensions", "pandas-stubs", "types-seaborn", "scipy-stubs"]
+tests = ["pytest", "pytest-cov", "pytest-mock", "pytest-skip-slow"]
+stubs = [
+  "typing-extensions",
+  "pandas-stubs",
+  "types-seaborn",
+  "scipy-stubs",
+  "types-tqdm",
+  "types-requests",
+]
+lint = ["mypy", "ruff>=0.14", "typos", "deptry", { include-group = "stubs" }]
+security = ["bandit", "ochrona", "pip-audit"]
+build = ["build"]
+dev = [
+  { include-group = "tests" },
+  { include-group = "lint" },
+  { include-group = "security" },
+  { include-group = "build" },
+]
 
 [project.urls]
 Homepage = "https://github.com/Deltakit/deltakit"
 "Bug Tracker" = "https://github.com/Deltakit/deltakit/issues"
 Changelog = "https://github.com/Deltakit/deltakit/releases"
+
+[tool.deptry]
+known_first_party = ["deltakit_explorer"]
+
+[tool.mypy]
+files = "src/**/*.py"
+# The below list of disabled checks should eventually be empty.
+disable_error_code = "arg-type,assignment,attr-defined,dict-item,index,list-item,misc,operator,override,return-value,union-attr,var-annotated"
+
+[[tool.mypy.overrides]]
+module = ["stim"]
+follow_untyped_imports = true
+
+[[tool.mypy.overrides]]
+module = ["bposd.css"]
+ignore_missing_imports = true

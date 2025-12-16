@@ -7,7 +7,7 @@ name = "deltakit-decode"
 version = "0.5.1"
 description = "Deltakit (component deltakit-decode)"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 
@@ -30,6 +30,8 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
+  "deltakit_circuit",
+  "deltakit_core",
   "numpy",
   "networkx",
   "seaborn",
@@ -40,17 +42,49 @@ dependencies = [
   "stim",
   "pathos>=0.3.4",
   "pandas>=2.0",
-  "typing_extensions",
+  "typing-extensions",
+  "tqdm",
+]
+
+[dependency-groups]
+tests = [
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "pytest-skip-slow",
+  "pytest-lazy-fixtures",
+]
+stubs = [
   "types-networkx",
   "types-requests",
   "types-tqdm",
-  "typing-extensions",
-  "tqdm",
   "pandas-stubs",
   "plotly-stubs",
+  "types-seaborn",
+]
+lint = ["mypy", "ruff>=0.14", "typos", "deptry", { include-group = "stubs" }]
+security = ["bandit", "ochrona", "pip-audit"]
+build = ["build"]
+dev = [
+  { include-group = "tests" },
+  { include-group = "lint" },
+  { include-group = "security" },
+  { include-group = "build" },
 ]
 
 [project.urls]
 Homepage = "https://github.com/Deltakit/deltakit"
 "Bug Tracker" = "https://github.com/Deltakit/deltakit/issues"
 Changelog = "https://github.com/Deltakit/deltakit/releases"
+
+[tool.deptry]
+known_first_party = ["deltakit_decode"]
+
+[tool.mypy]
+files = "src/**/*.py"
+# The below list of disabled checks should eventually be empty.
+disable_error_code = "arg-type,assignment,attr-defined,name-defined,index,misc"
+
+[[tool.mypy.overrides]]
+module = ["stim", "pathos", "pathos.pools", "pymatching"]
+follow_untyped_imports = true

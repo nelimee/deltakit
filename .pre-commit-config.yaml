@@ -31,8 +31,7 @@ repos:
     hooks:
       - id: mypy
         args:
-          - --config-file=mypy.ini
-        exclude: 'tests|build|tools|conftest\.py$'
+          - --config-file=pyproject.toml
         additional_dependencies:
           - numpy
           - matplotlib

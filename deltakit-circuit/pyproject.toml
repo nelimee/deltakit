@@ -29,12 +29,33 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Quantum Computing",
   "Typing :: Typed",
 ]
-dependencies = ["stim>=1.9.0"]
+dependencies = ["stim>=1.9.0", "typing-extensions"]
+
+[dependency-groups]
+tests = ["pytest", "pytest-cov", "pytest-skip-slow"]
+lint = ["mypy", "ruff>=0.14", "typos", "deptry"]
+security = ["bandit", "ochrona", "pip-audit"]
+build = ["build"]
+dev = [
+    {include-group = "tests"},
+    {include-group = "lint"},
+    {include-group = "security"},
+    {include-group = "build"},
+]
 
 [project.urls]
 Homepage = "https://github.com/Deltakit/deltakit"
 "Bug Tracker" = "https://github.com/Deltakit/deltakit/issues"
 Changelog = "https://github.com/Deltakit/deltakit/releases"
 
-[tool.deptry.per_rule_ignores]
-DEP003 = ['deltakit_circuit']
+[tool.deptry]
+known_first_party = ["deltakit_circuit"]
+
+[tool.mypy]
+files = "src/**/*.py"
+# The below list of disabled checks should eventually be empty.
+disable_error_code = "dict-item,misc,arg-type,return-value,union-attr,index,attr-defined,call-overload"
+
+[[tool.mypy.overrides]]
+module = ["stim"]
+follow_untyped_imports = true

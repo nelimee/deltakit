@@ -46,9 +46,9 @@ exclude = [
     "_version.py",
 ]
 
-# Only include the deltakit folders, not the docs/, tools/ or
+# Only include the deltakit folder, not the docs/, tools/ or
 # other utility folder.
-include = ["deltakit-*/**/*.py", "src/deltakit/**/*.py", "tools/**/*.py", "tests/**/*.py"]
+include = ["src/deltakit/**/*.py", "tests/**/*.py"]
 
 # Same as Black.
 line-length = 88

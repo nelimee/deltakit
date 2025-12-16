@@ -33,7 +33,28 @@ dependencies = [
   "numpy", "networkx", "stim", "typing_extensions", "semver"
 ]
 
+[dependency-groups]
+tests = ["pytest", "pytest-cov", "pytest-mock", "pytest-skip-slow", "pytest-lazy-fixtures"]
+lint = ["mypy", "ruff>=0.14", "typos", "deptry", "types-networkx"]
+security = ["bandit", "ochrona", "pip-audit"]
+build = ["build"]
+dev = [
+    {include-group = "tests"},
+    {include-group = "lint"},
+    {include-group = "security"},
+    {include-group = "build"},
+]
+
 [project.urls]
 Homepage = "https://github.com/Deltakit/deltakit"
 "Bug Tracker" = "https://github.com/Deltakit/deltakit/issues"
 Changelog = "https://github.com/Deltakit/deltakit/releases"
+
+[tool.mypy]
+files = "src/**/*.py"
+# The below list of disabled checks should eventually be empty.
+disable_error_code = "arg-type,attr-defined"
+
+[[tool.mypy.overrides]]
+module = ["stim"]
+follow_untyped_imports = true
