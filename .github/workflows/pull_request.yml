@@ -60,7 +60,7 @@ jobs:
           uv run --no-sync coverage xml
           uv run --no-sync coverage report
       - name: Printing coverage report as a message
-        if: ${{ env.ENABLE_COVERAGE == 'true' && env.PR_IS_FROM_FORK == 'false' }}
+        if: ${{ env.ENABLE_COVERAGE == 'true' && env.PR_FROM_FORK == 'false' }}
         uses: 5monkeys/cobertura-action@v13
         with:
           repo_token : ${{ secrets.GITHUB_TOKEN }}
