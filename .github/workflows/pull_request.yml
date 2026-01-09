@@ -34,7 +34,7 @@ jobs:
     env:
       ENABLE_COVERAGE: ${{ (matrix.python-version == '3.10') && (matrix.dependency-resolution == 'highest') }}
       # See https://github.com/orgs/community/discussions/25217
-      PR_IS_NOT_FROM_FORK: ${{ github.event.pull_request.head.repo.full_name == 'deltakit/deltakit' }}
+      PR_IS_FROM_FORK: ${{ github.event.pull_request.head.repo.full_name != 'deltakit/deltakit' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -60,7 +60,7 @@ jobs:
           uv run --no-sync coverage xml
           uv run --no-sync coverage report
       - name: Printing coverage report as a message
-        if: ${{ env.ENABLE_COVERAGE == 'true' && env.PR_IS_NOT_FROM_FORK}}
+        if: ${{ env.ENABLE_COVERAGE == 'true' && env.PR_IS_FROM_FORK == 'false' }}
         uses: 5monkeys/cobertura-action@v13
         with:
           repo_token : ${{ secrets.GITHUB_TOKEN }}
