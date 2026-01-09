@@ -34,7 +34,7 @@ jobs:
     env:
       ENABLE_COVERAGE: ${{ (matrix.python-version == '3.10') && (matrix.dependency-resolution == 'highest') }}
       # See https://github.com/orgs/community/discussions/25217
-      PR_IS_FROM_FORK: ${{ github.event.pull_request.head.repo.full_name != 'deltakit/deltakit' }}
+      PR_FROM_FORK: ${{ github.event.pull_request.head.repo.full_name != 'deltakit/deltakit' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
